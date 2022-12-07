@@ -1,22 +1,17 @@
-# DJI Cloud API
+# Frontend-DJI-Drone-App
 
-## What is the DJI Cloud API?
+## Needed
 
-The launch of the Cloud API mainly solves the problem of developers reinventing the wheel. For developers who do not need in-depth customization of APP, they can directly use DJI Pilot2 to communicate with the third cloud platform, and developers can focus on the development and implementation of cloud service interfaces. 
+### Node.js and NPM
+https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
-## Docker
+## Confic
 
-If you don't want to install the development environment, you can try deploying with docker. [Click the link to download.](https://terra-sz-hc1pro-cloudapi.oss-cn-shenzhen.aliyuncs.com/c0af9fe0d7eb4f35a8fe5b695e4d0b96/docker/cloud_api_sample_docker.zip)
+AppID: 124442
+AppKey: ff629d8e9901bd0096f1c8ab109cc97
+AppLicense: hxv4Wi1BtG0/0ZUIgi7gTYPO+yJzy+RC6NXYEyKemq3pOSAWEbs4UzcQ8edMNIRmQ/C8YIOOW0PdP00M2cMn2F0kElayYNS1jZebPBjXur75WUnjbTE+KePwpWLTOL56CfgkOSA++NgV8brFV+krL7i4tiTJ8hN7JA178UoUtj4=
 
-## Usage
-
-For more documentation, please visit the [DJI Developer Documentation](https://developer.dji.com/doc/cloud-api-tutorial/cn/).
-
-## Latest Release
-
-Cloud API 1.1.0 was released on 22 July 2022. For more information, please visit the [Release Note](https://developer.dji.com/doc/cloud-api-tutorial/cn/).
-
-## License
-
-Cloud API is MIT-licensed. Please refer to the LICENSE file for more information.
+agoraAPPID: 81151cf17c8641c18bf00e453ccaede4
+agoraToken: 007eJxTYNhnLnNnytcV/Grmb5an3T1kKr2Nz7+clSdo/SXB/mS3o3YKDBaGhqaGyWmG5skWZiaGyYYWSWkGBqkmpsbJyYmpKakmwbPLkxsCGRksl3UzMzJAIIjPxZCUmJuUmVKUn5fKwAAAmWogTA==
+agoraChannel: bambidrone
 
