@@ -29,7 +29,7 @@
             <span>{{ text }}</span>
         </a-tooltip>
       </template>
-      <!-- Firmware -->
+      <!-- 固件版本 -->
       <template #firmware_version="{ record }">
         <span v-if="judgeCurrentType(EDeviceTypeName.Dock)">
           <DeviceFirmwareUpgrade :device="record"
@@ -41,7 +41,7 @@
           {{ record.firmware_version }}
         </span>
       </template>
-      <!-- status  -->
+      <!-- 状态 -->
       <template #status="{ text }">
         <span v-if="text" class="flex-row flex-align-center">
             <span class="mr5" style="width: 12px; height: 12px; border-radius: 50%; background-color: green;" />

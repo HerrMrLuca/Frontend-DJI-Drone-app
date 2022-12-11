@@ -1,7 +1,7 @@
 $main-text-color: #000;
 $header-height: 52px;
 // Auxiliary color
-$info: #1fa3f6;
+$info: #77c580;
 $success: #28d445;
 $danger: #e70102;
 $alarm: #ffcc00;
@@ -9,21 +9,21 @@ $warning: #ffcc00;
 $error: #e70102;
 
 // 品牌色
-$primary: #2d8cf0;
-$primary-click: #2b85e4;
-$primary-hover: #5cadff;
+$primary: #78c480;
+$primary-click: #297638;
+$primary-hover: #78C480;
 $primary-hover-dropdown: rgba($primary-hover, 0.2);
-$primary-disabled: #274d75;
+$primary-disabled: #297638;
 // 辅助色拓展
 $danger-hover: #ff4d4e;
 $danger-active: #d40001;
-$menu-primary: #464c5b; // tab菜单主题色
+$menu-primary: #77c580; // tab菜单主题色
 // 图标颜色
 $ic-white-normal: #fff;
 $ic-black-normal: #4e4e4e;
 $ic-hover: #a7a7a7;
 $ic-disabled: #5f5f5f;
-$ic-selected: #1088f2;
+$ic-selected: #77c580;
 // 中性色-黑
 $dark-bg-light: #868688; // 背景色浅色
 $dark-btn-hover: #5d5f61; // 按钮 hover 色
@@ -32,7 +32,7 @@ $dark-btn-disabled: #3c3c3c; // 按钮主色禁用
 $dark-border-secondary: #393939; // 第二边框色
 $dark-basic-primary: #232323; // 第一基础底色
 $dark-basic-secondary: #282828; // 第二基础底色
-$dark-highlight: #232323; // 高亮色
+$dark-highlight: #77c580; // 高亮色
 $dark-disable: #444444; // 置灰底色
 $dark-project-disabled: #292929;
 // 中性色-白
@@ -42,8 +42,8 @@ $light-divider: #e8eaec; // 3 分割线
 $light-border: #dcdee2; // 4 边框
 $light-disabled: #c5c8ce; // 5 失效
 $light-auxiliary: #808695; // 6 辅助图标
-$light-main-text: #515a6e; // 7 正文 ？用处
-$light-title: #17233d; // 8 标题 ？用处
+$light-main-text: #77c580; // 7 正文 ？用处
+$light-title: #77c580; // 8 标题 ？用处
 $light-bg-menu: #3b3e40; // 9 菜单栏背景色  ？用处
 $light-border-secondary: #e8e8e8; // 第二边框色
 
@@ -59,7 +59,7 @@ $text-black-emphasize: rgba($text-black-basic, 0.85); // 强调
 $text-black-main: rgba($text-black-basic, 0.65); // 正文
 $text-black-secondary: rgba($text-black-basic, 0.45); // 次要
 $text-black-disabled: rgba($text-black-basic, 0.25); // 置灰
-$text-link: $primary;
+$text-link: #77c580;
 $text-danger: $danger;
 // 标签
 $tag-green: #19be6b;

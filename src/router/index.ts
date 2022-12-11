@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { ERouterName } from '/@/types/index'
-import CreatePlan from '../pages/page-web/projects/create-plan.vue'
+import CreatePlan from '/@/components/task/CreatePlan.vue'
 import WaylinePanel from '/@/pages/page-web/projects/wayline.vue'
 import DockPanel from '/@/pages/page-web/projects/dock.vue'
 import LiveAgora from '/@/components/livestream-agora.vue'
@@ -98,6 +98,18 @@ const routes: Array<RouteRecordRaw> = [
           }
 
         ]
+      }
+    ]
+  },
+  {
+    path: '/' + ERouterName.BAMBI,
+    name: ERouterName.BAMBI,
+    component: () => import('/@/pages/page-web/bambi/bambi.vue'),
+    redirect: '/' + ERouterName.BAMBIHOME,
+    children: [
+      {
+        path: '/' + ERouterName.BAMBIHOME,
+        component: () => import('/@/pages/page-web/bambi/bambiHome.vue')
       }
     ]
   },

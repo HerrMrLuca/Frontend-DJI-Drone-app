@@ -62,7 +62,7 @@ onMounted(() => {
 }
 
 .header {
-  background-color: black;
+  background-color: #77c580;
   color: white;
   height: 60px;
   font-size: 15px;

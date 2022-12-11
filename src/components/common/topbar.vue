@@ -1,7 +1,7 @@
 <template>
   <div class="width-100 flex-row flex-justify-between flex-align-center" style="height: 60px;">
     <div class="height-100">
-      <a-avatar :size="40" shape="square" :src="cloudapi" />
+      <a-avatar :size="50" shape="square" :src="bambi" />
       <span class="ml10 fontBold">{{ workspaceName }}</span>
     </div>
 
@@ -13,7 +13,7 @@
         :class="{
             'menu-item': true,
         }">
-          <span @click="selectedRoute(item.path)" :style="selected === item.path ? 'color: #2d8cf0;' : 'color: white'">{{ item.label }}</span>
+          <span @click="selectedRoute(item.path)" :style="selected === item.path ? 'color: #002F00;' : 'color: white'">{{ item.label }}</span>
         </router-link>
     </a-space>
 
@@ -43,7 +43,7 @@ import { getRoot } from '/@/root'
 import { getPlatformInfo } from '/@/api/manage'
 import { ELocalStorageKey, ERouterName } from '/@/types'
 import { UserOutlined, ExportOutlined } from '@ant-design/icons-vue'
-import cloudapi from '/@/assets/icons/cloudapi.png'
+import bambi from '/@/assets/icons/bambi.png'
 
 const root = getRoot()
 
@@ -63,7 +63,8 @@ const workspaceName = ref('')
 const options = [
   { key: 0, label: ERouterName.WORKSPACE.charAt(0).toUpperCase() + ERouterName.WORKSPACE.substr(1), path: '/' + ERouterName.WORKSPACE },
   { key: 1, label: ERouterName.MEMBERS.charAt(0).toUpperCase() + ERouterName.MEMBERS.substr(1), path: '/' + ERouterName.MEMBERS },
-  { key: 2, label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1), path: '/' + ERouterName.DEVICES }
+  { key: 2, label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1), path: '/' + ERouterName.DEVICES },
+  { key: 3, label: ERouterName.BAMBI.charAt(0).toUpperCase() + ERouterName.BAMBI.substr(1), path: '/' + ERouterName.BAMBI }
 ]
 
 const selected = ref<string>(root.$route.path)
