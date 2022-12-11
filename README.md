@@ -42,7 +42,7 @@ sudo service redis-server start
 Workbench Startup/Shutdown
 Start Server
 
-#Exit
+# Exit
 ### Vite
 strg + C
 
