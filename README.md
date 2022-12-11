@@ -21,3 +21,37 @@ agoraToken: 007eJxTYNhnLnNnytcV/Grmb5an3T1kKr2Nz7+clSdo/SXB/mS3o3YKDBaGhqaGyWmG5
 
 agoraChannel: bambidrone
 
+
+
+# Start
+
+### Vite
+npm run server
+
+IP in confic.ts eintragen
+IP in application.yml eintragen
+
+### EMQX
+./bin/emqx start
+
+### Redis
+wsl -u root
+sudo service redis-server start
+
+### MYSQL
+Workbench Startup/Shutdown
+Start Server
+
+#Exit
+### Vite
+strg + C
+
+### EMQX
+./bin/emqx stop
+
+### Redis
+exit
+
+### MYSQL
+Workbench Startup/Shutdown
+Stop Server
