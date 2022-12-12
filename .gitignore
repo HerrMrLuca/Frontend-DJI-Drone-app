@@ -106,3 +106,4 @@ dist
 
 # own ignores
 src/api/http/config.ts
+src/api/http/config.ts

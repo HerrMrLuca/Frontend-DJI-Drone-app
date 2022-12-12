@@ -6,6 +6,7 @@ export const CURRENT_CONFIG = {
   appLicense: 'hxv4Wi1BtG0/0ZUIgi7gTYPO+yJzy+RC6NXYEyKemq3pOSAWEbs4UzcQ8edMNIRmQ/C8YIOOW0PdP00M2cMn2F0kElayYNS1jZebPBjXur75WUnjbTE+KePwpWLTOL56CfgkOSA++NgV8brFV+krL7i4tiTJ8hN7JA178UoUtj4=', // You need to go to the development website to apply.
 
   // http
+  //TODO change IP
   baseURL: 'http://10.29.18.198:6789/', // This url must end with "/". Example: 'http://192.168.1.1:6789/'
   websocketURL: 'ws://10.29.18.198:6789/api/v1/ws', // Example: 'ws://192.168.1.1:6789/api/v1/ws'
 
