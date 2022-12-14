@@ -102,14 +102,18 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/' + ERouterName.BAMBI,
-    name: ERouterName.BAMBI,
-    component: () => import('/@/pages/page-web/bambi/bambi.vue'),
-    redirect: '/' + ERouterName.BAMBIHOME,
+    path: '/' + ERouterName.BAMBIWORKSPACE,
+    name: ERouterName.BAMBIWORKSPACE,
+    component: () => import('/@/pages/page-web/bambi/bambi-workspace.vue'),
+    redirect: '/' + ERouterName.BAMBI,
     children: [
       {
-        path: '/' + ERouterName.BAMBIHOME,
-        component: () => import('/@/pages/page-web/bambi/bambiHome.vue')
+        path: '/' + ERouterName.BAMBI,
+        component: () => import('/@/pages/page-web/bambi/bambi.vue')
+      },
+      {
+        path: '/' + ERouterName.MAP,
+        component: () => import('/@/pages/page-web/bambi/map.vue')
       }
     ]
   },

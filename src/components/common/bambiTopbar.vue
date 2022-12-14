@@ -42,7 +42,9 @@ interface IOptions {
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
 const workspaceName = ref('')
 const options = [
-  { key: 0, label: ERouterName.HOME.charAt(0).toUpperCase() + ERouterName.HOME.substr(1), path: '/' + ERouterName.BAMBIHOME }
+  { key: 0, label: ERouterName.HOME.charAt(0).toUpperCase() + ERouterName.HOME.substr(1), path: '/' + ERouterName.BAMBI },
+  { key: 1, label: ERouterName.MAP.charAt(0).toUpperCase() + ERouterName.MAP.substr(1), path: '/' + ERouterName.MAP },
+  { key: 2, label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1), path: '/' + ERouterName.DEVICES }
 ]
 
 const selected = ref<string>(root.$route.path)
