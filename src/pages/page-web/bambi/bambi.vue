@@ -84,92 +84,10 @@
       </template>
 
     </a-table>
-    <a-modal v-model:visible="deleteTip" width="450px" :closable="false" centered :okButtonProps="{ danger: true }" @ok="unbind">
-      <p class="pt10 pl20" style="height: 50px;">Delete device from workspace?</p>
-      <template #title>
-        <div class="flex-row flex-justify-center">
-          <span>Delete devices</span>
-        </div>
-      </template>
-    </a-modal>
-
-    <!-- 设备升级 -->
-    <DeviceFirmwareUpgradeModal title="设备升级"
-                                v-model:visible="deviceFirmwareUpgradeModalVisible"
-                                :device="selectedDevice"
-                                @ok="onUpgradeDeviceOk"
-    ></DeviceFirmwareUpgradeModal>
-
-    <!-- 设备日志上传记录 -->
-    <DeviceLogUploadRecordDrawer
-        v-model:visible="deviceLogUploadRecordVisible"
-        :device="currentDevice"
-    ></DeviceLogUploadRecordDrawer>
-
-    <!-- hms 信息 -->
-    <DeviceHmsDrawer
-        v-model:visible="hmsVisible2"
-        :device="currentDevice">
-    </DeviceHmsDrawer>
     <div>
-      <a-collapse :bordered="false" expandIconPosition="right" accordion style="background: #232323;">
-        <a-collapse-panel :key="EDeviceTypeName.Aircraft" header="Online Devices" style="border-bottom: 1px solid #4f4f4f;">
-          <div v-if="onlineDevices.data.length === 0" style="height: 150px; color: white;">
-            <a-empty :image="noData" :image-style="{ height: '60px' }" />
-          </div>
-          <div v-else class="fz12" style="color: white;">
-            <div v-for="device in onlineDevices.data" :key="device.sn" style="background: #3c3c3c; height: 90px; width: 250px; margin-bottom: 10px;">
-              <div class="battery-slide" v-if="deviceInfo[device.sn]">
-                <div style="background: #535759; width: 100%;"></div>
-                <div class="capacity-percent" :style="{ width: deviceInfo[device.sn].battery.capacity_percent + '%'}"></div>
-                <div class="return-home" :style="{ width: deviceInfo[device.sn].battery.return_home_power + '%'}"></div>
-                <div class="landing" :style="{ width: deviceInfo[device.sn].battery.landing_power + '%'}"></div>
-                <div class="battery" :style="{ left: deviceInfo[device.sn].battery.capacity_percent + '%' }"></div>
-              </div>
-              <div style="border-bottom: 1px solid #515151; border-radius: 2px; height: 50px; width: 100%;" class="flex-row flex-justify-between flex-align-center">
-                <div style="float: left; padding: 5px 5px 8px 8px; width: 88%">
-                  <div style="width: 100%; height: 100%;">
-                    <a-tooltip>
-                      <template #title>{{ device.model }} - {{ device.callsign }}</template>
-                      <span class="text-hidden" style="max-width: 200px; display: block; height: 20px;">{{ device.model }} - {{ device.callsign }}</span>
-                    </a-tooltip>
-                  </div>
-                  <div class="mt5" style="background: #595959;">
-                    <span class="ml5 mr5"><RocketOutlined /></span>
-                    <span class="font-bold" :style="deviceInfo[device.sn] && deviceInfo[device.sn].mode_code !== EModeCode.Disconnected ? 'color: #00ee8b' :  'color: red;'">
-                      {{ deviceInfo[device.sn] ? EModeCode[deviceInfo[device.sn].mode_code] : EModeCode[EModeCode.Disconnected] }}
-                    </span>
-                  </div>
-                </div>
-                <div style="float: right; background: #595959; height: 50px; width: 40px;" class="flex-row flex-justify-center flex-align-center">
-                  <div class="fz16" @click="switchVisible($event, device, false, deviceInfo[device.sn] && deviceInfo[device.sn].mode_code !== EModeCode.Disconnected)">
-                    <a v-if="osdVisible.sn === device.sn && osdVisible.visible"><EyeOutlined /></a>
-                    <a v-else><EyeInvisibleOutlined /></a>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-row flex-justify-center flex-align-center" style="height: 40px;">
-                <div style="height: 20px; background: #595959; width: 94%;" >
-                  <span class="mr5"><a-image style="margin-left: 2px; margin-top: -2px; height: 20px; width: 20px;" :src="rc" /></span>
-                  <a-tooltip>
-                    <template #title>{{ device.gateway.callsign }} </template>
-                    <span>{{ device.gateway.callsign }}</span>
-                  </a-tooltip>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <button @click="printData">
-              Print data
-            </button>
-          </div>
-        </a-collapse-panel>
-      </a-collapse>
-      <div id="map">
-        <!--In the following div the HERE Map will render-->
-        <div id="mapContainer" style="height:600px;width:100%" ref="hereMap"></div>
-      </div>
+      <button @click="printData">
+        Print data
+      </button>
     </div>
   </div>
 </template>
@@ -566,11 +484,14 @@ function getOnlineTopo () {
 }
 
 function switchVisible (e: any, device: OnlineDevice, isDock: boolean, isClick: boolean) {
+  console.log('switchVisibel')
   if (!isClick) {
+    console.log('not-allowed')
     e.target.style.cursor = 'not-allowed'
     return
   }
   if (device.sn === osdVisible.value.sn) {
+    console.log(!osdVisible.value.visible)
     osdVisible.value.visible = !osdVisible.value.visible
   } else {
     osdVisible.value.sn = device.sn
@@ -622,21 +543,26 @@ function readHms (visiable: boolean, sn: string) {
 
 function printData () {
   let str = 'Data: \n'
-  console.log(onlineDevices.data.length)
   str += 'lat:'
-  str += deviceInfo.value[0].latitude
+  str += deviceInfo.value[onlineDevices.data[0].sn].latitude
   str += '\nlong:'
-  str += deviceInfo.value[0].longitude
+  str += deviceInfo.value[onlineDevices.data[0].sn].longitude
   str += '\nv-speed:'
-  str += deviceInfo.value[0].vertical_speed
+  str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
   str += '\nh-speed:'
-  str += deviceInfo.value[0].horizontal_speed
+  str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
   str += '\nelevation:'
-  str += deviceInfo.value[0].elevation
+  str += deviceInfo.value[onlineDevices.data[0].sn].elevation
   str += '\nheight:'
-  str += deviceInfo.value[0].height
-  str += '\nbattery:'
-  str += deviceInfo.value[0].battery.capacity_percent
+  str += deviceInfo.value[onlineDevices.data[0].sn].height
+  str += '\nmode_code:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
+  str += '\nattitude_head:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+  str += '\nattitude_roll:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
+  str += '\nattitude_pitch:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
   console.log(str)
 }
 </script>

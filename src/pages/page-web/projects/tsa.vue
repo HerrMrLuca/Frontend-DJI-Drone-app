@@ -32,14 +32,14 @@
                     </div>
                     <div class="mr5 flex-align-center flex-row" style="width: 85px; margin-right: 0; height: 18px;">
                       <div v-if="hmsInfo[dock.gateway.sn]" class="flex-align-center flex-row">
-                          <div :class="hmsInfo[dock.gateway.sn][0].level === EHmsLevel.CAUTION ? 'caution-blink' :
+                        <div :class="hmsInfo[dock.gateway.sn][0].level === EHmsLevel.CAUTION ? 'caution-blink' :
                             hmsInfo[dock.gateway.sn][0].level === EHmsLevel.WARN ? 'warn-blink' : 'notice-blink'" style="width: 18px; height: 16px; text-align: center;">
-                            <span :style="hmsInfo[dock.gateway.sn].length > 99 ? 'font-size: 11px' : 'font-size: 12px'">{{ hmsInfo[dock.gateway.sn].length }}</span>
-                            <span class="fz10">{{ hmsInfo[dock.gateway.sn].length > 99 ? '+' : ''}}</span>
-                          </div>
+                          <span :style="hmsInfo[dock.gateway.sn].length > 99 ? 'font-size: 11px' : 'font-size: 12px'">{{ hmsInfo[dock.gateway.sn].length }}</span>
+                          <span class="fz10">{{ hmsInfo[dock.gateway.sn].length > 99 ? '+' : ''}}</span>
+                        </div>
                         <a-popover trigger="click" placement="bottom" color="black" v-model:visible="hmsVisible[dock.gateway.sn]"
-                          @visibleChange="readHms(hmsVisible[dock.gateway.sn], dock.gateway.sn)"
-                          :overlayStyle="{width: '200px', height: '300px'}">
+                                   @visibleChange="readHms(hmsVisible[dock.gateway.sn], dock.gateway.sn)"
+                                   :overlayStyle="{width: '200px', height: '300px'}">
                           <div :class="hmsInfo[dock.gateway.sn][0].level === EHmsLevel.CAUTION ? 'caution' :
                             hmsInfo[dock.gateway.sn][0].level === EHmsLevel.WARN ? 'warn' : 'notice'" style="margin-left: 3px; width: 62px; height: 16px;">
                             <span class="word-loop">{{ hmsInfo[dock.gateway.sn][0].message_en }}</span>
@@ -47,16 +47,16 @@
                           <template #content>
                             <a-collapse style="background: black; height: 300px; overflow-y: auto;" :bordered="false" expand-icon-position="right" :accordion="true">
                               <a-collapse-panel v-for="hms in hmsInfo[dock.gateway.sn]" :key="hms.hms_id" :showArrow="false"
-                                style=" margin: 0 auto 3px auto; border: 0; width: 140px; border-radius: 3px"
-                                :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
-                                >
+                                                style=" margin: 0 auto 3px auto; border: 0; width: 140px; border-radius: 3px"
+                                                :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
+                              >
                                 <template #header="{ isActive }">
                                   <div class="flex-row flex-align-center" style="width: 130px;">
                                     <div style="width: 110px;">
                                       <span class="word-loop">{{ hms.message_en }}</span>
                                     </div>
                                     <div style="width: 20px; height: 15px; font-size: 10px; z-index: 2 " class="flex-row flex-align-center flex-justify-center"
-                                      :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
+                                         :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
                                     >
                                       <DoubleRightOutlined :rotate="isActive ? 90 : 0" />
                                     </div>
@@ -89,7 +89,7 @@
                           <span class="fz10">{{ hmsInfo[dock.sn].length > 99 ? '+' : ''}}</span>
                         </div>
                         <a-popover trigger="click" placement="bottom" color="black" v-model:visible="hmsVisible[dock.sn]" @visibleChange="readHms(hmsVisible[dock.sn], dock.sn)"
-                          :overlayStyle="{width: '200px', height: '300px'}">
+                                   :overlayStyle="{width: '200px', height: '300px'}">
                           <div :class="hmsInfo[dock.sn][0].level === EHmsLevel.CAUTION ? 'caution' :
                             hmsInfo[dock.sn][0].level === EHmsLevel.WARN ? 'warn' : 'notice'" style="margin-left: 3px; width: 62px; height: 16px;">
                             <span class="word-loop">{{ hmsInfo[dock.sn][0].message_en }}</span>
@@ -97,16 +97,16 @@
                           <template #content>
                             <a-collapse style="background: black; height: 300px; overflow-y: auto;" :bordered="false" expand-icon-position="right" :accordion="true">
                               <a-collapse-panel v-for="hms in hmsInfo[dock.sn]" :key="hms.hms_id" :showArrow="false"
-                                style=" margin: 0 auto 3px auto; border: 0; width: 140px; border-radius: 3px"
-                                :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
-                                >
+                                                style=" margin: 0 auto 3px auto; border: 0; width: 140px; border-radius: 3px"
+                                                :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
+                              >
                                 <template #header="{ isActive }">
                                   <div class="flex-row flex-align-center" style="width: 130px;">
                                     <div style="width: 110px;">
                                       <span class="word-loop">{{ hms.message_en }}</span>
                                     </div>
                                     <div style="width: 20px; height: 15px; font-size: 10px; z-index: 2 " class="flex-row flex-align-center flex-justify-center"
-                                      :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
+                                         :class="hms.level === EHmsLevel.CAUTION ? 'caution' : hms.level === EHmsLevel.WARN ? 'warn' : 'notice'"
                                     >
                                       <DoubleRightOutlined :rotate="isActive ? 90 : 0" />
                                     </div>

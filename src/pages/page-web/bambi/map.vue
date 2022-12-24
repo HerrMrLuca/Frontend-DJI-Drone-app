@@ -1,84 +1,49 @@
 <template>
+  <link rel="stylesheet" href="/../node_modules/leaflet/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+        crossorigin=""/>
   <div id="app">
-    <HereMap  :center="center" />
+    <div id="map">
+
+    </div>
   </div>
 </template>
 <script lang="ts">
-import 'https://js.api.here.com/v3/3.1/mapsjs-core.js'
-import 'https://js.api.here.com/v3/3.1/mapsjs-service.js'
-import 'https://js.api.here.com/v3/3.1/mapsjs-mapevents.js'
-import 'https://js.api.here.com/v3/3.1/mapsjs-ui.js'
-import 'https://js.api.here.com/v3/3.1/mapsjs-clustering.js'
-import 'https://js.api.here.com/v3/3.1/mapsjs-data.js'
-import HereMap from '/@/components/common/hereMap.vue'
 import { computed } from 'vue'
 import { useMyStore } from '/@/store'
+import 'leaflet/dist/leaflet.css'
+import * as Maps from 'leaflet/dist/leaflet.js'
 
+const L = Maps.L
+
+const droneIcon = L.icon({
+  iconUrl: '/drone.png',
+
+  iconSize: [38, 20], // size of the icon
+  iconAnchor: [22, 20], // point of the icon which will correspond to marker's location
+  popupAnchor: [-3, -20] // point from which the popup should open relative to the iconAnchor
+})
+
+export default {
+  name: 'map',
+  mounted () {
+    this.map = L.map('map').setView([51.505, -0.09], 13)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(this.map)
+    L.marker([51.5, -0.09], { icon: droneIcon }).addTo(this.map)
+  },
+}
 const store = useMyStore()
 const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
 
-console.log(deviceInfo.value[0].latitude + ' + ' + deviceInfo.value[0].longitude)
-
-export default {
-  name: 'app',
-  components: {
-    HereMap
-  },
-  data () {
-    return {
-      // we are this as prop to the HereMap component
-      center: {
-        lat: deviceInfo.value[0].latitude,
-        lng: deviceInfo.value[0].longitude
-      }
-    }
-  }
-}
 </script>
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';
 @import '/@/styles/bambi.scss';
+@import '/@/../node_modules/leaflet/dist/leaflet.css';
 
-.project-app-wrapper {
-  display: flex;
-  transition: width 0.2s ease;
-  height: 100%;
-  width: 100%;
-
-  .left {
-    display: flex;
-    width: 335px;
-    flex: 0 0 335px;
-    background-color: #232323;
-
-    .main-content {
-      flex: 1;
-      color: $text-white-basic;
-    }
+  #map {
+    height: 180px;
   }
-
-  .right {
-    flex-grow: 1;
-    position: relative;
-
-    .map-wrapper{
-      width: 100%;
-      height: 100%;
-    }
-
-    .media-wrapper,
-    .task-wrapper {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: #f6f8fa;
-    }
-  }
-  a-layout-header {
-    background: #00ee8b !important;
-  }
-}
 </style>

@@ -1,0 +1,13 @@
+/**
+ * 下载文件
+ * @param data
+ * @param fileName
+ */
+export function downloadFile (data, fileName) {
+  const lable = document.createElement('a')
+  lable.href = window.URL.createObjectURL(data)
+  lable.download = fileName
+  lable.click()
+  URL.revokeObjectURL(lable.href)
+}
+// # sourceMappingURL=common.js.map
