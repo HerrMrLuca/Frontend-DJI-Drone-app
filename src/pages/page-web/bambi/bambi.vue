@@ -7,14 +7,6 @@
       </my-map>
     </div>
     <div>
-      <livestream>
-
-      </livestream>
-    </div>
-    <div>
-      <button @click="printData">
-        Print data
-      </button>
     </div>
   </div>
 </template>
@@ -51,6 +43,7 @@ import { EHmsLevel } from '/@/types/enums'
 import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
 import MyMap from '/@/pages/page-web/bambi/map.vue'
 import Livestream from '/@/pages/page-web/bambi/livestream.vue'
+import Agora from '/@/pages/page-web/bambi/agora.vue'
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))

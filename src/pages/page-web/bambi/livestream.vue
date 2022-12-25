@@ -13,14 +13,16 @@
       class="mt10"
       type="primary"
       @click="selectLivestream(item.routeName)"
-      >{{ item.label }}</a-button
-    >
+      >{{ item.label }}</a-button>
     </router-link>
   </div>
   <div class="live" v-if="showLive">
     <a style="position: absolute; right: 10px; top: 10px; font-size: 16px; color: white;" @click="() => root.$router.push('/' + ERouterName.LIVESTREAM)"><CloseOutlined /></a>
     <router-view :name="routeName" />
   </div>
+  <agora>
+
+  </agora>
 </template>
 
 <script lang="ts" setup>
@@ -29,12 +31,14 @@ import { onMounted, ref, watch } from 'vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { getRoot } from '/@/root'
 import { ERouterName } from '/@/types'
+import Agora from '/@/pages/page-web/bambi/agora.vue'
 const root = getRoot()
 const routeName = ref<string>()
 const showLive = ref<boolean>(false)
 
 const options = [
-  { key: 0, label: 'Agora Live', path: '/' + ERouterName.LIVESTREAM + '/' + ERouterName.LIVING, routeName: 'LiveAgora' }
+  { key: 0, label: 'Agora Live', path: '/' + ERouterName.LIVESTREAM + '/' + ERouterName.LIVING, routeName: 'LiveAgora' },
+  { key: 1, label: 'RTMP', path: '/' + ERouterName.LIVESTREAM + '/' + ERouterName.LIVING, routeName: 'LiveOthers' }
 ]
 
 const selectLivestream = (route: string) => {
