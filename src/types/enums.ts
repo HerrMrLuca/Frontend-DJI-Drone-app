@@ -2,7 +2,10 @@ export enum ERouterName {
     ELEMENT = 'element',
     PROJECT = 'project',
     HOME = 'home',
+    BAMBI = 'bambi',
     TSA = 'tsa',
+    BAMBIWORKSPACE = 'bambi-workspace',
+    MAP = 'map',
     LAYER = 'layer',
     MEDIA = 'media',
     WAYLINE = 'wayline',
@@ -90,7 +93,7 @@ export enum EBizCode {
     MapElementDelete = 'map_element_delete',
     DeviceOnline = 'device_online',
     DeviceOffline = 'device_offline',
-    FlightTaskProgress = 'flighttask_progress',
+    FlightTaskProgress = 'flighttask_progress', // 机场任务执行进度
     DeviceHms = 'device_hms',
 
     // 设备指令

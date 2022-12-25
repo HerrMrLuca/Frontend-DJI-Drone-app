@@ -1,20 +1,25 @@
 <template>
   <a-layout class="width-100 flex-display" style="height: 100vh">
-    <header class="header">
-      <Topbar />
-    </header>
+    <a-layout-header class="header">
+      <bambi-topbar />
+    </a-layout-header>
     <a-layout-content>
       <router-view />
     </a-layout-content>
+
   </a-layout>
 </template>
 <script lang="ts" setup>
-import Topbar from '/@/components/common/bambiTopbar.vue'
+
+import Sidebar from '/@/components/common/sidebar.vue'
+import MediaPanel from '/@/components/MediaPanel.vue'
+import TaskPanel from '/@/components/TaskPanel.vue'
+import GMap from '/@/components/GMap.vue'
 import { EBizCode, ERouterName } from '/@/types'
 import { getRoot } from '/@/root'
 import { useMyStore } from '/@/store'
 import { useConnectWebSocket } from '/@/hooks/use-connect-websocket'
-import EventBus from '/@/event-bus'
+import BambiTopbar from '/@/components/common/bambiTopbar.vue'
 
 const root = getRoot()
 const store = useMyStore()
@@ -58,7 +63,7 @@ const messageHandler = async (payload: any) => {
       break
     }
     case EBizCode.FlightTaskProgress: {
-      EventBus.emit('deviceTaskProgress', payload)
+      store.commit('SET_FLIGHT_TASK_PROGRESS', payload.data)
       break
     }
     case EBizCode.DeviceHms: {
@@ -94,50 +99,53 @@ useConnectWebSocket(messageHandler)
 
 </script>
 <style lang="scss" scoped>
-@import "https://js.api.here.com/v3/3.1/mapsjs-ui.css";
 @import '/@/styles/index.scss';
-@import '/@/styles/bambi.scss';
 
 .project-app-wrapper {
   display: flex;
+  position: absolute;
   transition: width 0.2s ease;
   height: 100%;
   width: 100%;
-
   .left {
+    width: 400px;
     display: flex;
-    width: 335px;
-    flex: 0 0 335px;
     background-color: #232323;
-
-    .main-content {
-      flex: 1;
-      color: $text-white-basic;
-    }
+    float: left;
   }
-
   .right {
-    flex-grow: 1;
-    position: relative;
-
-    .map-wrapper{
+    width: 100%;
+    height: 100%;
+    .map-wrapper {
       width: 100%;
       height: 100%;
     }
-
-    .media-wrapper,
-    .task-wrapper {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: #f6f8fa;
-    }
   }
-  a-layout-header {
-    background: #00ee8b !important;
+  .main-content {
+    flex: 1;
+    color: $text-white-basic;
   }
+  .media-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    background: #f6f8fa;
+  }
+  .wayline-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    background: #f6f8fa;
+    padding: 16px;
+  }
+}
+.header {
+  background-color: #77c580;
+  color: white;
+  height: 60px;
+  font-size: 15px;
+  padding: 0 20px;
 }
 </style>

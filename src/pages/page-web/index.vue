@@ -1,41 +1,41 @@
 <template>
   <div
-    class="login flex-column flex-justify-center flex-align-center m0 b0">
+      class="login flex-column flex-justify-center flex-align-center m0 b0">
     <a-image
-      style="width: 17vw; height: 10vw; margin-bottom: 50px"
-      :src="djiLogo"
+        style="width: 15vw; height: 15vw; margin-bottom: 30px"
+        :src="bambi"
     />
-    <p class="fz35 pb50" style="color: #2d8cf0">Cloud API Demo</p>
+    <p class="fz35 pb50" style="color: #78C480">Bambi</p>
     <a-form
-      layout="inline"
-      :model="formState"
-      class="flex-row flex-justify-center flex-align-center"
+        layout="inline"
+        :model="formState"
+        class="flex-row flex-justify-center flex-align-center"
     >
       <a-form-item>
         <a-input v-model:value="formState.username" placeholder="Username">
           <template #prefix
-            ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
+          ><UserOutlined style="color: rgba(120, 196, 128, 0.25)"
           /></template>
         </a-input>
       </a-form-item>
       <a-form-item>
         <a-input
-          v-model:value="formState.password"
-          type="password"
-          placeholder="Password"
+            v-model:value="formState.password"
+            type="password"
+            placeholder="Password"
         >
           <template #prefix
-            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+          ><LockOutlined style="color: rgba(120, 196, 128, 0.25"
           /></template>
         </a-input>
       </a-form-item>
       <a-form-item>
         <a-button
-          class="m0"
-          type="primary"
-          html-type="submit"
-          :disabled="loginBtnDisabled"
-          @click="onSubmit"
+            class="m0"
+            type="primary"
+            html-type="submit"
+            :disabled="loginBtnDisabled"
+            @click="onSubmit"
         >
           Login
         </a-button>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import djiLogo from '/@/assets/icons/dji_logo.png'
+import bambi from '../../assets/icons/bambi.png'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { reactive, computed, UnwrapRef } from 'vue'
@@ -86,7 +86,7 @@ const onSubmit = async (e: any) => {
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';
 .login {
-  background-color: $dark-highlight;
+  background-color: white;
   height: 100vh;
 }
 </style>

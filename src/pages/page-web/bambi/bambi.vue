@@ -1,89 +1,16 @@
 
 <template>
+  <div>
+    <div>
+      <my-map>
 
-  <a-menu v-model:selectedKeys="current" mode="horizontal" @select="select">
-    <a-menu-item :key="EDeviceTypeName.Aircraft" class="ml20">
-      Aircraft
-    </a-menu-item>
-    <a-menu-item :key="EDeviceTypeName.Dock">
-      Dock
-    </a-menu-item>
-  </a-menu>
-  <div class="device-table-wrap table flex-display flex-column">
-    <a-table :columns="columns" :data-source="data.device" :pagination="paginationProp" @change="refreshData" row-key="device_sn" :expandedRowKeys="expandRows"
-             :row-selection="rowSelection" :rowClassName="rowClassName" :scroll="{ x: '100%', y: 600 }"
-             :expandIcon="expandIcon" :loading="loading">
-      <template v-for="col in ['nickname']" #[col]="{ text, record }" :key="col">
-        <div>
-          <a-input
-              v-if="editableData[record.device_sn]"
-              v-model:value="editableData[record.device_sn][col]"
-              style="margin: -5px 0"
-          />
-          <template v-else>
-            {{ text }}
-          </template>
-        </div>
-      </template>
-      <template v-for="col in ['sn', 'workspace']" #[col]="{ text }" :key="col">
-        <a-tooltip :title="text">
-          <span>{{ text }}</span>
-        </a-tooltip>
-      </template>
-      <!-- 固件版本 -->
-      <template #firmware_version="{ record }">
-        <span v-if="judgeCurrentType(EDeviceTypeName.Dock)">
-          <DeviceFirmwareUpgrade :device="record"
-                                 class="table-flex-col"
-                                 @device-upgrade="onDeviceUpgrade"
-          />
-        </span>
-        <span v-else>
-          {{ record.firmware_version }}
-        </span>
-      </template>
-      <!-- 状态 -->
-      <template #status="{ text }">
-        <span v-if="text" class="flex-row flex-align-center">
-            <span class="mr5" style="width: 12px; height: 12px; border-radius: 50%; background-color: green;" />
-            <span>Online</span>
-        </span>
-        <span class="flex-row flex-align-center" v-else>
-            <span class="mr5" style="width: 12px; height: 12px; border-radius: 50%; background-color: red;" />
-            <span>Offline</span>
-        </span>
-      </template>
-      <!-- 操作 -->
-      <template #action="{ record }">
-        <div class="editable-row-operations">
-          <!-- 编辑态操作 -->
-          <div v-if="editableData[record.device_sn]">
-            <a-tooltip title="Confirm changes">
-              <span @click="save(record)" style="color: #28d445;"><CheckOutlined /></span>
-            </a-tooltip>
-            <a-tooltip title="Modification canceled">
-              <span @click="() => delete editableData[record.device_sn]" style="color: #e70102;"><CloseOutlined /></span>
-            </a-tooltip>
-          </div>
-          <!-- 非编辑态操作 -->
-          <div v-else class="flex-align-center flex-row" style="color: #2d8cf0">
-            <a-tooltip v-if="current.indexOf(EDeviceTypeName.Dock) !== -1" title="设备日志">
-              <CloudServerOutlined @click="showDeviceLogUploadRecord(record)"/>
-            </a-tooltip>
-            <a-tooltip v-if="current.indexOf(EDeviceTypeName.Dock) !== -1" title="Hms Info">
-              <FileSearchOutlined @click="showHms(record)"/>
-            </a-tooltip>
-            <a-tooltip title="Edit">
-              <EditOutlined @click="edit(record)"/>
-            </a-tooltip>
-            <a-tooltip title="Delete">
-              <DeleteOutlined @click="() => { deleteTip = true, deleteSn = record.device_sn }"/>
-            </a-tooltip>
-          </div>
-        </div>
-      </template>
+      </my-map>
+    </div>
+    <div>
+      <livestream>
 
-    </a-table>
+      </livestream>
+    </div>
     <div>
       <button @click="printData">
         Print data
@@ -122,6 +49,8 @@ import { useMyStore } from '/@/store'
 import { useMyFakeStore } from '/@/store/fakestore.ts'
 import { EHmsLevel } from '/@/types/enums'
 import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
+import MyMap from '/@/pages/page-web/bambi/map.vue'
+import Livestream from '/@/pages/page-web/bambi/livestream.vue'
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -540,31 +469,31 @@ function readHms (visiable: boolean, sn: string) {
     })
   }
 }
-
-function printData () {
-  let str = 'Data: \n'
-  str += 'lat:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].latitude
-  str += '\nlong:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].longitude
-  str += '\nv-speed:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
-  str += '\nh-speed:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
-  str += '\nelevation:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].elevation
-  str += '\nheight:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].height
-  str += '\nmode_code:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
-  str += '\nattitude_head:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
-  str += '\nattitude_roll:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
-  str += '\nattitude_pitch:'
-  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
-  console.log(str)
-}
+//
+// function printData () {
+//   let str = 'Data: \n'
+//   str += 'lat:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].latitude
+//   str += '\nlong:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].longitude
+//   str += '\nv-speed:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
+//   str += '\nh-speed:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
+//   str += '\nelevation:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].elevation
+//   str += '\nheight:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].height
+//   str += '\nmode_code:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
+//   str += '\nattitude_head:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+//   str += '\nattitude_roll:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
+//   str += '\nattitude_pitch:'
+//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
+//   console.log(str)
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -625,4 +554,5 @@ th.ant-table-selection-column {
   cursor: pointer;
   overflow: hidden;
 }
+
 </style>

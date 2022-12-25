@@ -4,6 +4,7 @@ import CreatePlan from '../pages/page-web/projects/create-plan.vue'
 import WaylinePanel from '/@/pages/page-web/projects/wayline.vue'
 import DockPanel from '/@/pages/page-web/projects/dock.vue'
 import LiveAgora from '/@/components/livestream-agora.vue'
+import Agora from '/@/pages/page-web/bambi/agora.vue'
 import LiveOthers from '/@/components/livestream-others.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -32,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/' + ERouterName.DEVICES,
         name: ERouterName.DEVICES,
         component: () => import('/@/pages/page-web/projects/devices.vue')
+      },
+      {
+        path: '/' + ERouterName.BAMBIWORKSPACE,
+        name: ERouterName.BAMBIWORKSPACE,
+        component: () => import('/@/pages/page-web/bambi/bambi-workspace.vue')
       }
     ]
   },
@@ -97,6 +103,36 @@ const routes: Array<RouteRecordRaw> = [
             ]
           }
 
+        ]
+      }
+    ]
+  },
+  {
+    path: '/' + ERouterName.BAMBIWORKSPACE,
+    name: ERouterName.BAMBIWORKSPACE,
+    component: () => import('/@/pages/page-web/bambi/bambi-workspace.vue'),
+    redirect: '/' + ERouterName.BAMBI,
+    children: [
+      {
+        path: '/' + ERouterName.BAMBI,
+        component: () => import('/@/pages/page-web/bambi/bambi.vue')
+      },
+      {
+        path: '/' + ERouterName.MAP,
+        component: () => import('/@/pages/page-web/bambi/map.vue')
+      },
+      {
+        path: '/' + ERouterName.LIVESTREAM,
+        name: ERouterName.LIVESTREAM,
+        component: () => import('/@/pages/page-web/bambi/livestream.vue'),
+        children: [
+          {
+            path: ERouterName.LIVING,
+            name: ERouterName.LIVING,
+            components: {
+              Agora
+            }
+          }
         ]
       }
     ]

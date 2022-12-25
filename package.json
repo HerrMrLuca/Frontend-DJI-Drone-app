@@ -15,6 +15,7 @@
     "agora-rtc-sdk-ng": "^4.12.1",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.1",
+    "leaflet": "^1.9.3",
     "mitt": "^3.0.0",
     "query-string": "^7.0.1",
     "reconnecting-websocket": "^4.4.0",
@@ -30,6 +31,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.0",
     "@types/node": "^16.3.2",
     "@types/urlencode": "^1.1.2",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
@@ -95,6 +97,8 @@
         "ant-design-vue/es/tooltip/style/css",
         "ant-design-vue/es/tree/style/css",
         "axios",
+        "leaflet",
+        "leaflet/dist/leaflet.js",
         "mitt",
         "moment",
         "reconnecting-websocket",
