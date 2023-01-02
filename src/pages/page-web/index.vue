@@ -1,41 +1,44 @@
 <template>
   <div
-    class="login flex-column flex-justify-center flex-align-center m0 b0">
-    <a-image
-      style="width: 17vw; height: 10vw; margin-bottom: 50px"
-      :src="djiLogo"
+      class="login flex-column flex-justify-center flex-align-center m0 b0">
+    <img
+        :src="bambiLogo"
     />
-    <p class="fz35 pb50" style="color: #2d8cf0">Cloud API Demo</p>
+    <p class="fz35 pb60 title">Bambi</p>
     <a-form
-      layout="inline"
-      :model="formState"
-      class="flex-row flex-justify-center flex-align-center"
+        layout="inline"
+        :model="formState"
+        class="flex-display flex-align-stretch flex-row flex-justify-center flex-align-center"
     >
-      <a-form-item>
+      <a-form-item class="name">
         <a-input v-model:value="formState.username" placeholder="Username">
           <template #prefix
-            ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          >
+            <UserOutlined style="color: rgba(0, 0, 0, 0.25)"
+            />
+          </template>
         </a-input>
       </a-form-item>
-      <a-form-item>
+      <a-form-item class="password">
         <a-input
-          v-model:value="formState.password"
-          type="password"
-          placeholder="Password"
+            v-model:value="formState.password"
+            type="password"
+            placeholder="Password"
         >
           <template #prefix
-            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          >
+            <LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+            />
+          </template>
         </a-input>
       </a-form-item>
-      <a-form-item>
+      <a-form-item class="login-button">
         <a-button
-          class="m0"
-          type="primary"
-          html-type="submit"
-          :disabled="loginBtnDisabled"
-          @click="onSubmit"
+            class="m0"
+            type="primary"
+            html-type="submit"
+            :disabled="loginBtnDisabled"
+            @click="onSubmit"
         >
           Login
         </a-button>
@@ -47,6 +50,7 @@
 
 <script lang="ts" setup>
 import djiLogo from '/@/assets/icons/dji_logo.png'
+import bambiLogo from '/@/assets/icons/BAMBI_notext.png'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { reactive, computed, UnwrapRef } from 'vue'
@@ -54,6 +58,8 @@ import { login, LoginBody } from '/@/api/manage'
 import { getRoot } from '/@/root'
 import { ELocalStorageKey, ERouterName, EUserType } from '/@/types'
 import router from '/@/router'
+
+// TODO 2 postpone displaying until the picture is done loading
 
 const root = getRoot()
 
@@ -84,9 +90,48 @@ const onSubmit = async (e: any) => {
 </script>
 
 <style lang="scss" scoped>
-@import '/@/styles/index.scss';
+// @import '/@/styles/index.scss';
+@import "/@/styles/variables.scss";
+
 .login {
-  background-color: $dark-highlight;
+
+  img {
+    width: 50vw;
+    height: auto;
+    max-width: 200px;
+  }
+
+  .title {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    margin-bottom: 20vh;
+  }
+
+  background-color: $bambi-nat-ultralight;
   height: 100vh;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .name,
+    .password {
+      width: 100%;
+    }
+
+    .login-button {
+
+      margin: 5px 0 0;  //reset button margin except top
+
+      button {
+        background-color: $bambi-shade-darker-2;
+        border-color: $bambi-shade-darker-3;
+      }
+    }
+  }
 }
+
 </style>
