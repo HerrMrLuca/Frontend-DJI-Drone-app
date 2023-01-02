@@ -7,122 +7,11 @@
 
 </template>
 <script lang="ts">
-import { computed, reactive, onMounted, onUpdated, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useMyStore } from '/@/store'
 import 'leaflet/dist/leaflet.css'
 // import 'https://unpkg.com/leaflet-compass@1.0.0/dist/leaflet-compass.min.js'
 import L, { LatLng, LayerGroup } from 'leaflet'
-
-import { message } from 'ant-design-vue'
-
-import { deleteWaylineFile, downloadWaylineFile, getWaylineFiles } from '/@/api/wayline'
-import { ELocalStorageKey } from '/@/types'
-import { EllipsisOutlined, RocketOutlined, CameraFilled, UserOutlined } from '@ant-design/icons-vue'
-import { EDeviceType } from '/@/types/device'
-
-import { WaylineFile } from '/@/types/wayline'
-import { downloadFile } from '/@/utils/common'
-import { IPage } from '/@/api/http/type'
-
-const loading = ref(false)
-const store = useMyStore()
-const pagination :IPage = {
-  page: 1,
-  total: 0,
-  page_size: 10
-}
-
-const waylinesData = reactive({
-  data: [] as WaylineFile[]
-})
-
-const workspaceId = localStorage.getItem(ELocalStorageKey.WorkspaceId)!
-const deleteTip = ref(false)
-const deleteWaylineId = ref<string>('')
-const canRefresh = ref(true)
-
-onMounted(() => {
-  getWaylines()
-})
-
-onUpdated(() => {
-  const element = document.getElementsByClassName('scrollbar').item(0) as HTMLDivElement
-  const parent = element?.parentNode as HTMLDivElement
-  setTimeout(() => {
-    if (element?.scrollHeight < parent?.clientHeight && pagination.total > waylinesData.data.length) {
-      if (canRefresh.value) {
-        pagination.page++
-        getWaylines()
-      }
-    } else if (element && element.className.indexOf('height-100') === -1) {
-      element.className = element.className + ' height-100'
-    }
-  }, 300)
-})
-
-function getWaylines () {
-  if (!canRefresh.value) {
-    return
-  }
-  canRefresh.value = false
-  getWaylineFiles(workspaceId, {
-    page: pagination.page,
-    page_size: pagination.page_size,
-    order_by: 'update_time desc'
-  }).then(res => {
-    if (res.code !== 0) {
-      return
-    }
-    res.data.list.forEach((wayline: WaylineFile) => waylinesData.data.push(wayline))
-    pagination.total = res.data.pagination.total
-    pagination.page = res.data.pagination.page
-  }).finally(() => {
-    canRefresh.value = true
-  })
-}
-
-function showWaylineTip (waylineId: string) {
-  deleteWaylineId.value = waylineId
-  deleteTip.value = true
-}
-
-function deleteWayline () {
-  deleteWaylineFile(workspaceId, deleteWaylineId.value).then(res => {
-    if (res.code === 0) {
-      message.success('Wayline file deleted')
-    }
-    deleteWaylineId.value = ''
-    deleteTip.value = false
-    pagination.total--
-    waylinesData.data = []
-    setTimeout(getWaylines, 500)
-  })
-}
-
-function downloadWayline (waylineId: string, fileName: string) {
-  loading.value = true
-  downloadWaylineFile(workspaceId, waylineId).then(res => {
-    if (!res) {
-      return
-    }
-    const data = new Blob([res], { type: 'application/zip' })
-    downloadFile(data, fileName + '.kmz')
-  }).finally(() => {
-    loading.value = false
-  })
-}
-
-function selectRoute (wayline: WaylineFile) {
-  store.commit('SET_SELECT_WAYLINE_INFO', wayline)
-}
-
-function onScroll (e: any) {
-  const element = e.srcElement
-  if (element.scrollTop + element.clientHeight === element.scrollHeight && Math.ceil(pagination.total / pagination.page_size) > pagination.page && canRefresh.value) {
-    pagination.page++
-    getWaylines()
-  }
-}
 
 const droneIcon = L.icon({
   iconUrl: '/src/assets/icons/drone.png',
@@ -174,6 +63,9 @@ export default {
   },
 }
 
+const store = useMyStore()
+const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
+
 interface OnlineDevice {
   model: string,
   callsign: string,
@@ -219,14 +111,12 @@ function getLocation () {
 function getWaypoints () {
   const latLongArray: [number, number][] = []
   let latLong: [number, number]
-  // TODO Remove Fake Shit
+  // TODO FAKE
   for (let i = 0; i < fakeWaypoint.length; i++) {
-    latLong = [fakeWaypoint[i][0], fakeWaypoint[i][1]]
+    latLong = [fakeWaypoint[index][0], fakeWaypoint[index][1]]
     latLongArray.push(latLong)
   }
-  if (waylinesData.data.length > 0) {
-    console.log(waylinesData.data)
-  }
+  // console.log(latLong)
   return latLongArray
 }
 
@@ -236,8 +126,8 @@ function getWaypoints () {
 @import '/@/styles/bambi.scss';
 @import '/@/../node_modules/leaflet/dist/leaflet.css';
 
-  #map {
-    height: 500px;
-    width: 800px;
-  }
+#map {
+  height: 200px;
+  width: 600px;
+}
 </style>

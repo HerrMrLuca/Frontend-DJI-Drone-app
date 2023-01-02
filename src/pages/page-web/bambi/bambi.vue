@@ -7,6 +7,9 @@
       </my-map>
     </div>
     <div>
+      <my-battery>
+
+      </my-battery>
     </div>
   </div>
 </template>
@@ -44,6 +47,7 @@ import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@
 import MyMap from '/@/pages/page-web/bambi/map.vue'
 import Livestream from '/@/pages/page-web/bambi/livestream.vue'
 import Agora from '/@/pages/page-web/bambi/agora.vue'
+import MyBattery from '/@/pages/page-web/bambi/battery.vue'
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
