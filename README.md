@@ -26,7 +26,7 @@ agoraChannel: bambidrone
 # Start
 
 ### Vite
-npm run server
+npm run serve
 
 IP in confic.ts eintragen
 IP in application.yml eintragen
