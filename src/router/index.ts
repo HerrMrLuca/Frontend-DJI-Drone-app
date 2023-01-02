@@ -19,10 +19,10 @@ const routes: Array<RouteRecordRaw> = [
   },
   // members, devices
   {
-    path: '/' + ERouterName.HOME,
-    name: ERouterName.HOME,
-    component: () => import('/@/pages/page-web/home.vue'),
-    children: [
+    path: '/' + ERouterName.MAINPAGE,
+    name: ERouterName.MAINPAGE,
+    component: () => import('/@/pages/page-web/mainpage.vue'),
+    children: [ // note links werden dann für die bottom bar importiert also routen werden dann gelinkt
       {
         path: '/' + ERouterName.MEMBERS,
         name: ERouterName.MEMBERS,

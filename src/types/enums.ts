@@ -19,7 +19,9 @@ export enum ERouterName {
     PILOT_HOME = 'pilot-home',
     PILOT_MEDIA = 'pilot-media',
     PILOT_LIVESHARE = 'pilot-liveshare',
-    PILOT_BIND = 'pilot-bind'
+    PILOT_BIND = 'pilot-bind',
+
+    MAINPAGE = 'mainpage',
 }
 
 export enum EStorageKey {
