@@ -1,16 +1,16 @@
 <template>
   <div class="width-100 flex-row all" style="height: 60px;">
     <!--    <img src="src/assets/icons/bottombar/home.svg">-->
-    <a-space class="fz16 height-100 items" size="large">
+    <div class="fz16 height-100 items" size="large">
       <router-link
           v-for="item in options"
           :key="item.key"
           :to="item.path"
           :class="{
             'menu-item': true,
-        }">
-        <span @click="selectedRoute(item.path)"
-              :style="selected === item.path ? 'color: #2d8cf0;' : 'color: white'">
+            'selected': selected === item.path
+          }"> <!--TODO 4 check click behavior-->
+        <span @click="selectedRoute(item.path)" :class="selected === item.path ? 'selected' : 'not-selected'">
           <img :src="item.icon"
                alt="Icon for page {{item.label}}"
                class="icons">
@@ -19,7 +19,7 @@
         </span>
 
       </router-link>
-    </a-space>
+    </div>
   </div>
 </template>
 
@@ -84,6 +84,8 @@ onMounted(() => {
 function selectedRoute (path: string) {
   selected.value = path
 }
+
+// TODO 1 change img colors to delete line "filter: invert(100%);"
 </script>
 
 <style lang="scss" scoped>
@@ -101,17 +103,33 @@ function selectedRoute (path: string) {
   align-items: center;
 
   .items {
+    display: flex;
     width: 100%;
-    height: auto;
+    max-width: 300px;
+    height: 100%;
     justify-content: center;
-    align-items: center;
+    align-content: center;
+    //gap: 10vw;
+
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    .selected {
+      background-color: $bambi-shade-darker-3;
+    }
 
     .icons {
+      height: 100%;
+      max-height: 30px;
       width: 100%;
-      max-width: 45px;
-      height: auto;
+      color: $bambi-nat-ultralight;
+      filter: invert(100%);
     }
   }
 }
-
 </style>

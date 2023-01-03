@@ -80,3 +80,10 @@ $bambi-shade-darker-1: #519c5b;
 $bambi-shade-darker-2: #297638;
 $bambi-shade-darker-3: #005117;
 $bambi-shade-darker-4: #002f00;
+
+.not-selectable{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

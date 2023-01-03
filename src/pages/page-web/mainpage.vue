@@ -1,7 +1,7 @@
 <template>
   <a-layout class="width-100 flex-display" style="height: 100vh">
     <div class="topbar">
-      <my-Topbar></my-Topbar>
+      <MyTopbar />
     </div>
 
     <div class="bottombar">
@@ -21,11 +21,10 @@ import { getRoot } from '/@/root'
 import { EBizCode, ELocalStorageKey, ERouterName } from '/@/types'
 import { useConnectWebSocket } from '/@/hooks/use-connect-websocket'
 import EventBus from '/@/event-bus'
-
-import Topbar from '/@/components/common/topbar.vue'
+import MyTopbar from '/@/components/common/my-topbar.vue'
 
 export default defineComponent({
-  components: { Topbar }
+  components: { MyTopbar }
 })
 
 </script>

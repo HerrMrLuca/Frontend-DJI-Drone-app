@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: '/' + ERouterName.PROJECT
   },
-  // 首页
+  // Titelseite
   {
     path: '/' + ERouterName.PROJECT,
     name: ERouterName.PROJECT,
