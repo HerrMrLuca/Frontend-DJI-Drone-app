@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="battery" ref="batteryComponent">
+    <div id="windspeed" ref="windspeedComponent">
       <a-input
           v-if="battery"
           v-model:value="battery"
@@ -13,11 +13,11 @@
 import { computed, reactive } from 'vue'
 import { useMyStore } from '/@/store'
 export default {
-  name: 'MyBattery',
+  name: 'MyWindspeed',
   data () {
     return {
-      battery: null,
-      warningLevel: 25,
+      windSpeed: null,
+      windDirection: null,
     }
   },
   mounted () {

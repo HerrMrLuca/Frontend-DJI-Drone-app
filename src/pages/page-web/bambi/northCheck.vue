@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <div id="battery" ref="batteryComponent">
+    <div id="northCheck" ref="northCheckComponent">
       <a-input
-          v-if="battery"
-          v-model:value="battery"
+          v-if="heading"
+          v-model:value="heading"
           readonly
       />
     </div>
@@ -13,21 +13,19 @@
 import { computed, reactive } from 'vue'
 import { useMyStore } from '/@/store'
 export default {
-  name: 'MyBattery',
+  name: 'MyNorthCheck',
   data () {
     return {
-      battery: null,
-      warningLevel: 25,
+      heading: null,
     }
   },
   mounted () {
     setInterval(() => {
       // do stuff
-      this.battery = getBattery()
-      console.log(this.battery)
-      if (this.battery <= this.warningLevel && this.battery > 0) {
-        this.warningLevel -= 10
-        alert('The Battery is at ' + this.battery + '%!')
+      this.heading = getheading()
+      console.log(this.heading)
+      if (this.heading > 0.5 || this.heading < -0.5) {
+        alert('DU FLIEGST NICHT NACH NORDEN DU HURENSOHN: ' + this.heading + '!')
       }
     }, 10000)
   },
@@ -55,13 +53,14 @@ interface OnlineDevice {
 const onlineDevices = reactive({
   data: [] as OnlineDevice[]
 })
-let battery = 100
-function getBattery () {
+
+// TODO delete fake drone data
+const heading = 0.001
+function getheading () {
   if (deviceInfo.value) {
-    return deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    return deviceInfo.value[onlineDevices.data[0].sn].attitude_head
   }
-  battery--
-  return battery
+  return heading
 }
 
 </script>

@@ -118,6 +118,7 @@ function getFiles () {
     paginationProp.total = res.data.pagination.total
     paginationProp.current = res.data.pagination.page
     console.info(mediaData.data[0])
+    console.log('MediaData: ' + mediaData.data[0])
   })
 }
 

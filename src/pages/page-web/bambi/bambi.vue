@@ -10,6 +10,9 @@
       <my-battery>
 
       </my-battery>
+      <my-north-check>
+
+      </my-north-check>
     </div>
   </div>
 </template>
@@ -48,6 +51,7 @@ import MyMap from '/@/pages/page-web/bambi/map.vue'
 import Livestream from '/@/pages/page-web/bambi/livestream.vue'
 import Agora from '/@/pages/page-web/bambi/agora.vue'
 import MyBattery from '/@/pages/page-web/bambi/battery.vue'
+import MyNorthCheck from '/@/pages/page-web/bambi/northCheck.vue'
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))

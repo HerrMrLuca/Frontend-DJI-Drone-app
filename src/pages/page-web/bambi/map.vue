@@ -154,8 +154,9 @@ export default {
   },
   mounted () {
     this.map = L.map('map').setView(this.currentLocation, 13)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     }).addTo(this.map)
 
     this.marker = L.marker(this.currentLocation, { icon: droneIcon }).addTo(this.map)
@@ -195,7 +196,7 @@ const onlineDevices = reactive({
 })
 
 // TODO DESTORY FAKE
-const fakeLocation = [[51, 0], [51, 1], [51, 2],]
+const fakeLocation = [[51, 0], [51, 0.1], [51, 0.2],]
 const fakeWaypoint = [[51.1, 0], [51.2, 0], [51.1, 0.1], [51.2, 0.1]]
 let index = 0
 function getLocation () {

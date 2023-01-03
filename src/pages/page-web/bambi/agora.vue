@@ -259,6 +259,7 @@ const onStart = async () => {
     video_quality: dronePara.claritySelected
   })
     .then(res => {
+      console.log(res) // TODO console.log to Test
       livePara.liveState = true
     })
     .catch(err => {
