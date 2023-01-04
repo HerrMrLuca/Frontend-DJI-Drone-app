@@ -2,23 +2,28 @@
 <template>
   <div>
     <div>
-      <my-map>
+<!--      <my-map>-->
 
-      </my-map>
+<!--      </my-map>-->
     </div>
     <div>
-      <my-battery>
+<!--      <my-battery>-->
 
-      </my-battery>
-      <my-north-check>
+<!--      </my-battery>-->
+<!--      <my-north-check>-->
 
-      </my-north-check>
+<!--      </my-north-check>-->
+    </div>
+    <div>
+      <button @click="printData">
+        data
+      </button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
-import { h, onMounted, reactive, ref, UnwrapRef, watch, computed, WritableComputedRef } from 'vue'
+import { h, onMounted, reactive, ref, UnwrapRef, watch, computed, WritableComputedRef, onUpdated } from 'vue'
 import { IPage } from '/@/api/http/type'
 import {
   BindBody,
@@ -52,6 +57,10 @@ import Livestream from '/@/pages/page-web/bambi/livestream.vue'
 import Agora from '/@/pages/page-web/bambi/agora.vue'
 import MyBattery from '/@/pages/page-web/bambi/battery.vue'
 import MyNorthCheck from '/@/pages/page-web/bambi/northCheck.vue'
+import { WaylineFile } from '/@/types/wayline'
+import { deleteWaylineFile, downloadWaylineFile, getWaylineFiles } from '/@/api/wayline'
+import { downloadFile } from '/@/utils/common'
+import L, { LayerGroup } from 'leaflet'
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -92,6 +101,161 @@ const hmsInfo = computed({
   }
 })
 
+const loading = ref(false)
+const pagination :IPage = {
+  page: 1,
+  total: 0,
+  page_size: 10
+}
+
+const waylinesData = reactive({
+  data: [] as WaylineFile[]
+})
+
+const deleteWaylineId = ref<string>('')
+const canRefresh = ref(true)
+
+onMounted(() => {
+  getWaylines()
+})
+
+onUpdated(() => {
+  const element = document.getElementsByClassName('scrollbar').item(0) as HTMLDivElement
+  const parent = element?.parentNode as HTMLDivElement
+  setTimeout(() => {
+    if (element?.scrollHeight < parent?.clientHeight && pagination.total > waylinesData.data.length) {
+      if (canRefresh.value) {
+        pagination.page++
+        getWaylines()
+      }
+    } else if (element && element.className.indexOf('height-100') === -1) {
+      element.className = element.className + ' height-100'
+    }
+  }, 300)
+})
+
+function getWaylines () {
+  if (!canRefresh.value) {
+    console.log('is null')
+    return
+  }
+  canRefresh.value = false
+  getWaylineFiles(workspaceId.value, {
+    page: pagination.page,
+    page_size: pagination.page_size,
+    order_by: 'update_time desc'
+  }).then(res => {
+    if (res.code !== 0) {
+      console.log('is null')
+      return
+    }
+    res.data.list.forEach((wayline: WaylineFile) => waylinesData.data.push(wayline))
+    pagination.total = res.data.pagination.total
+    pagination.page = res.data.pagination.page
+    console.log(waylinesData.data)
+  }).finally(() => {
+    canRefresh.value = true
+  })
+}
+
+function showWaylineTip (waylineId: string) {
+  deleteWaylineId.value = waylineId
+  deleteTip.value = true
+}
+
+function deleteWayline () {
+  deleteWaylineFile(workspaceId.value, deleteWaylineId.value).then(res => {
+    if (res.code === 0) {
+      message.success('Wayline file deleted')
+    }
+    deleteWaylineId.value = ''
+    deleteTip.value = false
+    pagination.total--
+    waylinesData.data = []
+    setTimeout(getWaylines, 500)
+  })
+}
+
+function downloadWayline (waylineId: string, fileName: string) {
+  loading.value = true
+  downloadWaylineFile(workspaceId.value, waylineId).then(res => {
+    if (!res) {
+      return
+    }
+    const data = new Blob([res], { type: 'application/zip' })
+    downloadFile(data, fileName + '.kmz')
+  }).finally(() => {
+    loading.value = false
+  })
+}
+
+function selectRoute (wayline: WaylineFile) {
+  store.commit('SET_SELECT_WAYLINE_INFO', wayline)
+}
+
+function onScroll (e: any) {
+  const element = e.srcElement
+  if (element.scrollTop + element.clientHeight === element.scrollHeight && Math.ceil(pagination.total / pagination.page_size) > pagination.page && canRefresh.value) {
+    pagination.page++
+    getWaylines()
+  }
+}
+
+const droneIcon = L.icon({
+  iconUrl: '/src/assets/icons/drone.png',
+  iconSize: [38, 38], // size of the icon
+  iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
+  popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+})
+
+const waypointIcon = L.icon({
+  iconUrl: '/src/assets/icons/marker.svg',
+  iconSize: [20, 20], // size of the icon
+  iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
+  popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+})
+
+// TODO DESTORY FAKE
+const fakeLocation = [[48.25, 14], [48.25, 14.1], [48.25, 14.2]]
+const fakeWaypoint = [[48.1, 14], [48.2, 14], [48.1, 14.1], [48.2, 14.1]]
+let index = 0
+function getLocation () {
+  // TODO Change fake to real
+  if (deviceInfo.value) {
+    const latLong: [number, number] = [deviceInfo.value[onlineDevices.data[1].sn].longitude, deviceInfo.value[onlineDevices.data[1].sn].latitude]
+    console.log('latLong = ' + latLong)
+    return latLong
+  }
+  let latLong: [number, number]
+  if (fakeLocation[index][1] === 14) {
+    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+    index = 1
+  } else if (fakeLocation[index][1] === 14.1) {
+    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+    index = 2
+  } else {
+    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+    index = 0
+  }
+  // console.log(latLong)
+  return latLong
+}
+
+function getWaypoints () {
+  const latLongArray: [number, number][] = []
+  let latLong: [number, number]
+  // TODO Remove Fake Shit
+  for (let i = 0; i < fakeWaypoint.length; i++) {
+    latLong = [fakeWaypoint[i][0], fakeWaypoint[i][1]]
+    latLongArray.push(latLong)
+  }
+  if (waylinesData.data.length > 0) {
+    console.log(waylinesData.data)
+  }
+  getWaylines()
+  return latLongArray
+}
+
 class FakeDeviceOsd {
   public battery = { capacity_percent: 75, landing_power: 45, remain_flight_time: 100, return_home_power: 35 }
   public distance_limit_status = true
@@ -118,7 +282,6 @@ interface DeviceData {
   device: Device[]
 }
 
-const loading = ref(true)
 const deleteTip = ref<boolean>(false)
 const deleteSn = ref<string>()
 const columns: ColumnProps[] = [
@@ -219,6 +382,13 @@ onMounted(() => {
     getOnlineDeviceHms()
   }, 3000)
 })
+
+function getBattery () {
+  if (deviceInfo.value) {
+    return deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+  }
+  return null
+}
 
 // 获取分页信息
 function getPaginationBody () {
@@ -470,31 +640,32 @@ function readHms (visiable: boolean, sn: string) {
     })
   }
 }
-//
-// function printData () {
-//   let str = 'Data: \n'
-//   str += 'lat:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].latitude
-//   str += '\nlong:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].longitude
-//   str += '\nv-speed:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
-//   str += '\nh-speed:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
-//   str += '\nelevation:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].elevation
-//   str += '\nheight:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].height
-//   str += '\nmode_code:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
-//   str += '\nattitude_head:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
-//   str += '\nattitude_roll:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
-//   str += '\nattitude_pitch:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
-//   console.log(str)
-// }
+
+function printData () {
+  let str = 'Data: \n'
+  str += 'lat:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].latitude
+  str += '\nlong:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].longitude
+  str += '\nv-speed:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
+  str += '\nh-speed:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
+  str += '\nelevation:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].elevation
+  str += '\nheight:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].height
+  str += '\nmode_code:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
+  str += '\nattitude_head:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+  str += '\nattitude_roll:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
+  str += '\nattitude_pitch:'
+  str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
+  console.log(str)
+  console.log(getWaypoints())
+}
 </script>
 
 <style lang="scss" scoped>

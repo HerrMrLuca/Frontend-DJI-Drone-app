@@ -26,6 +26,7 @@ import { IPage } from '/@/api/http/type'
 
 const loading = ref(false)
 const store = useMyStore()
+console.log(store)
 const pagination :IPage = {
   page: 1,
   total: 0,
@@ -40,6 +41,7 @@ const workspaceId = localStorage.getItem(ELocalStorageKey.WorkspaceId)!
 const deleteTip = ref(false)
 const deleteWaylineId = ref<string>('')
 const canRefresh = ref(true)
+const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
 
 onMounted(() => {
   getWaylines()
@@ -148,7 +150,7 @@ export default {
       deviceInfo: null,
       polyline: null,
       waypointsLayer: null,
-      currentLocation: [51.505, -0.09], // initial location for the marker
+      currentLocation: [48.25, 14.39], // initial location for the marker
       latlngs: [[4, 4]]
     }
   },
@@ -167,7 +169,7 @@ export default {
       this.waypointsLayer.clearLayers()
       this.polyline.setLatLngs(getWaypoints())
       for (let i = 0; i < this.polyline.getLatLngs().length; i++) {
-        this.waypointsLayer.addLayer(new L.marker(this.polyline.getLatLngs()[i], { icon: waypointIcon }).addTo((this.map)))
+        // this.waypointsLayer.addLayer(new L.marker(this.polyline.getLatLngs()[i], { icon: waypointIcon }).addTo(this.map))
       }
 
       this.marker.setLatLng(getLocation())
@@ -196,17 +198,21 @@ const onlineDevices = reactive({
 })
 
 // TODO DESTORY FAKE
-const fakeLocation = [[51, 0], [51, 0.1], [51, 0.2],]
-const fakeWaypoint = [[51.1, 0], [51.2, 0], [51.1, 0.1], [51.2, 0.1]]
+const fakeLocation = [[48.25, 14], [48.25, 14.1], [48.25, 14.2]]
+const fakeWaypoint = [[48.1, 14], [48.2, 14], [48.1, 14.1], [48.2, 14.1]]
 let index = 0
 function getLocation () {
   // TODO Change fake to real
-  // let latLong: [number, number] = [deviceInfo.value[onlineDevices.data[0].sn].longitude, deviceInfo.value[onlineDevices.data[0].sn].latitude]
+  if (deviceInfo.value) {
+    const latLong: [number, number] = [deviceInfo.value[onlineDevices.data[1].sn].longitude, deviceInfo.value[onlineDevices.data[1].sn].latitude]
+    console.log('latLong = ' + latLong)
+    return latLong
+  }
   let latLong: [number, number]
-  if (fakeLocation[index][1] === 0) {
+  if (fakeLocation[index][1] === 14) {
     latLong = [fakeLocation[index][0], fakeLocation[index][1]]
     index = 1
-  } else if (fakeLocation[index][1] === 1) {
+  } else if (fakeLocation[index][1] === 14.1) {
     latLong = [fakeLocation[index][0], fakeLocation[index][1]]
     index = 2
   } else {

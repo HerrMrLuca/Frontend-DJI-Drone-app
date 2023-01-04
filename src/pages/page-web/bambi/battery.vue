@@ -12,6 +12,7 @@
 <script lang="ts">
 import { computed, reactive } from 'vue'
 import { useMyStore } from '/@/store'
+
 export default {
   name: 'MyBattery',
   data () {
@@ -58,7 +59,7 @@ const onlineDevices = reactive({
 let battery = 100
 function getBattery () {
   if (deviceInfo.value) {
-    return deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    return deviceInfo.value[onlineDevices.data[1].sn].battery.capacity_percent
   }
   battery--
   return battery
