@@ -14,54 +14,24 @@ import { computed, reactive } from 'vue'
 import { useMyStore } from '/@/store'
 export default {
   name: 'MyBattery',
+  props: ['batteryData'],
   data () {
     return {
       battery: null,
-      warningLevel: 25,
+      warningLevel: 40,
     }
   },
   mounted () {
     setInterval(() => {
       // do stuff
-      this.battery = getBattery()
-      console.log(this.battery)
-      if (this.battery <= this.warningLevel && this.battery > 0) {
-        this.warningLevel -= 10
-        alert('The Battery is at ' + this.battery + '%!')
+      this.battery = this.batteryData[0]
+      console.log(this.batteryData[0])
+      if (this.batteryData[0] <= this.warningLevel && this.batteryData[0] > 0) {
+        this.warningLevel -= 40
+        alert('The Battery is at ' + this.batteryData[0] + '%!')
       }
     }, 10000)
   },
-}
-
-const store = useMyStore()
-const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
-
-interface OnlineDevice {
-  model: string,
-  callsign: string,
-  sn: string,
-  mode: number,
-  gateway: {
-    model: string,
-    callsign: string,
-    sn: string,
-    domain: string,
-  },
-  payload: {
-    model: string
-  }[]
-}
-
-const onlineDevices = reactive({
-  data: [] as OnlineDevice[]
-})
-let battery = 100
-function getBattery () {
-  if (deviceInfo.value) {
-    return deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
-  }
-  battery--
-  return battery
 }
 
 </script>

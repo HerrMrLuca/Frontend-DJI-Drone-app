@@ -2,23 +2,23 @@
 <template>
   <div>
     <div>
-      <my-map>
+      <my-map v-bind:mapData="mapData">
 
       </my-map>
     </div>
     <div>
-      <my-battery>
+      <my-battery v-bind:batteryData="batteryData">
 
       </my-battery>
-      <my-north-check>
+      <my-north-check v-bind:northData="northData">
 
       </my-north-check>
     </div>
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
-import { h, onMounted, reactive, ref, UnwrapRef, watch, computed, WritableComputedRef } from 'vue'
+import Vue, { h, onMounted, reactive, ref, UnwrapRef, watch, computed, WritableComputedRef } from 'vue'
 import { IPage } from '/@/api/http/type'
 import {
   BindBody,
@@ -40,11 +40,9 @@ import { DeviceCmdExecuteInfo, DeviceCmdExecuteStatus } from '/@/types/device-cm
 import DeviceLogUploadRecordDrawer from '/@/components/devices/device-log/DeviceLogUploadRecordDrawer.vue'
 import DeviceHmsDrawer from '/@/components/devices/device-hms/DeviceHmsDrawer.vue'
 import { message } from 'ant-design-vue'
-
 import noData from '/@/assets/icons/no-data.png'
 import rc from '/@/assets/icons/rc.png'
 import { useMyStore } from '/@/store'
-import { useMyFakeStore } from '/@/store/fakestore.ts'
 import { EHmsLevel } from '/@/types/enums'
 import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
 import MyMap from '/@/pages/page-web/bambi/map.vue'
@@ -52,6 +50,63 @@ import Livestream from '/@/pages/page-web/bambi/livestream.vue'
 import Agora from '/@/pages/page-web/bambi/agora.vue'
 import MyBattery from '/@/pages/page-web/bambi/battery.vue'
 import MyNorthCheck from '/@/pages/page-web/bambi/northCheck.vue'
+import L, { LayerGroup } from 'leaflet'
+
+export default {
+  components: {
+    MyMap,
+    MyBattery,
+    MyNorthCheck
+  },
+  data: function () {
+    return {
+      mapData: [1],
+      batteryData: [1],
+      northData: [1]
+    }
+  },
+  methods: {
+    updateMapData (newData: Array< Object >) {
+      this.mapData = newData
+    },
+    updateBatteryData (newData: Array< Object >) {
+      this.batteryData = newData
+    }
+  },
+  mounted: function () {
+    setInterval(() => {
+      this.updateMapData(getDeviceData())
+      this.updateBatteryData(getBatteryData())
+    }, 1000)
+  }
+}
+
+const long = 48.366937
+let lat = 14.517274
+
+function getDeviceData () {
+  lat += 0.001
+  return [
+    // deviceInfo.value[onlineDevices.data[0].sn].latitude,
+    // deviceInfo.value[onlineDevices.data[0].sn].longitude,
+    long,
+    lat
+  ]
+}
+
+let fakeBattery = 100
+
+function getBatteryData () {
+  fakeBattery--
+  return [
+    // deviceInfo.value[onlineDevices.data[0].sn].battery,
+    // deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent,
+    // deviceInfo[onlineDevices.data[0].sn].battery.return_home_power,
+    // deviceInfo[onlineDevices.data[0].sn].battery.landing_power,
+    // deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent,
+    fakeBattery
+  ]
+}
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -91,28 +146,6 @@ const hmsInfo = computed({
     return val
   }
 })
-
-class FakeDeviceOsd {
-  public battery = { capacity_percent: 75, landing_power: 45, remain_flight_time: 100, return_home_power: 35 }
-  public distance_limit_status = true
-  public elevation = '50'
-  public gear= 2
-  public height= 512
-  public height_limit= 1000
-  public home_distance= 10
-  public horizontal_speed= 25
-  public latitude= 48
-  public longitude= 14
-  public mode_code= 2
-  public night_lights_state= true
-  public obstacle_avoidance= true
-  public position_state= { gps_number: 'string', is_fixed: 4, rtk_number: 'string' }
-  public vertical_speed= 'string'
-  public wind_direction= 'string'
-  public wind_speed= 'string'
-}
-
-const fakeDeviceInfo = new FakeDeviceOsd()
 
 interface DeviceData {
   device: Device[]
@@ -470,6 +503,7 @@ function readHms (visiable: boolean, sn: string) {
     })
   }
 }
+
 //
 // function printData () {
 //   let str = 'Data: \n'

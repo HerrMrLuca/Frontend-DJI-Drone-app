@@ -3904,7 +3904,7 @@
 
 "vue@^3.0.0", "vue@^3.0.2", "vue@^3.2.26", "vue@>=3.0.3", "vue@>=3.1.0", "vue@3.2.26":
   "integrity" "sha512-KD4lULmskL5cCsEkfhERVRIOEDrfEL9CwAsLYpzptOGjaGFNWo3BQ9g8MAb7RaIO71rmVOziZ/uEN/rHwcUIhg=="
-  "resolved" "https://registry.npmmirror.com/vue/download/vue-3.2.26.tgz"
+  "resolved" "https://registry.npmmirror.com/vue/-/vue-3.2.26.tgz"
   "version" "3.2.26"
   dependencies:
     "@vue/compiler-dom" "3.2.26"
