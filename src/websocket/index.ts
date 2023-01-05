@@ -52,7 +52,7 @@ class ConnectWebSocket {
   }
 
   _onOpen () {
-    console.log('连接成功')
+    console.log('连接成功 | Verbindung erfolgreich')
   }
 
   _onClose () {

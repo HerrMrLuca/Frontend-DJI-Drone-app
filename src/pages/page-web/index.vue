@@ -81,7 +81,7 @@ const onSubmit = async (e: any) => {
     localStorage.setItem(ELocalStorageKey.Username, result.data.username)
     localStorage.setItem(ELocalStorageKey.UserId, result.data.user_id)
     localStorage.setItem(ELocalStorageKey.Flag, EUserType.Web.toString())
-    root.$router.push(ERouterName.MEMBERS)
+    root.$router.push(ERouterName.HOMEPAGE)
   } else {
     message.error(result.message)
   }

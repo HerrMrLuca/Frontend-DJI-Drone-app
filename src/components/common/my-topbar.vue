@@ -1,28 +1,8 @@
 <template>
-  <div class="width-100 flex-row flex-justify-between flex-align-center topbar" style="height: 60px;">
+  <div class="width-100 flex-row flex-justify-between flex-align-center topbar">
     <div class="height-100 logo not-selectable">
       <img :src="bambiLogo"/>
-      <p class="fontBold"> Bambi<!--{{ workspaceName }}--></p>
-    </div>
-
-    <!--  note USER ICON and logic-->
-    <div class="height-100 fz16 flex-row flex-justify-between flex-align-center ">
-      <a-dropdown class="user">  <!--todo 4 implement click event here-->
-        <div class="height-100 not-selectable">
-          <span class="fz20 user-icon" style="border: 2px solid black; border-radius: 50%;">
-           <img :src="userIcon">
-          </span>
-          <p class="username" style="float: right;">{{ username }}</p>
-        </div>
-        <template #overlay>
-          <a-menu theme="dark" class="flex-column flex-justify-between flex-align-center">
-            <a-menu-item>
-              <span class="mr10" style="font-size: 16px;"><ExportOutlined/></span>
-              <span @click="logout">Log Out</span>
-            </a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown>
+      <p> <span>Bambi</span> Info Center</p>
     </div>
   </div>
 </template>
@@ -72,14 +52,23 @@ const logout = () => {
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
 
+p, span{
+  font-family: 'Fredoka', sans-serif;
+  font-size: large;
+}
+span{
+  text-transform: uppercase;
+}
+
 .fontBold {
   font-weight: 500;
   font-size: 18px;
 }
 
 .topbar {
+  height: $bottom-bar-height;
   width: 100%;
-  background-color: $bambi-nat-lighter;
+  background-color: $bambi-nat-ultralight;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
 
   .logo {
@@ -87,10 +76,10 @@ const logout = () => {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 0 0 0 15px;
+    margin: 0 0 0 10px;
 
     p{
-      margin: 0 0 0 7px;
+      margin: 0 0 0 10px;
       font-weight: 550;
     }
 
