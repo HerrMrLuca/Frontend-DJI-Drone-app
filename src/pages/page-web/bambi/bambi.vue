@@ -7,12 +7,12 @@
       </my-map>
     </div>
     <div>
-      <my-battery>
+<!--      <my-battery>-->
 
-      </my-battery>
-      <my-north-check>
+<!--      </my-battery>-->
+<!--      <my-north-check>-->
 
-      </my-north-check>
+<!--      </my-north-check>-->
     </div>
   </div>
 </template>
@@ -84,6 +84,7 @@ const onlineDocks = reactive({
 })
 
 const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
+console.log(store)
 const dockInfo = computed(() => store.state.deviceState.dockInfo)
 const hmsInfo = computed({
   get: () => store.state.hmsInfo,
