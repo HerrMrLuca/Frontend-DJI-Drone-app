@@ -14,6 +14,8 @@ export interface CreatePlan {
 export const getWaylineFiles = async function (wid: string, body: {}): Promise<IWorkspaceResponse<any>> {
   const url = `${HTTP_PREFIX}/workspaces/${wid}/waylines?order_by=${body.order_by}&page=${body.page}&page_size=${body.page_size}`
   const result = await request.get(url)
+  console.log('getWaylineFiles: ')
+  console.log(result.data)
   return result.data
 }
 
@@ -52,6 +54,8 @@ export const createPlan = async function (workspaceId: string, plan: CreatePlan)
 export const getWaylineJobs = async function (workspaceId: string, page: IPage): Promise<IWorkspaceResponse<any>> {
   const url = `${HTTP_PREFIX}/workspaces/${workspaceId}/jobs?page=${page.page}&page_size=${page.page_size}`
   const result = await request.get(url)
+  console.log('getWaylineJobs: ')
+  console.log(result.data)
   return result.data
 }
 

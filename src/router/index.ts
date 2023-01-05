@@ -122,6 +122,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('/@/pages/page-web/bambi/map.vue')
       },
       {
+        path: '/' + ERouterName.WAYLINE + 'BAMBI',
+        component: () => import('/@/pages/page-web/bambi/wayline.vue')
+      },
+      {
         path: '/' + ERouterName.LIVESTREAM,
         name: ERouterName.LIVESTREAM,
         component: () => import('/@/pages/page-web/bambi/livestream.vue'),

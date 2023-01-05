@@ -63,7 +63,8 @@ const workspaceName = ref('')
 const options = [
   { key: 0, label: ERouterName.BAMBI.charAt(0).toUpperCase() + ERouterName.BAMBI.substr(1), path: '/' + ERouterName.BAMBIWORKSPACE },
   { key: 1, label: ERouterName.MAP.charAt(0).toUpperCase() + ERouterName.MAP.substr(1), path: '/' + ERouterName.MAP },
-  { key: 2, label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1), path: '/' + ERouterName.DEVICES }
+  { key: 2, label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1), path: '/' + ERouterName.DEVICES },
+  { key: 3, label: ERouterName.WAYLINE.charAt(0).toUpperCase() + ERouterName.WAYLINE.substr(1), path: '/' + ERouterName.WAYLINE + 'BAMBI' }
 
 ]
 

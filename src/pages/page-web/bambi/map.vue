@@ -51,17 +51,18 @@ export default {
     }).addTo(this.map)
 
     this.marker = L.marker(this.currentLocation, { icon: droneIcon }).addTo(this.map)
-    // this.polyline = L.polyline(this.latlngs, { color: 'red' }).addTo(this.map)
-    // this.waypointsLayer = new LayerGroup()
-    // this.waypointsLayer.addTo(this.map)
+    this.polyline = L.polyline(this.latlngs, { color: 'red' }).addTo(this.map)
+    this.waypointsLayer = new LayerGroup()
+    this.waypointsLayer.addTo(this.map)
     let latLong: [number, number]
     setInterval(() => {
-      console.log('this.mapData' + this.mapData[0] + ' ' + this.mapData[1])
-      // this.waypointsLayer.clearLayers()
-      // this.polyline.setLatLngs(getWaypoints())
-      // for (let i = 0; i < this.polyline.getLatLngs().length; i++) {
-      //   // this.waypointsLayer.addLayer(new L.marker(this.polyline.getLatLngs()[i], { icon: waypointIcon }).addTo((this.map)))
-      // }
+      // console.log(this.mapData)
+      this.waypointsLayer.clearLayers()
+      this.polyline.setLatLngs(this.mapData[2])
+      for (let i = 0; i < this.polyline.getLatLngs().length; i++) {
+        const layer = L.marker(this.polyline.getLatLngs()[i], { icon: waypointIcon }).addTo(this.map)
+        this.waypointsLayer.addLayer(layer)
+      }
       latLong = [this.mapData[0], this.mapData[1]]
       this.marker.setLatLng(latLong)
       this.map.panTo(this.marker.getLatLng(), { animate: true, duration: 1 })
@@ -76,7 +77,7 @@ export default {
 @import '/@/../node_modules/leaflet/dist/leaflet.css';
 
   #map {
-    height: 500px;
-    width: 800px;
+    height: 300px;
+    width: 300px;
   }
 </style>

@@ -14,6 +14,7 @@ import { computed, reactive } from 'vue'
 import { useMyStore } from '/@/store'
 export default {
   name: 'MyNorthCheck',
+  props: ['northData'],
   data () {
     return {
       heading: null,
@@ -22,7 +23,7 @@ export default {
   mounted () {
     setInterval(() => {
       // do stuff
-      this.heading = getheading()
+      this.heading = this.northData[0]
       console.log(this.heading)
       if (this.heading > 0.5 || this.heading < -0.5) {
         alert('DU FLIEGST NICHT NACH NORDEN DU HURENSOHN: ' + this.heading + '!')
@@ -30,39 +31,6 @@ export default {
     }, 10000)
   },
 }
-
-const store = useMyStore()
-const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
-
-interface OnlineDevice {
-  model: string,
-  callsign: string,
-  sn: string,
-  mode: number,
-  gateway: {
-    model: string,
-    callsign: string,
-    sn: string,
-    domain: string,
-  },
-  payload: {
-    model: string
-  }[]
-}
-
-const onlineDevices = reactive({
-  data: [] as OnlineDevice[]
-})
-
-// TODO delete fake drone data
-const heading = 0.001
-function getheading () {
-  if (deviceInfo.value) {
-    return deviceInfo.value[onlineDevices.data[0].sn].attitude_head
-  }
-  return heading
-}
-
 </script>
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';

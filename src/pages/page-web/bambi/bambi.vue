@@ -1,19 +1,24 @@
-
 <template>
   <div>
     <div>
-      <my-map v-bind:mapData="mapData">
+<!--      <my-map v-bind:mapData="mapData">-->
 
-      </my-map>
+<!--      </my-map>-->
     </div>
     <div>
-      <my-battery v-bind:batteryData="batteryData">
+<!--      <my-battery v-bind:batteryData="batteryData">-->
 
-      </my-battery>
-      <my-north-check v-bind:northData="northData">
+<!--      </my-battery>-->
+<!--      <my-north-check v-bind:northData="northData">-->
 
-      </my-north-check>
+<!--      </my-north-check>-->
+<!--      <my-drone-data v-bind:droneData="droneData">-->
+
+<!--      </my-drone-data>-->
     </div>
+    <button v-on:click="printData()">
+      Data
+    </button>
   </div>
 </template>
 <script lang="ts">
@@ -44,25 +49,27 @@ import noData from '/@/assets/icons/no-data.png'
 import rc from '/@/assets/icons/rc.png'
 import { useMyStore } from '/@/store'
 import { EHmsLevel } from '/@/types/enums'
-import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
+// import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
 import MyMap from '/@/pages/page-web/bambi/map.vue'
 import Livestream from '/@/pages/page-web/bambi/livestream.vue'
 import Agora from '/@/pages/page-web/bambi/agora.vue'
 import MyBattery from '/@/pages/page-web/bambi/battery.vue'
 import MyNorthCheck from '/@/pages/page-web/bambi/northCheck.vue'
-import L, { LayerGroup } from 'leaflet'
+import MyDroneData from '/@/pages/page-web/bambi/droneData.vue'
 
 export default {
   components: {
     MyMap,
     MyBattery,
-    MyNorthCheck
+    MyNorthCheck,
+    MyDroneData
   },
   data: function () {
     return {
-      mapData: [1],
+      mapData: [48.366937, 14.517274, [[48, 14], [48.1, 14], [48.05, 14.1]]],
       batteryData: [1],
-      northData: [1]
+      northData: [0],
+      droneData: [0]
     }
   },
   methods: {
@@ -71,41 +78,22 @@ export default {
     },
     updateBatteryData (newData: Array< Object >) {
       this.batteryData = newData
+    },
+    updateNorthData (newData: Array< Object >) {
+      this.northData = newData
+    },
+    updateDroneData (newData: Array< Object >) {
+      this.droneData = newData
     }
   },
   mounted: function () {
     setInterval(() => {
-      this.updateMapData(getDeviceData())
+      this.updateMapData(getMapData())
       this.updateBatteryData(getBatteryData())
+      this.updateNorthData(getNorthData())
+      this.updateDroneData(getDroneData())
     }, 1000)
   }
-}
-
-const long = 48.366937
-let lat = 14.517274
-
-function getDeviceData () {
-  lat += 0.001
-  return [
-    // deviceInfo.value[onlineDevices.data[0].sn].latitude,
-    // deviceInfo.value[onlineDevices.data[0].sn].longitude,
-    long,
-    lat
-  ]
-}
-
-let fakeBattery = 100
-
-function getBatteryData () {
-  fakeBattery--
-  return [
-    // deviceInfo.value[onlineDevices.data[0].sn].battery,
-    // deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent,
-    // deviceInfo[onlineDevices.data[0].sn].battery.return_home_power,
-    // deviceInfo[onlineDevices.data[0].sn].battery.landing_power,
-    // deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent,
-    fakeBattery
-  ]
 }
 
 const store = useMyStore()
@@ -504,31 +492,125 @@ function readHms (visiable: boolean, sn: string) {
   }
 }
 
-//
-// function printData () {
-//   let str = 'Data: \n'
-//   str += 'lat:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].latitude
-//   str += '\nlong:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].longitude
-//   str += '\nv-speed:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
-//   str += '\nh-speed:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
-//   str += '\nelevation:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].elevation
-//   str += '\nheight:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].height
-//   str += '\nmode_code:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
-//   str += '\nattitude_head:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
-//   str += '\nattitude_roll:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
-//   str += '\nattitude_pitch:'
-//   str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
-//   console.log(str)
-// }
+function printData () {
+  let str = 'Data: \n'
+  str += 'lat:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].latitude
+  // str += '\nlong:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].longitude
+  // str += '\nv-speed:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
+  // str += '\nh-speed:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
+  // str += '\nelevation:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].elevation
+  // str += '\nheight:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].height
+  // str += '\nmode_code:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
+  // str += '\nattitude_head:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+  // str += '\nattitude_roll:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
+  // str += '\nattitude_pitch:'
+  // str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
+  console.log(str)
+}
+const long = 48.366937
+const lat = 14.517274
+const fakeWayPoints = [[48, 14], [48.1, 14], [48.05, 14.1]]
+
+function getMapData () {
+  // lat += 0.001
+  if (deviceInfo.value) {
+    return [
+      deviceInfo.value[onlineDevices.data[0].sn].latitude,
+      deviceInfo.value[onlineDevices.data[0].sn].longitude,
+      fakeWayPoints
+    ]
+  } else {
+    return [
+      long,
+      lat,
+      fakeWayPoints
+    ]
+  }
+}
+
+const fakeBattery = 100
+
+function getBatteryData () {
+  // fakeBattery--
+
+  if (deviceInfo.value) {
+    return [
+      deviceInfo.value[onlineDevices.data[0].sn].battery,
+      deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent,
+      deviceInfo.value[onlineDevices.data[0].sn].battery.return_home_power,
+      deviceInfo.value[onlineDevices.data[0].sn].battery.landing_power,
+      deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent,
+    ]
+  } else {
+    return [
+      fakeBattery
+    ]
+  }
+}
+
+let attitude_head = 0
+function getNorthData () {
+  attitude_head -= 0.01
+  if (deviceInfo.value) {
+    return [
+      deviceInfo.value[onlineDevices.data[0].sn].attitude_head,
+      // gimbal_yaw
+    ]
+  } else {
+    return [
+      attitude_head
+    ]
+  }
+}
+
+class FakeDeviceOsd {
+  public battery = {
+    capacity_percent: 75,
+    landing_power: 45,
+    remain_flight_time: 100,
+    return_home_power: 35
+  }
+
+  public distance_limit_status = 'true'
+  public elevation = '50'
+  public gear = 2
+  public height = 512
+  public height_limit = 1000
+  public home_distance = 10
+  public horizontal_speed = 25
+  public latitude = 48
+  public longitude = 14
+  public mode_code = 2
+  public night_lights_state = true
+  public obstacle_avoidance = true
+  public position_state = { gps_number: 'string', is_fixed: 4, rtk_number: 'string' }
+  public vertical_speed = 'string'
+  public wind_direction = 'string'
+  public wind_speed = 'string'
+}
+const fakeDeviceOsd = new FakeDeviceOsd()
+
+function getDroneData () {
+  if (deviceInfo.value) {
+    return [
+      deviceInfo.value[onlineDevices.data[0].sn]
+    ]
+  } else {
+    return [
+      1
+    ]
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>
