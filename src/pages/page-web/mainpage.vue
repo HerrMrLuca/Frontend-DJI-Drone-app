@@ -115,7 +115,6 @@ router-view{
 
 .bottom-bar {
   display: block;
-  background-color: $bambi-shade-darker-2;
   position: fixed;
   bottom: 0;
   width: 100%;
