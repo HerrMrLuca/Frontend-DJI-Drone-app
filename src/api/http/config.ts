@@ -6,14 +6,14 @@ export const CURRENT_CONFIG = {
   appLicense: 'hxv4Wi1BtG0/0ZUIgi7gTYPO+yJzy+RC6NXYEyKemq3pOSAWEbs4UzcQ8edMNIRmQ/C8YIOOW0PdP00M2cMn2F0kElayYNS1jZebPBjXur75WUnjbTE+KePwpWLTOL56CfgkOSA++NgV8brFV+krL7i4tiTJ8hN7JA178UoUtj4=', // You need to go to the development website to apply.
 
   // http
-  //TODO change IP
-  baseURL: 'http://10.29.18.198:6789/', // This url must end with "/". Example: 'http://192.168.1.1:6789/'
-  websocketURL: 'ws://10.29.18.198:6789/api/v1/ws', // Example: 'ws://192.168.1.1:6789/api/v1/ws'
+  // TODO change IP
+  baseURL: 'http://192.168.0.12:6789/', // This url must end with "/". Example: 'http://192.168.1.1:6789/'
+  websocketURL: 'ws://192.168.0.12:6789/api/v1/ws', // Example: 'ws://192.168.1.1:6789/api/v1/ws'
 
   // livestreaming
   // RTMP  Note: This IP is the address of the streaming server. If you want to see livestream on web page, you need to convert the RTMP stream to WebRTC stream.
   rtmpURL: 'rtmp://192.240.105.123/live/', // Example: 'rtmp://192.168.1.1/live/'
-  // GB28181 Note:If you don't know what these parameters mean, you can go to Pilot2 and select the GB28181 page in the cloud platform. Where the parameters same as these parameters.
+  // GB28181 Note: If you don't know what these parameters mean, you can go to Pilot2 and select the GB28181 page in the cloud platform. Where the parameters same as these parameters.
   gbServerIp: 'Please enter the server ip.',
   gbServerPort: 'Please enter the server port.',
   gbServerId: 'Please enter the server id.',
