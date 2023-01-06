@@ -13,7 +13,7 @@
       > <!--TODO 4 check click behavior-->
         <span @click="selectedRoute(item)">
           <img :src="item.icon"
-               alt="Icon for page {{item.label}}"
+               alt="Icon for page ${{item.label}}"
                class="icons">
           <!--todo 1 get itemlable to fill text-->
           <!--{{item.label}}-->
@@ -27,9 +27,10 @@
 import { createVNode, defineComponent } from 'vue'
 import { getRoot } from '/@/root'
 import { ERouterName } from '/@/types'
-import homeIcon from '/@/assets/icons/bottombar/home.png'
-import videoIcon from '/@/assets/icons/bottombar/video-camera-alt.png'
-import settingsIcon from '/@/assets/icons/bottombar/picture.png'
+import homeIcon from '/@/assets/icons/bottombar/home_colored.png'
+import videoIcon from '/@/assets/icons/bottombar/video-colored.png'
+import settingsIcon from '/@/assets/icons/bottombar/profile-colored.png'
+import gallery from '/@/assets/icons/bottombar/gallery-colored.png'
 
 const icons = {
   homeIcon,
@@ -112,6 +113,7 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   height: $bottom-bar-height;
+  background-color: white;
 
   .items {
     display: flex;
@@ -130,8 +132,16 @@ export default defineComponent({
       width: 100%;
     }
 
-    .selected {
-      background-color: $bambi-shade-darker-3;
+    a:not(.selected) {
+      img {
+        filter: brightness(0%);
+      }
+    }
+
+    a.selected {
+      img {
+        filter: none;
+      }
     }
 
     .icons {
@@ -139,7 +149,6 @@ export default defineComponent({
       max-height: 30px;
       width: 100%;
       color: $bambi-nat-ultralight;
-      filter: invert(100%);
     }
   }
 }

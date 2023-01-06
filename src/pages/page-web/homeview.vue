@@ -2,13 +2,13 @@
   <div class="home-view">
     <div class="content">
 
-      <div class="north">
+      <div class="north content-warning">
         <div class="content-container">
           <div class="icon-container north">
             <img :src="compass" alt="icon of compass" class="home-icon compass">
           </div>
           <p v-if="check">--°</p>
-          <p v-else class="num">0°</p> <!--todo 5 add nordung-->
+          <p v-else class="num">359°</p> <!--todo 5 add nordung-->
         </div>
         <h5>Nordung</h5>
       </div>
@@ -27,7 +27,7 @@
         <h5>RKT State</h5>
       </div>
 
-      <div class="battery">
+      <div class="battery content-alert">
         <div class="content-container">
           <div class="icon-container">
             <img :src="battery" class="home-icon" alt="icon of battery">
@@ -93,12 +93,14 @@
           {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
           <h6>Direction</h6>
           <p v-if="check">--</p>
-          <p v-else class="num"></p>
+          <p v-else class="num">
+
+          </p>
         </div>
         <div class="wind-speed">
           <h6>Speed</h6>
           <p v-if="check">--</p>
-          <p v-else class="num"> <!--todo 5 fill-->
+          <p v-else class="num">20 <!--todo 5 fill-->
             <span class="unit">km/h</span>
           </p>
         </div>
@@ -109,14 +111,14 @@
         <div class="speed-horizontal">
           <h6>horizontal</h6>
           <p v-if="check">--</p>
-          <p v-else class="num"> <!--todo 5 fill-->
+          <p v-else class="num">10 <!--todo 5 fill-->
             <span class="unit">km/h</span>
           </p>
         </div>
         <div class="speed-vertical">
           <h6>vertical</h6>
           <p v-if="check">--</p>
-          <p v-else class="num">  <!--todo 5 fill-->
+          <p v-else class="num">30  <!--todo 5 fill-->
             <span class="unit">km/h</span></p>
         </div>
         <h5>Drone Speed</h5>
@@ -285,7 +287,7 @@ const check = ref(false)
 <style lang="scss" scoped>
 @import "/@/styles/variables.scss";
 
-$num-font-size: 1.2em;
+$num-font-size: 1.1rem;
 
 p,
 h5,
@@ -297,7 +299,7 @@ h6 {
 }
 
 h6 {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 h5 {
@@ -324,10 +326,10 @@ img {
 .home-view {
   width: 100%;
   height: calc(100% - (2 * $bottom-bar-height));
-  border: $bambi-nat-ultralight 3px solid;
-  background-color: $bambi-nat-ultralight;
+  border: $bambi-white 3px solid;
+  background-color: $bambi-white;
 
-  padding: 4vw;
+  padding: 2vw;
 
   overflow-y: scroll;
 
@@ -336,45 +338,40 @@ img {
     height: auto;
     display: grid;
     max-width: 500px;
-    grid-template-columns: repeat(12, 8.333%);
+    row-gap: min(2vw, 2.5em);
+    column-gap: min(2vw, 2.5em);
+    grid-template-columns: repeat(8, 1fr);
     grid-auto-rows: 1fr;
-    row-gap: 5vh;
 
     //region grid layout
-    .north {
-      grid-column: 1/4;
+    .north,
+    .battery{
+      grid-column: 1/3;
     }
 
-    .gps {
-      grid-column: 5/8;
-    }
-
-    .battery {
-      grid-column: 1/4;
-    }
-
-    .storage {
-      grid-column: 5/8;
+    .gps,
+    .storage{
+      grid-column: 3/5;
     }
 
     .height {
-      grid-column: 1/6;
+      grid-column: 1/5;
     }
 
     .coordinates {
-      grid-column: 7/13;
+      grid-column: 5/9;
     }
 
     .wind {
-      grid-column: 1/6;
+      grid-column: 1/5;
     }
 
     .drone-speed {
-      grid-column: 7/13;
+      grid-column: 5/9;
     }
 
     .flight-time {
-      grid-column: 1/13;
+      grid-column: 1/9;
     }
 
     //endregion
@@ -387,8 +384,18 @@ img {
       height: 100%;
 
       border-radius: 10px;
-      box-shadow: 1px 1px 5px rgba(175, 230, 173, 0.78);
-      padding: 0.5rem 0.6rem;
+      border-color: $bambi-stroke-light;
+
+      //region box shadow
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px; //#36
+      //box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px; //76
+      //box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px; //35
+      //box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; //0
+      //box-shadow: 1px 1px 5px $bambi-shade-darker-4;
+      //note -> for examples https://getcssscan.com/css-box-shadow-examples
+      //endregion
+
+      padding: 0.4rem 0.5rem;
 
       //children
       display: flex;
@@ -406,21 +413,33 @@ img {
       .content-container {
         display: flex;
         justify-content: space-evenly;
+        align-items: center;
+        gap: 0.5em;
 
-        .icon-container {
-          height: $num-font-size;
-          width: 30%;
-
-          .home-icon {
-            height: 100%;
-            width: auto;
-          }
+        p{
+          flex-shrink: 0;
         }
 
         .icon-container.north { //change size for pfeil
-          height: calc(2 * $num-font-size);
-          width: auto;
+
         }
+      }
+    }
+
+    .content-warning{
+      background-color: $bambi-warning-color;
+
+      // TODO maybe also change styles
+    }
+    .content-alert{
+      background-color: $bambi-alert-color;
+      .unit,
+      h5,
+      .num{
+        color: white;
+      }
+      img{
+        filter: invert(100%);
       }
     }
 
@@ -438,7 +457,7 @@ img {
     .drone-speed,
     .flight-time,
     .height {
-      justify-content: space-around;
+      justify-content: space-evenly;
       h5{
         text-align: left;
       }
@@ -459,8 +478,8 @@ img {
 }
 
 .warning {
-  border-color: orange;
-  $shadow: inset 0 0 30px orange;
+  border-color: $bambi-warning-color;
+  $shadow: inset 0 0 30px $bambi-warning-color;
 
   -webkit-box-shadow: $shadow;
   -moz-box-shadow: $shadow;
@@ -470,7 +489,7 @@ img {
 }
 
 .alert {
-  border-color: red;
+  border-color: $bambi-alert-color;
 }
 
 </style>
