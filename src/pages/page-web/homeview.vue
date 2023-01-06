@@ -1,68 +1,156 @@
 <template>
   <div class="home-view">
-    <!--
-        <div class="alert"></div>
-        <h1>HomeView</h1>
-    -->
     <div class="content">
-      <div class="north">
-        <p>Nordung</p>
-        <p>0°</p> <!--todo 5 add nordung-->
-      </div>
-      <div class="gps">
-        <p>RKT State</p>
-        <p v-if="onlineDevices.data.length == 0">NO DEVICE</p>
-        <p v-else class="num">{{ deviceInfo[onlineDevices.data[0].sn].rkt_state.gps_number }} ||
-          {{ deviceInfo[onlineDevices.data[0].sn].position_state.gps_number }}</p>
-        <p>Satelliten</p>
-      </div>
-      <div class="battery">
-        <p>Batterie</p>
-        <p v-if="onlineDevices.data.length == 0">NO DEVICE</p>
-        <p v-else>{{ deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent }}%</p>
-      </div>
-      <div class="storage">
-        <p>Höhen</p>
-        <p>100 </p>
-        <p>50m Startpunkt</p>
-      </div>
-      <div class="height">
-        <p>Höhen</p>
-        <p>100 m Meeresspiegel</p>
-        <p>50m Startpunkt</p>
-      </div>
-      <div class="coordinates">
-        <p>Coordinates</p>
-        <p>latitude</p>
 
-        <p>longitude</p>
+      <div class="north">
+        <div class="content-container">
+          <div class="icon-container north">
+            <img :src="compass" alt="icon of compass" class="home-icon compass">
+          </div>
+          <p v-if="check">--°</p>
+          <p v-else class="num">0°</p> <!--todo 5 add nordung-->
+        </div>
+        <h5>Nordung</h5>
       </div>
+
+      <div class="gps">
+        <div>
+          <p v-if="check">--</p>
+          <p v-else class="num">20
+            <!--
+            {{ deviceInfo[onlineDevices.data[0].sn].rkt_state.gps_number }} ||
+            {{ deviceInfo[onlineDevices.data[0].sn].position_state.gps_number }}
+            -->
+            <span class="unit">Satelliten</span>
+          </p>
+        </div>
+        <h5>RKT State</h5>
+      </div>
+
+      <div class="battery">
+        <div class="content-container">
+          <div class="icon-container">
+            <img :src="battery" class="home-icon" alt="icon of battery">
+          </div>
+          <p v-if="check">--%</p>
+          <p v-else class="num">100
+            <!--          {{ deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent }}-->
+            <span class="unit">%</span>
+          </p>
+        </div>
+        <h5>Batterie</h5>
+      </div>
+
+      <div class="storage">
+        <div class="content-container">
+          <div class="icon-container">
+            <img :src="storage" class="home-icon" alt="icon of storage">
+          </div>
+          <p v-if="check">--%</p>
+          <p v-else class="num">100 <!--  {{ storage_percent }}  todo 5 calc storage_percent with every update-->
+            <span class="unit">%</span>
+          </p>
+        </div>
+        <h5>Storage</h5>
+      </div>
+
+      <div class="height">
+        <div>
+          <h6>height</h6>
+          <p v-if="check">0,0</p>
+          <p v-else class="num">200 <!--todo 5 fill-->
+            <span class="unit">m</span>
+          </p>
+        </div>
+
+        <div>
+          <h6>elevation</h6>
+          <p v-if="check">0,0</p>
+          <p v-else class="num">150 <!--todo 5 fill-->
+            <span class="unit">m</span>
+          </p>
+        </div>
+        <h5>Höhen</h5>
+      </div>
+
+      <div class="coordinates">
+        <div class="latitude">
+          <h6>latitude</h6>
+          <p v-if="check">0,0</p>
+          <p v-else class="num">-23,423239</p>
+        </div>
+
+        <div class="longitude">
+          <h6>longitude</h6>
+          <p v-if="check">0,0</p>
+          <p v-else class="num">-11,111118</p>
+        </div>
+        <h5>Coordinates</h5>
+      </div>
+
       <div class="wind">
-        <p>Wind</p>
-        <p>Direction</p>
-        <p>Speed</p>
+        <div class="wind-dir"> <!--todo check with icon and rotation
+          {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
+          <h6>Direction</h6>
+          <p v-if="check">--</p>
+          <p v-else class="num"></p>
+        </div>
+        <div class="wind-speed">
+          <h6>Speed</h6>
+          <p v-if="check">--</p>
+          <p v-else class="num"> <!--todo 5 fill-->
+            <span class="unit">km/h</span>
+          </p>
+        </div>
+        <h5>Wind</h5>
       </div>
+
       <div class="drone-speed">
-        <p>Drone Speed</p>
-        <p>horizontal</p>
-        <p>vertical</p>
+        <div class="speed-horizontal">
+          <h6>horizontal</h6>
+          <p v-if="check">--</p>
+          <p v-else class="num"> <!--todo 5 fill-->
+            <span class="unit">km/h</span>
+          </p>
+        </div>
+        <div class="speed-vertical">
+          <h6>vertical</h6>
+          <p v-if="check">--</p>
+          <p v-else class="num">  <!--todo 5 fill-->
+            <span class="unit">km/h</span></p>
+        </div>
+        <h5>Drone Speed</h5>
       </div>
+
       <div class="flight-time">
-        <p>Flight Time</p>
-        <p>00:30 min</p>
-        <p>vertical</p>
+        <div class="since-start">
+          <p v-if="check">--:--</p>
+          <p v-else class="num">00:30</p>
+          <h6>since start</h6>
+        </div>
+        <div class="remaining-flight-time">
+          <p v-if="check">--:--</p>
+          <p v-else class="num">20:30</p>
+          <h6>remaining (battery)</h6>
+        </div>
+        <h5>Flight Time</h5>
       </div>
+
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import battery from '/@/assets/icons/icons_homeview/battery.png'
+import compass from '/@/assets/icons/icons_homeview/compass 1.png'
+import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
+
+// region ---------------------------- tsa copy code ----------------------------
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useMyStore } from '/@/store'
-import { getDeviceTopo, getUnreadDeviceHms, updateDeviceHms } from '/@/api/manage'
+import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
-import { EHmsLevel } from '/@/types/enums'
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -185,15 +273,52 @@ function getOnlineDeviceHms () {
   })
 }
 
+// endregion
+
+const storage_percent = ref(0)
+const check = ref(false)
+
 // todo 2 add little animation for warning and alert
+// TODO 5 review grid -> row-gap and col-gap and space it to 6
 </script>
 
 <style lang="scss" scoped>
 @import "/@/styles/variables.scss";
 
-p{
-  margin: 0;
+$num-font-size: 1.2em;
+
+p,
+h5,
+h6 {
+  margin: 0; //reset
   color: black;
+  font-family: 'Open Sans', sans-serif;
+  //font-family: 'Fredoka', sans-serif;
+}
+
+h6 {
+  font-size: 14px;
+}
+
+h5 {
+  font-size: 14px;
+  font-weight: 300;
+  text-align: center;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.num {
+  font-feature-settings: "tnum";
+  font-size: $num-font-size;
+}
+
+.unit {
+  color: $bambi-shade-darker-1;
+  font-size: 10px;
 }
 
 .home-view {
@@ -202,7 +327,7 @@ p{
   border: $bambi-nat-ultralight 3px solid;
   background-color: $bambi-nat-ultralight;
 
-  padding: 5%;
+  padding: 4vw;
 
   overflow-y: scroll;
 
@@ -212,51 +337,118 @@ p{
     display: grid;
     max-width: 500px;
     grid-template-columns: repeat(12, 8.333%);
+    grid-auto-rows: 1fr;
     row-gap: 5vh;
 
+    //region grid layout
     .north {
       grid-column: 1/4;
     }
 
-    .gps{
+    .gps {
       grid-column: 5/8;
     }
 
-    .battery{
+    .battery {
       grid-column: 1/4;
     }
 
-    .storage{
+    .storage {
       grid-column: 5/8;
     }
 
-    .height{
-      grid-column: 1/5;
-    }
-
-    .coordinates{
-      grid-column: 6/13;
-    }
-
-    .wind{
+    .height {
       grid-column: 1/6;
     }
 
-    .drone-speed{
+    .coordinates {
       grid-column: 7/13;
     }
 
-    .flight-time{
+    .wind {
+      grid-column: 1/6;
+    }
+
+    .drone-speed {
+      grid-column: 7/13;
+    }
+
+    .flight-time {
       grid-column: 1/13;
     }
 
-    div {
+    //endregion
+
+    > div { //divs with content
       background-color: white;
       text-align: center;
+
       width: 100%;
       height: 100%;
+
       border-radius: 10px;
       box-shadow: 1px 1px 5px rgba(175, 230, 173, 0.78);
+      padding: 0.5rem 0.6rem;
+
+      //children
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      h5 {
+        width: 100%; //grow all h5 element
+        align-self: flex-start;
+        order: -1;
+      }
+
+      .content-container {
+        display: flex;
+        justify-content: space-evenly;
+
+        .icon-container {
+          height: $num-font-size;
+          width: 30%;
+
+          .home-icon {
+            height: 100%;
+            width: auto;
+          }
+        }
+
+        .icon-container.north { //change size for pfeil
+          height: calc(2 * $num-font-size);
+          width: auto;
+        }
+      }
+    }
+
+    .north,
+    .gps,
+    .battery,
+    .storage {
+      div {
+        width: 100%;
+      }
+    }
+
+    .coordinates,
+    .wind,
+    .drone-speed,
+    .flight-time,
+    .height {
+      justify-content: space-around;
+      h5{
+        text-align: left;
+      }
+    }
+
+    .latitude, .longitude {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
     }
 
     -webkit-user-select: none;
@@ -266,7 +458,7 @@ p{
   }
 }
 
-.warning{
+.warning {
   border-color: orange;
   $shadow: inset 0 0 30px orange;
 
@@ -277,7 +469,7 @@ p{
   //todo 2 add little animation for warning and alert
 }
 
-.alert{
+.alert {
   border-color: red;
 }
 
