@@ -14,7 +14,7 @@
 import BottomBar from '/@/components/common/bottombar.vue'
 import MyTopbar from '/@/components/common/my-topbar.vue'
 
-//region ---------------------------- workspace copy code ----------------------------
+// region ---------------------------- workspace copy code ----------------------------
 import { getRoot } from '/@/root'
 import { useMyStore } from '/@/store'
 import { EBizCode } from '/@/types'
@@ -95,15 +95,13 @@ const messageHandler = async (payload: any) => {
 
 // Auf WebSocket-Nachrichten warten
 useConnectWebSocket(messageHandler)
-//endregion
-
+// endregion
 
 </script>
 
 <style lang="scss" scoped>
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
-
 .fontBold {
   font-weight: 500;
   font-size: 18px;

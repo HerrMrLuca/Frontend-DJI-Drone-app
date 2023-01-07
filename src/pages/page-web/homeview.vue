@@ -91,12 +91,13 @@
       <div class="wind">
         <div class="wind-dir"> <!--todo check with icon and rotation
           {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
-          <h6>Direction</h6>
-          <p v-if="check">--</p>
-          <p v-else class="num">
-
-          </p>
+          <!--          <h6>Direction</h6>-->
+          <div class="compass">
+            <img class="cardinal-points" :src="cardinalPoints">
+            <img class="needle" :class="direction" :src="needle" :style="{rotate: direction + 'deg'}">
+          </div>
         </div>
+
         <div class="wind-speed">
           <h6>Speed</h6>
           <p v-if="check">--</p>
@@ -137,8 +138,18 @@
         </div>
         <h5>Flight Time</h5>
       </div>
+      <div class="temperature">
+        <p class="num">-20
+          <span class="unit">°C</span>
+        </p>
+        <h5>Weather</h5>
+      </div>
 
+      <div class="map">
+        <img :src="map">
+      </div>
     </div>
+    <button @click="changeDir">change</button>
   </div>
 </template>
 
@@ -146,6 +157,9 @@
 import battery from '/@/assets/icons/icons_homeview/battery.png'
 import compass from '/@/assets/icons/icons_homeview/compass 1.png'
 import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
+import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
+import needle from '/@/assets/icons/icons_homeview/needle.png'
+import map from '/@/assets/icons/Preview.png'
 
 // region ---------------------------- tsa copy code ----------------------------
 import { computed, onMounted, reactive, ref, watch } from 'vue'
@@ -280,14 +294,72 @@ function getOnlineDeviceHms () {
 const storage_percent = ref(0)
 const check = ref(false)
 
+// region ---------------------------- compass logic  ----------------------------
+const direction = ref(0)
+// TODO delete in production
+let i = -1
+const dires = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest']
+let dirTest = 'North'
+
+function closestAngle (from: number, to: number) {
+  // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
+  return from + ((((to - from) % 360) + 540) % 360) - 180
+}
+
+function chooseDeg () {
+  switch (dirTest) { // todo change in production
+    case 'North':
+      direction.value = closestAngle(direction.value, 0)
+      break
+    case 'Northeast':
+      direction.value = closestAngle(direction.value, 45)
+      break
+    case 'East':
+      direction.value = closestAngle(direction.value, 90)
+      break
+    case 'Southeast':
+      direction.value = closestAngle(direction.value, 135)
+      break
+    case 'South':
+      direction.value = closestAngle(direction.value, 180)
+      break
+    case 'Southwest':
+      direction.value = closestAngle(direction.value, 225)
+      break
+    case 'West':
+      direction.value = closestAngle(direction.value, 270)
+      break
+    case 'Northwest':
+      direction.value = closestAngle(direction.value, 315)
+      break
+  }
+}
+
+function changeDir () {
+  i = Math.floor(Math.random() * 8)
+  dirTest = dires[i]
+  chooseDeg()
+}
+
+// endregion
+
 // todo 2 add little animation for warning and alert
-// TODO 5 review grid -> row-gap and col-gap and space it to 6
+
+// todo 2 https://open-meteo.com/ search for good api for temperature and fetch data or maybe drone has data
 </script>
 
 <style lang="scss" scoped>
 @import "/@/styles/variables.scss";
 
 $num-font-size: 1.1rem;
+* {
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
 
 p,
 h5,
@@ -309,8 +381,10 @@ h5 {
 }
 
 img {
+  display: block;
   width: 100%;
   height: auto;
+  max-width: 100%;
 }
 
 .num {
@@ -341,16 +415,16 @@ img {
     row-gap: min(2vw, 2.5em);
     column-gap: min(2vw, 2.5em);
     grid-template-columns: repeat(8, 1fr);
-    grid-auto-rows: 1fr;
+
 
     //region grid layout
     .north,
-    .battery{
+    .battery {
       grid-column: 1/3;
     }
 
     .gps,
-    .storage{
+    .storage {
       grid-column: 3/5;
     }
 
@@ -371,7 +445,16 @@ img {
     }
 
     .flight-time {
-      grid-column: 1/9;
+      grid-column: 1/7;
+    }
+
+    .temperature {
+      grid-column: 7/9;
+    }
+
+    .map {
+      grid-column: 5/9;
+      grid-row: 1/3;
     }
 
     //endregion
@@ -416,7 +499,7 @@ img {
         align-items: center;
         gap: 0.5em;
 
-        p{
+        p {
           flex-shrink: 0;
         }
 
@@ -426,19 +509,46 @@ img {
       }
     }
 
-    .content-warning{
+    .wind {
+      .wind-dir {
+        flex-basis: 35%;
+
+        .compass {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+
+          .cardinal-points {
+            position: relative;
+          }
+
+          .needle {
+            position: absolute;
+            transition: rotate 0.5s ease-in-out;
+            width: 30%;
+          }
+        }
+      }
+    }
+
+    .content-warning {
       background-color: $bambi-warning-color;
 
       // TODO maybe also change styles
     }
-    .content-alert{
+
+    .content-alert {
       background-color: $bambi-alert-color;
+
       .unit,
       h5,
-      .num{
+      .num {
         color: white;
       }
-      img{
+
+      img {
         filter: invert(100%);
       }
     }
@@ -452,13 +562,30 @@ img {
       }
     }
 
+    .map {
+      padding: 0 0;
+      overflow: hidden;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+
     .coordinates,
     .wind,
     .drone-speed,
     .flight-time,
-    .height {
+    .height,
+    .temperature {
       justify-content: space-evenly;
-      h5{
+
+      h5 {
         text-align: left;
       }
     }
@@ -492,4 +619,12 @@ img {
   border-color: $bambi-alert-color;
 }
 
+@keyframes north {
+  0% {
+    rotate: 360deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
 </style>
