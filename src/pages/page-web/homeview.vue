@@ -1,14 +1,13 @@
 <template>
   <div class="home-view">
     <div class="content">
-
-      <div class="north content-warning">
+      <div class="north">
         <div class="content-container">
           <div class="icon-container north">
-            <img :src="compass" alt="icon of compass" class="home-icon compass">
+            <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: droneDir + 'deg'}">
           </div>
           <p v-if="check">--°</p>
-          <p v-else class="num">359°</p> <!--todo 5 add nordung-->
+          <p v-else class="num">{{droneDir}}°</p> <!--todo 5 add nordung-->
         </div>
         <h5>Nordung</h5>
       </div>
@@ -27,12 +26,12 @@
         <h5>RKT State</h5>
       </div>
 
-      <div class="battery content-alert">
+      <div class="battery">
         <div class="content-container">
           <div class="icon-container">
             <img :src="battery" class="home-icon" alt="icon of battery">
           </div>
-          <p v-if="check">--%</p>
+          <p v-if="check">-- <span class="unit">%</span></p>
           <p v-else class="num">100
             <!--          {{ deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent }}-->
             <span class="unit">%</span>
@@ -46,7 +45,7 @@
           <div class="icon-container">
             <img :src="storage" class="home-icon" alt="icon of storage">
           </div>
-          <p v-if="check">--%</p>
+          <p v-if="check">-- <span class="unit">%</span></p>
           <p v-else class="num">100 <!--  {{ storage_percent }}  todo 5 calc storage_percent with every update-->
             <span class="unit">%</span>
           </p>
@@ -57,16 +56,16 @@
       <div class="height">
         <div>
           <h6>height</h6>
-          <p v-if="check">0,0</p>
-          <p v-else class="num">200 <!--todo 5 fill-->
+          <p v-if="check">0,0 <span class="unit">m</span></p>
+          <p v-else class="num">200,23 <!--todo 5 fill-->
             <span class="unit">m</span>
           </p>
         </div>
 
         <div>
           <h6>elevation</h6>
-          <p v-if="check">0,0</p>
-          <p v-else class="num">150 <!--todo 5 fill-->
+          <p v-if="check">0,0 <span class="unit">m</span></p>
+          <p v-else class="num">150,50 <!--todo 5 fill-->
             <span class="unit">m</span>
           </p>
         </div>
@@ -76,13 +75,13 @@
       <div class="coordinates">
         <div class="latitude">
           <h6>latitude</h6>
-          <p v-if="check">0,0</p>
+          <p v-if="check">--,------</p>
           <p v-else class="num">-23,423239</p>
         </div>
 
         <div class="longitude">
           <h6>longitude</h6>
-          <p v-if="check">0,0</p>
+          <p v-if="check">--,------</p>
           <p v-else class="num">-11,111118</p>
         </div>
         <h5>Coordinates</h5>
@@ -91,15 +90,16 @@
       <div class="wind">
         <div class="wind-dir"> <!--todo check with icon and rotation
           {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
-          <h6>Direction</h6>
-          <p v-if="check">--</p>
-          <p v-else class="num">
-
-          </p>
+          <!--          <h6>Direction</h6>-->
+          <div class="compass">
+            <img class="cardinal-points" :src="cardinalPoints">
+            <img class="needle" :class="direction" :src="needle" :style="{rotate: direction + 'deg'}">
+          </div>
         </div>
+
         <div class="wind-speed">
           <h6>Speed</h6>
-          <p v-if="check">--</p>
+          <p v-if="check">-- <span class="unit">km/h</span></p>
           <p v-else class="num">20 <!--todo 5 fill-->
             <span class="unit">km/h</span>
           </p>
@@ -110,14 +110,14 @@
       <div class="drone-speed">
         <div class="speed-horizontal">
           <h6>horizontal</h6>
-          <p v-if="check">--</p>
+          <p v-if="check">-- <span class="unit">km/h</span></p>
           <p v-else class="num">10 <!--todo 5 fill-->
             <span class="unit">km/h</span>
           </p>
         </div>
         <div class="speed-vertical">
           <h6>vertical</h6>
-          <p v-if="check">--</p>
+          <p v-if="check">-- <span class="unit">km/h</span></p>
           <p v-else class="num">30  <!--todo 5 fill-->
             <span class="unit">km/h</span></p>
         </div>
@@ -137,8 +137,21 @@
         </div>
         <h5>Flight Time</h5>
       </div>
+      <div class="temperature">
+        <!-- todo 3 if else check -->
+        <p class="num">-20
+          <span class="unit">°C</span>
+        </p>
+        <h5>Weather</h5>
+      </div>
 
+      <div class="map">
+        <img :src="map">
+      </div>
     </div>
+    <br>
+    <button @click="changeDir">change</button>
+    <button @click="changeDirDrone">changeDrone</button>
   </div>
 </template>
 
@@ -146,6 +159,9 @@
 import battery from '/@/assets/icons/icons_homeview/battery.png'
 import compass from '/@/assets/icons/icons_homeview/compass 1.png'
 import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
+import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
+import needle from '/@/assets/icons/icons_homeview/needle.png'
+import map from '/@/assets/icons/Preview.png' // inverted
 
 // region ---------------------------- tsa copy code ----------------------------
 import { computed, onMounted, reactive, ref, watch } from 'vue'
@@ -153,6 +169,8 @@ import { useMyStore } from '/@/store'
 import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
+
+const check = ref(false)
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -278,16 +296,82 @@ function getOnlineDeviceHms () {
 // endregion
 
 const storage_percent = ref(0)
-const check = ref(false)
+
+// region ---------------------------- compass logic  ----------------------------
+const droneDir = ref(0)
+const direction = ref(0)
+// TODO delete in production
+let i = -1
+const dires = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest']
+let dirTest = 'North'
+
+function closestAngle (from: number, to: number) {
+  // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
+  return from + ((((to - from) % 360) + 540) % 360) - 180
+}
+
+function chooseDeg (direction: number, deg: number) {
+  switch (dirTest) { // todo change in production
+    case 'North':
+      direction = closestAngle(direction, 0)
+      break
+    case 'Northeast':
+      direction = closestAngle(direction, 45)
+      break
+    case 'East':
+      direction = closestAngle(direction, 90)
+      break
+    case 'Southeast':
+      direction = closestAngle(direction, 135)
+      break
+    case 'South':
+      direction = closestAngle(direction, 180)
+      break
+    case 'Southwest':
+      direction = closestAngle(direction, 225)
+      break
+    case 'West':
+      direction = closestAngle(direction, 270)
+      break
+    case 'Northwest':
+      direction = closestAngle(direction, 315)
+      break
+  }
+  if (deg !== -20) {
+    direction = closestAngle(direction, deg)
+  }
+  return direction
+}
+
+function changeDir () {
+  i = Math.floor(Math.random() * 8)
+  dirTest = dires[i]
+  direction.value = chooseDeg(direction.value, -20)
+}
+
+function changeDirDrone () {
+  droneDir.value = chooseDeg(droneDir.value, Math.floor(Math.random() * 380))
+}
+
+// endregion
 
 // todo 2 add little animation for warning and alert
-// TODO 5 review grid -> row-gap and col-gap and space it to 6
+
+// todo 2 https://open-meteo.com/ search for good api for temperature and fetch data or maybe drone has data
 </script>
 
 <style lang="scss" scoped>
 @import "/@/styles/variables.scss";
 
 $num-font-size: 1.1rem;
+* {
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
 
 p,
 h5,
@@ -309,8 +393,10 @@ h5 {
 }
 
 img {
+  display: block;
   width: 100%;
   height: auto;
+  max-width: 100%;
 }
 
 .num {
@@ -341,16 +427,15 @@ img {
     row-gap: min(2vw, 2.5em);
     column-gap: min(2vw, 2.5em);
     grid-template-columns: repeat(8, 1fr);
-    grid-auto-rows: 1fr;
 
     //region grid layout
     .north,
-    .battery{
+    .battery {
       grid-column: 1/3;
     }
 
     .gps,
-    .storage{
+    .storage {
       grid-column: 3/5;
     }
 
@@ -371,7 +456,16 @@ img {
     }
 
     .flight-time {
-      grid-column: 1/9;
+      grid-column: 1/6;
+    }
+
+    .temperature {
+      grid-column: 6/9;
+    }
+
+    .map {
+      grid-column: 5/9;
+      grid-row: 1/3;
     }
 
     //endregion
@@ -416,8 +510,12 @@ img {
         align-items: center;
         gap: 0.5em;
 
-        p{
+        p {
           flex-shrink: 0;
+        }
+
+        .icon-container:not(.north){
+          flex-basis: 30%;
         }
 
         .icon-container.north { //change size for pfeil
@@ -426,20 +524,48 @@ img {
       }
     }
 
-    .content-warning{
-      background-color: $bambi-warning-color;
-
-      // TODO maybe also change styles
-    }
-    .content-alert{
-      background-color: $bambi-alert-color;
-      .unit,
-      h5,
-      .num{
-        color: white;
+    .north {
+      .compass {
+        transform-origin: center;
+        transition: rotate 0.5s ease-in-out;
+        height: 100%;
+        width: auto;
       }
-      img{
-        filter: invert(100%);
+      p{
+        display: block;
+        flex-basis: 60%;
+        text-align: right;
+      }
+    }
+
+    .wind {
+
+      .wind-dir {
+        flex-basis: 35%;
+
+        .compass {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+
+          .cardinal-points {
+            position: relative;
+          }
+
+          .needle {
+            position: absolute;
+            transition: rotate 0.5s ease-in-out;
+            width: 30%;
+          }
+        }
+      }
+    }
+
+    .gps {
+      .unit {
+        display: block;
       }
     }
 
@@ -452,13 +578,30 @@ img {
       }
     }
 
+    .map {
+      padding: 0 0;
+      overflow: hidden;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+
     .coordinates,
     .wind,
     .drone-speed,
-    .flight-time,
-    .height {
-      justify-content: space-evenly;
-      h5{
+    .height,
+    .temperature,
+    .flight-time{
+      justify-content: space-around;
+
+      h5 {
         text-align: left;
       }
     }
@@ -470,6 +613,25 @@ img {
       align-items: baseline;
     }
 
+    .content-warning {
+      background-color: $bambi-warning-color;
+
+      // TODO maybe also change styles
+    }
+
+    .content-alert {
+      background-color: $bambi-alert-color;
+
+      .unit,
+      h5,
+      .num {
+        color: white;
+      }
+
+      img {
+        filter: invert(100%);
+      }
+    }
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -492,4 +654,12 @@ img {
   border-color: $bambi-alert-color;
 }
 
+@keyframes north {
+  0% {
+    rotate: 360deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
 </style>

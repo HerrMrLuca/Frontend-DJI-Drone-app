@@ -102,7 +102,6 @@ useConnectWebSocket(messageHandler)
 <style lang="scss" scoped>
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
-
 .fontBold {
   font-weight: 500;
   font-size: 18px;
