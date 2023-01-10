@@ -3,17 +3,17 @@
     <!--    <img src="src/assets/icons/bottombar/home.svg">-->
     <div class="fz16 height-100 items">
       <router-link
-          v-for="item in options"
-          :key="item.key"
-          :to="item.path"
-          :class="{
+        v-for="item in options"
+        :key="item.key"
+        :class="{
             'menu-item': true,
             selected: selectedRoute(item)
           }"
+        :to="item.path"
       > <!--TODO 4 check click behavior-->
         <span @click="selectedRoute(item)">
-          <img :src="item.icon"
-               alt="Icon for page ${{item.label}}"
+          <img :alt="`Icon for page ${item.label}`"
+               :src="item.icon"
                class="icons">
           <!--todo 1 get itemlable to fill text-->
           <!--{{item.label}}-->
@@ -30,7 +30,6 @@ import { ERouterName } from '/@/types'
 import homeIcon from '/@/assets/icons/bottombar/home_colored.png'
 import videoIcon from '/@/assets/icons/bottombar/video-colored.png'
 import settingsIcon from '/@/assets/icons/bottombar/profile-colored.png'
-import gallery from '/@/assets/icons/bottombar/gallery-colored.png'
 
 const icons = {
   homeIcon,
@@ -43,8 +42,8 @@ interface IOptions {
   key: number
   label: string
   path:
-      | string
-      | {
+    | string
+    | {
     path: string
     query?: any
   }
@@ -66,19 +65,21 @@ export default defineComponent({
     const options = [
       {
         key: 0,
-        label: ERouterName.HOMEPAGE.charAt(0).toUpperCase() + ERouterName.HOMEPAGE.substr(1),
+        label: ERouterName.HOMEPAGE.charAt(0).toUpperCase() + ERouterName.HOMEPAGE.substring(1),
         path: '/' + ERouterName.HOMEPAGE,
         icon: homeIcon
       },
       {
         key: 1,
-        label: ERouterName.MEMBERS.charAt(0).toUpperCase() + ERouterName.MEMBERS.substr(1),
-        path: '/' + ERouterName.MEMBERS,
+        // label: ERouterName.MEMBERS.charAt(0).toUpperCase() + ERouterName.MEMBERS.substring(1),
+        // path: '/' + ERouterName.MEMBERS,
+        label: ERouterName.STREAM.charAt(0).toUpperCase() + ERouterName.STREAM.substring(1),
+        path: '/' + ERouterName.STREAM,
         icon: videoIcon
       },
       {
         key: 2,
-        label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1),
+        label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substring(1),
         path: '/' + ERouterName.DEVICES,
         icon: settingsIcon
       }

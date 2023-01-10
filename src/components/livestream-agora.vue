@@ -4,28 +4,30 @@
     <p class="fz24">Live streaming source selection</p>
     <div class="flex-row flex-justify-center flex-align-center mt10">
       <a-select
-        style="width:150px"
         placeholder="Select Drone"
+        style="width:150px"
         @select="onDroneSelect"
       >
         <a-select-option
           v-for="item in dronePara.droneList"
           :key="item.value"
           :value="item.value"
-          >{{ item.label }}</a-select-option
+        >{{ item.label }}
+        </a-select-option
         >
       </a-select>
       <a-select
         class="ml10"
-        style="width:150px"
         placeholder="Select Camera"
+        style="width:150px"
         @select="onCameraSelect"
       >
         <a-select-option
           v-for="item in dronePara.cameraList"
           :key="item.value"
           :value="item.value"
-          >{{ item.label }}</a-select-option
+        >{{ item.label }}
+        </a-select-option
         >
       </a-select>
       <!-- <a-select
@@ -44,15 +46,16 @@
       </a-select> -->
       <a-select
         class="ml10"
-        style="width:150px"
         placeholder="Select Clarity"
+        style="width:150px"
         @select="onClaritySelect"
       >
         <a-select-option
           v-for="item in clarityList"
           :key="item.value"
           :value="item.value"
-          >{{ item.label }}</a-select-option
+        >{{ item.label }}
+        </a-select-option
         >
       </a-select>
     </div>
@@ -62,26 +65,29 @@
     <div class="flex-row flex-justify-center flex-align-center">
       <a-input v-model:value="agoraPara.appid" placeholder="APP ID"></a-input>
       <a-input
-        class="ml10"
         v-model:value="agoraPara.token"
+        class="ml10"
         placeholder="Token"
       ></a-input>
       <a-input
-        class="ml10"
         v-model:value="agoraPara.channel"
+        class="ml10"
         placeholder="Channel"
       ></a-input>
     </div>
     <div class="mt20 flex-row flex-justify-center flex-align-center">
-      <a-button type="primary" large @click="onStart">Play</a-button>
-      <a-button class="ml20" type="primary" large @click="onStop"
-        >Stop</a-button
+      <a-button large type="primary" @click="onStart">Play</a-button>
+      <a-button class="ml20" large type="primary" @click="onStop"
+      >Stop
+      </a-button
       >
-      <a-button class="ml20" type="primary" large @click="onUpdateQuality"
-        >Update Clarity</a-button
+      <a-button class="ml20" large type="primary" @click="onUpdateQuality"
+      >Update Clarity
+      </a-button
       >
-      <a-button class="ml20" type="primary" large @click="onRefresh"
-        >Refresh Live Capacity</a-button
+      <a-button class="ml20" large type="primary" @click="onRefresh"
+      >Refresh Live Capacity
+      </a-button
       >
     </div>
   </div>
@@ -90,10 +96,42 @@
 <script lang="ts" setup>
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng'
 import { message } from 'ant-design-vue'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { CURRENT_CONFIG as config } from '/@/api/http/config'
-import { getLiveCapacity, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
+import { getDeviceTopo, getLiveCapacity, getPlatformInfo, getUserInfo, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
+import { ELocalStorageKey } from '/@/types'
+
+/* region testing get-functions and content */
+
+const workspaceId = ref(localStorage.getItem(ELocalStorageKey.WorkspaceId)!)
+
+console.log('start getDeviceTopo')
+const test1 = getDeviceTopo(workspaceId.value)
+console.log(test1)
+console.log('end getDeviceTopo')
+
+console.log('start getLiveCapacity')
+const test2 = getLiveCapacity(workspaceId.value)
+console.log(test2)
+console.log('end getLiveCapacity')
+
+// console.log('start getAllUsersInfo')
+// const test3 = getAllUsersInfo(workspaceId.value, )
+// console.log(test3)
+// console.log('end getAllUsersInfo')
+
+console.log('start getPlatformInfo')
+const test4 = getPlatformInfo()
+console.log(test4)
+console.log('end getPlatformInfo')
+
+console.log('start getUserInfo')
+const test5 = getUserInfo()
+console.log(test5)
+console.log('end getUserInfo')
+
+/* endregion */
 
 const root = getRoot()
 

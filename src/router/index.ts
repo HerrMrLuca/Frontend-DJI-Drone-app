@@ -29,11 +29,17 @@ const routes: Array<RouteRecordRaw> = [
         name: ERouterName.HOMEPAGE,
         component: () => import('/@/pages/page-web/homeview.vue')
 
-      }, {
-        path: '/' + ERouterName.MEMBERS,
-        name: ERouterName.MEMBERS,
-        component: () => import('/@/pages/page-web/projects/members.vue')
       },
+      {
+        path: '/' + ERouterName.STREAM,
+        name: ERouterName.STREAM,
+        component: () => import('/@/pages/page-web/stream.vue'),
+      },
+      // {
+      //   path: '/' + ERouterName.MEMBERS,
+      //   name: ERouterName.MEMBERS,
+      //   component: () => import('/@/pages/page-web/projects/members.vue'),
+      // },
       {
         path: '/' + ERouterName.DEVICES,
         name: ERouterName.DEVICES,

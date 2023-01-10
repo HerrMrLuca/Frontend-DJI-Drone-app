@@ -1,13 +1,15 @@
 <template>
   <div class="home-view">
+    <button @click="changeDir">change</button>
+    <button @click="changeDirDrone">changeDrone</button>
     <div class="content">
       <div class="north">
         <div class="content-container">
           <div class="icon-container north">
-            <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: droneDir + 'deg'}">
+            <img :src="compass" :style="{rotate: droneDir + 'deg'}" alt="icon of compass" class="home-icon compass">
           </div>
           <p v-if="check">--°</p>
-          <p v-else class="num">{{droneDir}}°</p> <!--todo 5 add nordung-->
+          <p v-else class="num">{{ droneDir }}°</p> <!--todo 5 add nordung-->
         </div>
         <h5>Nordung</h5>
       </div>
@@ -29,7 +31,7 @@
       <div class="battery">
         <div class="content-container">
           <div class="icon-container">
-            <img :src="battery" class="home-icon" alt="icon of battery">
+            <img :src="battery" alt="icon of battery" class="home-icon">
           </div>
           <p v-if="check">-- <span class="unit">%</span></p>
           <p v-else class="num">100
@@ -43,7 +45,7 @@
       <div class="storage">
         <div class="content-container">
           <div class="icon-container">
-            <img :src="storage" class="home-icon" alt="icon of storage">
+            <img :src="storage" alt="icon of storage" class="home-icon">
           </div>
           <p v-if="check">-- <span class="unit">%</span></p>
           <p v-else class="num">100 <!--  {{ storage_percent }}  todo 5 calc storage_percent with every update-->
@@ -92,8 +94,8 @@
           {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
           <!--          <h6>Direction</h6>-->
           <div class="compass">
-            <img class="cardinal-points" :src="cardinalPoints">
-            <img class="needle" :class="direction" :src="needle" :style="{rotate: direction + 'deg'}">
+            <img :src="cardinalPoints" class="cardinal-points">
+            <img :class="direction" :src="needle" :style="{rotate: direction + 'deg'}" class="needle">
           </div>
         </div>
 
@@ -149,9 +151,6 @@
         <img :src="map">
       </div>
     </div>
-    <br>
-    <button @click="changeDir">change</button>
-    <button @click="changeDirDrone">changeDrone</button>
   </div>
 </template>
 
@@ -162,7 +161,6 @@ import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
 import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
 import needle from '/@/assets/icons/icons_homeview/needle.png'
 import map from '/@/assets/icons/Preview.png' // inverted
-
 // region ---------------------------- tsa copy code ----------------------------
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useMyStore } from '/@/store'
@@ -301,6 +299,7 @@ const storage_percent = ref(0)
 const droneDir = ref(0)
 const direction = ref(0)
 // TODO delete in production
+
 let i = -1
 const dires = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest']
 let dirTest = 'North'
@@ -427,6 +426,10 @@ img {
     row-gap: min(2vw, 2.5em);
     column-gap: min(2vw, 2.5em);
     grid-template-columns: repeat(8, 1fr);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
 
     //region grid layout
     .north,
@@ -481,7 +484,7 @@ img {
       border-color: $bambi-stroke-light;
 
       //region box shadow
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px; //#36
+      box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.06) 0 1px 2px 0; //#36
       //box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px; //76
       //box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px; //35
       //box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; //0
@@ -514,7 +517,7 @@ img {
           flex-shrink: 0;
         }
 
-        .icon-container:not(.north){
+        .icon-container:not(.north) {
           flex-basis: 30%;
         }
 
@@ -531,7 +534,8 @@ img {
         height: 100%;
         width: auto;
       }
-      p{
+
+      p {
         display: block;
         flex-basis: 60%;
         text-align: right;
@@ -598,7 +602,7 @@ img {
     .drone-speed,
     .height,
     .temperature,
-    .flight-time{
+    .flight-time {
       justify-content: space-around;
 
       h5 {
@@ -632,6 +636,7 @@ img {
         filter: invert(100%);
       }
     }
+
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
