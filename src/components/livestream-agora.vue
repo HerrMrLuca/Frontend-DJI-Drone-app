@@ -96,42 +96,10 @@
 <script lang="ts" setup>
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng'
 import { message } from 'ant-design-vue'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { CURRENT_CONFIG as config } from '/@/api/http/config'
-import { getDeviceTopo, getLiveCapacity, getPlatformInfo, getUserInfo, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
+import { getLiveCapacity, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
-import { ELocalStorageKey } from '/@/types'
-
-/* region testing get-functions and content */
-
-const workspaceId = ref(localStorage.getItem(ELocalStorageKey.WorkspaceId)!)
-
-console.log('start getDeviceTopo')
-const test1 = getDeviceTopo(workspaceId.value)
-console.log(test1)
-console.log('end getDeviceTopo')
-
-console.log('start getLiveCapacity')
-const test2 = getLiveCapacity(workspaceId.value)
-console.log(test2)
-console.log('end getLiveCapacity')
-
-// console.log('start getAllUsersInfo')
-// const test3 = getAllUsersInfo(workspaceId.value, )
-// console.log(test3)
-// console.log('end getAllUsersInfo')
-
-console.log('start getPlatformInfo')
-const test4 = getPlatformInfo()
-console.log(test4)
-console.log('end getPlatformInfo')
-
-console.log('start getUserInfo')
-const test5 = getUserInfo()
-console.log(test5)
-console.log('end getUserInfo')
-
-/* endregion */
 
 const root = getRoot()
 
