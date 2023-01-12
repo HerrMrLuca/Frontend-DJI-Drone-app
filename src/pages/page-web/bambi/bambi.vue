@@ -1,29 +1,20 @@
 <template>
   <div>
     <div>
-<!--      <my-map v-bind:mapData="mapData">-->
-
-<!--      </my-map>-->
+      <div id="map">
+      </div>
     </div>
     <div>
-<!--      <my-battery v-bind:batteryData="batteryData">-->
-
-<!--      </my-battery>-->
-<!--      <my-north-check v-bind:northData="northData">-->
-
-<!--      </my-north-check>-->
-<!--      <my-drone-data v-bind:droneData="droneData">-->
-
-<!--      </my-drone-data>-->
+      <div v-for="device in onlineDevices.data" :key="device.sn" style="background: #3c3c3c; height: 90px; width: 250px; margin-bottom: 10px;">
+        <div>{{ deviceInfo[device.sn].battery.capacity_percent }}%</div>
+        <div>Nordungsabweichung: {{ deviceInfo[device.sn].attitude_head }}</div>
+      </div>
     </div>
-    <button v-on:click="printData()">
-      Data
-    </button>
   </div>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
-import Vue, { h, onMounted, reactive, ref, UnwrapRef, watch, computed, WritableComputedRef } from 'vue'
+import { h, onMounted, onUpdated, reactive, ref, UnwrapRef, watch, computed, WritableComputedRef } from 'vue'
 import { IPage } from '/@/api/http/type'
 import {
   BindBody,
@@ -35,8 +26,8 @@ import {
   updateDevice, updateDeviceHms
 } from '/@/api/manage'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
-import { EditOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, FileSearchOutlined, CloudServerOutlined, RocketOutlined, EyeInvisibleOutlined, EyeOutlined, RobotOutlined, DoubleRightOutlined } from '@ant-design/icons-vue'
-import { Device, DeviceFirmwareStatusEnum, EModeCode, DeviceStatus, OSDVisible, EDockModeCode, DeviceOsd } from '/@/types/device'
+import { EditOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, FileSearchOutlined, CloudServerOutlined, RocketOutlined, EyeInvisibleOutlined, EyeOutlined, RobotOutlined, DoubleRightOutlined, EllipsisOutlined, CameraFilled, UserOutlined } from '@ant-design/icons-vue'
+import { Device, DeviceFirmwareStatusEnum, EModeCode, DeviceStatus, OSDVisible, EDockModeCode, DeviceOsd, EDeviceType } from '/@/types/device'
 import DeviceFirmwareUpgrade from '/@/components/devices/device-upgrade/DeviceFirmwareUpgrade.vue'
 import DeviceFirmwareUpgradeModal from '/@/components/devices/device-upgrade/DeviceFirmwareUpgradeModal.vue'
 import { useDeviceFirmwareUpgrade } from '/@/components/devices/device-upgrade/use-device-upgrade'
@@ -45,62 +36,62 @@ import { DeviceCmdExecuteInfo, DeviceCmdExecuteStatus } from '/@/types/device-cm
 import DeviceLogUploadRecordDrawer from '/@/components/devices/device-log/DeviceLogUploadRecordDrawer.vue'
 import DeviceHmsDrawer from '/@/components/devices/device-hms/DeviceHmsDrawer.vue'
 import { message } from 'ant-design-vue'
+
+// Imports for Map
+import 'leaflet/dist/leaflet.css'
+// import 'https://unpkg.com/leaflet-compass@1.0.0/dist/leaflet-compass.min.js'
+import L, { LatLng, LayerGroup } from 'leaflet'
+import { deleteWaylineFile, downloadWaylineFile, getWaylineFiles } from '/@/api/wayline'
+
+import { WaylineFile } from '/@/types/wayline'
+import { downloadFile } from '/@/utils/common'
+
 import noData from '/@/assets/icons/no-data.png'
 import rc from '/@/assets/icons/rc.png'
 import { useMyStore } from '/@/store'
+import { useMyFakeStore } from '/@/store/fakestore.ts'
 import { EHmsLevel } from '/@/types/enums'
-// import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
-import MyMap from '/@/pages/page-web/bambi/map.vue'
+import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
 import Livestream from '/@/pages/page-web/bambi/livestream.vue'
 import Agora from '/@/pages/page-web/bambi/agora.vue'
-import MyBattery from '/@/pages/page-web/bambi/battery.vue'
-import MyNorthCheck from '/@/pages/page-web/bambi/northCheck.vue'
-import MyDroneData from '/@/pages/page-web/bambi/droneData.vue'
-
-export default {
-  components: {
-    MyMap,
-    MyBattery,
-    MyNorthCheck,
-    MyDroneData
-  },
-  data: function () {
-    return {
-      mapData: [48.366937, 14.517274, [[48, 14], [48.1, 14], [48.05, 14.1]]],
-      batteryData: [1],
-      northData: [0],
-      droneData: [0]
-    }
-  },
-  methods: {
-    updateMapData (newData: Array< Object >) {
-      this.mapData = newData
-    },
-    updateBatteryData (newData: Array< Object >) {
-      this.batteryData = newData
-    },
-    updateNorthData (newData: Array< Object >) {
-      this.northData = newData
-    },
-    updateDroneData (newData: Array< Object >) {
-      this.droneData = newData
-    }
-  },
-  mounted: function () {
-    setInterval(() => {
-      this.updateMapData(getMapData())
-      this.updateBatteryData(getBatteryData())
-      this.updateNorthData(getNorthData())
-      this.updateDroneData(getDroneData())
-    }, 1000)
-  }
-}
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
 const workspaceId = ref(localStorage.getItem(ELocalStorageKey.WorkspaceId)!)
 const osdVisible = ref({} as OSDVisible)
 const hmsVisible = new Map<string, boolean>()
+
+// Map Variables
+const waylinesData = reactive({
+  data: [] as WaylineFile[]
+})
+const deleteWaylineId = ref<string>('')
+const canRefresh = ref(true)
+
+const droneIcon = L.icon({
+  iconUrl: '/src/assets/icons/drone.png',
+  iconSize: [38, 38], // size of the icon
+  iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
+  popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+})
+
+const waypointIcon = L.icon({
+  iconUrl: '/src/assets/icons/marker.svg',
+  iconSize: [20, 20], // size of the icon
+  iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
+  popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+})
+
+const mapData = reactive({
+  map: null,
+  marker: null,
+  store: null,
+  deviceInfo: null,
+  polyline: null,
+  waypointsLayer: null,
+  currentLocation: [48.2, 14.3], // initial location for the marker
+  latlngs: [[48, 14]]
+})
 
 interface OnlineDevice {
   model: string,
@@ -127,13 +118,36 @@ const onlineDocks = reactive({
 })
 
 const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
+console.log(store)
 const dockInfo = computed(() => store.state.deviceState.dockInfo)
 const hmsInfo = computed({
   get: () => store.state.hmsInfo,
-  set: (val) => {
+  set: (val: any) => {
     return val
   }
 })
+
+class FakeDeviceOsd {
+  public battery = { capacity_percent: 75, landing_power: 45, remain_flight_time: 100, return_home_power: 35 }
+  public distance_limit_status = true
+  public elevation = '50'
+  public gear= 2
+  public height= 512
+  public height_limit= 1000
+  public home_distance= 10
+  public horizontal_speed= 25
+  public latitude= 48
+  public longitude= 14
+  public mode_code= 2
+  public night_lights_state= true
+  public obstacle_avoidance= true
+  public position_state= { gps_number: 'string', is_fixed: 4, rtk_number: 'string' }
+  public vertical_speed= 'string'
+  public wind_direction= 'string'
+  public wind_speed= 'string'
+}
+
+const fakeDeviceInfo = new FakeDeviceOsd()
 
 interface DeviceData {
   device: Device[]
@@ -223,11 +237,13 @@ const paginationProp = reactive({
 })
 
 onMounted(() => {
+  getWaylines() // get waylines
+  prepMap() // prep necessary map data
   getDevices(current.value[0])
   getOnlineTopo()
   setTimeout(() => {
     watch(() => store.state.deviceStatusEvent,
-      data => {
+      (data: { deviceOnline: { sn: string } }) => {
         getOnlineTopo()
         if (data.deviceOnline.sn) {
           getUnreadHms(data.deviceOnline.sn)
@@ -239,7 +255,184 @@ onMounted(() => {
     )
     getOnlineDeviceHms()
   }, 3000)
+  setInterval(() => { // interval that regularly updates the various data
+    updateMap()
+    updateBatteryPercentage()
+    updateNorthCheck()
+    printData()
+  }, 1000)
+}
+)
+
+onUpdated(() => {
+  const element = document.getElementsByClassName('scrollbar').item(0) as HTMLDivElement
+  const parent = element?.parentNode as HTMLDivElement
+  setTimeout(() => {
+    if (element?.scrollHeight < parent?.clientHeight && paginationProp.total > waylinesData.data.length) {
+      if (canRefresh.value) {
+        paginationProp.page++
+        getWaylines()
+      }
+    } else if (element && element.className.indexOf('height-100') === -1) {
+      element.className = element.className + ' height-100'
+    }
+  }, 300)
 })
+
+function prepMap () {
+  mapData.map = L.map('map').setView(mapData.currentLocation, 13)
+  L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+  }).addTo(mapData.map)
+
+  mapData.marker = L.marker(mapData.currentLocation, { icon: droneIcon }).addTo(mapData.map)
+  mapData.polyline = L.polyline(mapData.latlngs, { color: 'red' }).addTo(mapData.map)
+  mapData.waypointsLayer = new LayerGroup()
+  mapData.waypointsLayer.addTo(mapData.map)
+}
+
+function updateMap () {
+  mapData.waypointsLayer.clearLayers()
+  mapData.polyline.setLatLngs(getWaypoints())
+  for (let i = 0; i < mapData.polyline.getLatLngs().length; i++) {
+    // mapData.waypointsLayer.addLayer(new L.marker(mapData.polyline.getLatLngs()[i], { icon: waypointIcon }).addTo((mapData.map)))
+  }
+  mapData.marker.setLatLng(getLocation())
+}
+
+const fakeLocation = [[51, 0], [51, 0.1], [51, 0.2]]
+const fakeWaypoint = [[51.1, 0], [51.2, 0], [51.1, 0.1], [51.2, 0.1]]
+let index = 0
+function getLocation () {
+  // TODO Change fake to real
+  // let latLong: [number, number] = [deviceInfo.value[onlineDevices.data[0].sn].longitude, deviceInfo.value[onlineDevices.data[0].sn].latitude]
+  let latLong: [number, number]
+  if (fakeLocation[index][1] === 0) {
+    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+    index = 1
+  } else if (fakeLocation[index][1] === 1) {
+    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+    index = 2
+  } else {
+    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+    index = 0
+  }
+  // console.log(latLong)
+  return latLong
+}
+
+function getWaypoints () {
+  const latLongArray: [number, number][] = []
+  let latLong: [number, number]
+  // TODO Remove Fake Shit
+  for (let i = 0; i < fakeWaypoint.length; i++) {
+    latLong = [fakeWaypoint[i][0], fakeWaypoint[i][1]]
+    latLongArray.push(latLong)
+  }
+  if (waylinesData.data.length > 0) {
+    console.log(waylinesData.data)
+  }
+  return latLongArray
+}
+
+function getWaylines () {
+  if (!canRefresh.value) {
+    return
+  }
+  canRefresh.value = false
+  getWaylineFiles(workspaceId, {
+    page: paginationProp.page,
+    page_size: paginationProp.page_size,
+    order_by: 'update_time desc'
+  }).then(res => {
+    if (res.code !== 0) {
+      return
+    }
+    res.data.list.forEach((wayline: WaylineFile) => waylinesData.data.push(wayline))
+    paginationProp.total = res.data.pagination.total
+    paginationProp.page = res.data.pagination.page
+  }).finally(() => {
+    canRefresh.value = true
+  })
+}
+
+function showWaylineTip (waylineId: string) {
+  deleteWaylineId.value = waylineId
+  deleteTip.value = true
+}
+
+function deleteWayline () {
+  deleteWaylineFile(workspaceId, deleteWaylineId.value).then(res => {
+    if (res.code === 0) {
+      message.success('Wayline file deleted')
+    }
+    deleteWaylineId.value = ''
+    deleteTip.value = false
+    paginationProp.total--
+    waylinesData.data = []
+    setTimeout(getWaylines, 500)
+  })
+}
+
+function downloadWayline (waylineId: string, fileName: string) {
+  loading.value = true
+  downloadWaylineFile(workspaceId, waylineId).then(res => {
+    if (!res) {
+      return
+    }
+    const data = new Blob([res], { type: 'application/zip' })
+    downloadFile(data, fileName + '.kmz')
+  }).finally(() => {
+    loading.value = false
+  })
+}
+
+function selectRoute (wayline: WaylineFile) {
+  store.commit('SET_SELECT_WAYLINE_INFO', wayline)
+}
+
+function onScroll (e: any) {
+  const element = e.srcElement
+  if (element.scrollTop + element.clientHeight === element.scrollHeight && Math.ceil(paginationProp.total / paginationProp.page_size) > paginationProp.page && canRefresh.value) {
+    paginationProp.page++
+    getWaylines()
+  }
+}
+
+function updateBatteryPercentage () {
+  const batteryPercentage = getBatteryPercentage()
+  console.log(batteryPercentage)
+  if (batteryPercentage <= 40) {
+    if (batteryPercentage % 5 === 0) {
+      alert('The Battery is at ' + batteryPercentage + '%!')
+    }
+  }
+}
+
+function getBatteryPercentage () {
+  console.log(onlineDevices.data[0])
+  if (onlineDevices.data[0]) {
+    return deviceInfo.value[onlineDevices.data[0].sn].battery
+  } else {
+    return 100
+  }
+}
+
+function updateNorthCheck () {
+  const heading = getHeading()
+  console.log(heading)
+  if (heading > 0.5 || heading < -0.5) {
+    alert('Drohne nicht genordet! Momentane Abweichung: ' + heading + '!')
+  }
+}
+
+function getHeading () {
+  if (onlineDevices.data[0]) {
+    return deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+  }
+  return 0
+}
 
 // 获取分页信息
 function getPaginationBody () {
@@ -491,126 +684,33 @@ function readHms (visiable: boolean, sn: string) {
     })
   }
 }
-
+//
 function printData () {
   let str = 'Data: \n'
-  str += 'lat:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].latitude
-  // str += '\nlong:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].longitude
-  // str += '\nv-speed:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
-  // str += '\nh-speed:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
-  // str += '\nelevation:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].elevation
-  // str += '\nheight:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].height
-  // str += '\nmode_code:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
-  // str += '\nattitude_head:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
-  // str += '\nattitude_roll:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
-  // str += '\nattitude_pitch:'
-  // str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
+  if (onlineDevices.data[0]) {
+    str += 'lat:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].latitude
+    str += '\nlong:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].longitude
+    str += '\nv-speed:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
+    str += '\nh-speed:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
+    str += '\nelevation:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].elevation
+    str += '\nheight:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].height
+    str += '\nmode_code:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].mode_code
+    str += '\nattitude_head:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+    str += '\nattitude_roll:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].attitude_roll
+    str += '\nattitude_pitch:'
+    str += deviceInfo.value[onlineDevices.data[0].sn].attitude_pitch
+  }
   console.log(str)
 }
-const long = 48.366937
-const lat = 14.517274
-const fakeWayPoints = [[48, 14], [48.1, 14], [48.05, 14.1]]
-
-function getMapData () {
-  // lat += 0.001
-  if (deviceInfo.value) {
-    return [
-      deviceInfo.value[onlineDevices.data[0].sn].latitude,
-      deviceInfo.value[onlineDevices.data[0].sn].longitude,
-      fakeWayPoints
-    ]
-  } else {
-    return [
-      long,
-      lat,
-      fakeWayPoints
-    ]
-  }
-}
-
-const fakeBattery = 100
-
-function getBatteryData () {
-  // fakeBattery--
-
-  if (deviceInfo.value) {
-    return [
-      deviceInfo.value[onlineDevices.data[0].sn].battery,
-      deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent,
-      deviceInfo.value[onlineDevices.data[0].sn].battery.return_home_power,
-      deviceInfo.value[onlineDevices.data[0].sn].battery.landing_power,
-      deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent,
-    ]
-  } else {
-    return [
-      fakeBattery
-    ]
-  }
-}
-
-let attitude_head = 0
-function getNorthData () {
-  attitude_head -= 0.01
-  if (deviceInfo.value) {
-    return [
-      deviceInfo.value[onlineDevices.data[0].sn].attitude_head,
-      // gimbal_yaw
-    ]
-  } else {
-    return [
-      attitude_head
-    ]
-  }
-}
-
-class FakeDeviceOsd {
-  public battery = {
-    capacity_percent: 75,
-    landing_power: 45,
-    remain_flight_time: 100,
-    return_home_power: 35
-  }
-
-  public distance_limit_status = 'true'
-  public elevation = '50'
-  public gear = 2
-  public height = 512
-  public height_limit = 1000
-  public home_distance = 10
-  public horizontal_speed = 25
-  public latitude = 48
-  public longitude = 14
-  public mode_code = 2
-  public night_lights_state = true
-  public obstacle_avoidance = true
-  public position_state = { gps_number: 'string', is_fixed: 4, rtk_number: 'string' }
-  public vertical_speed = 'string'
-  public wind_direction = 'string'
-  public wind_speed = 'string'
-}
-const fakeDeviceOsd = new FakeDeviceOsd()
-
-function getDroneData () {
-  if (deviceInfo.value) {
-    return [
-      deviceInfo.value[onlineDevices.data[0].sn]
-    ]
-  } else {
-    return [
-      1
-    ]
-  }
-}
-
 </script>
 
 <style lang="scss" scoped>
@@ -624,6 +724,9 @@ function getDroneData () {
 </style>
 
 <style lang="scss">
+@import '/@/styles/index.scss';
+@import '/@/styles/bambi.scss';
+@import '/@/../node_modules/leaflet/dist/leaflet.css';
 .table {
   background-color: white;
   margin: 20px;
@@ -671,5 +774,8 @@ th.ant-table-selection-column {
   cursor: pointer;
   overflow: hidden;
 }
-
+#map {
+  height: 300px;
+  width: 300px;
+}
 </style>
