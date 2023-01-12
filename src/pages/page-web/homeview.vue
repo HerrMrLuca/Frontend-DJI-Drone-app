@@ -9,7 +9,7 @@
             <img :src="compass" :style="{rotate: droneDir + 'deg'}" alt="icon of compass" class="home-icon compass">
           </div>
           <p v-if="check">--°</p>
-          <p v-else class="num">{{ droneDir }}°</p> <!--todo 5 add nordung-->
+          <p v-else class="num">{{ heading }}°</p> <!--todo 5 add nordung-->
         </div>
         <h5>Nordung</h5>
       </div>
@@ -18,10 +18,6 @@
         <div>
           <p v-if="check">--</p>
           <p v-else class="num">20
-            <!--
-            {{ deviceInfo[onlineDevices.data[0].sn].rkt_state.gps_number }} ||
-            {{ deviceInfo[onlineDevices.data[0].sn].position_state.gps_number }}
-            -->
             <span class="unit">Satelliten</span>
           </p>
         </div>
@@ -34,8 +30,7 @@
             <img :src="battery" alt="icon of battery" class="home-icon">
           </div>
           <p v-if="check">-- <span class="unit">%</span></p>
-          <p v-else class="num">100
-            <!--          {{ deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent }}-->
+          <p v-else class="num">{{ batteryPercentage }}
             <span class="unit">%</span>
           </p>
         </div>
@@ -48,7 +43,7 @@
             <img :src="storage" alt="icon of storage" class="home-icon">
           </div>
           <p v-if="check">-- <span class="unit">%</span></p>
-          <p v-else class="num">100 <!--  {{ storage_percent }}  todo 5 calc storage_percent with every update-->
+          <p v-else class="num">{{ storage_percent }} <!--  {{ storage_percent }}  todo 5 calc storage_percent with every update-->
             <span class="unit">%</span>
           </p>
         </div>
@@ -224,6 +219,14 @@ onMounted(() => {
     )
     getOnlineDeviceHms()
   }, 3000)
+  setInterval(() => {
+    /* todo: pull update from Luca-2.0 and integrate updateMap() */
+    // updateMap()
+    updateBatteryPercentage()
+    updateNorthCheck()
+    updateStorage()
+    logDeviceInfo()
+  }, 1000)
 })
 
 function getOnlineTopo () {
@@ -293,8 +296,6 @@ function getOnlineDeviceHms () {
 
 // endregion
 
-const storage_percent = ref(0)
-
 // region ---------------------------- compass logic  ----------------------------
 const droneDir = ref(0)
 const direction = ref(0)
@@ -350,6 +351,70 @@ function changeDir () {
 
 function changeDirDrone () {
   droneDir.value = chooseDeg(droneDir.value, Math.floor(Math.random() * 380))
+}
+
+// endregion
+
+// region drone data
+
+const heading = ref()
+const batteryPercentage = ref()
+const storage_percent = ref()
+const mapData = reactive({
+  map: null,
+  marker: null,
+  store: null,
+  deviceInfo: null,
+  polyline: null,
+  waypointsLayer: null,
+  currentLocation: [0, 0], // initial location for the marker
+  latlngs: [[0, 0]]
+})
+
+function getHeading () {
+  if (onlineDevices.data[0]) {
+    return deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+  }
+  return 0
+}
+
+function updateNorthCheck () {
+  heading.value = getHeading()
+  // console.log(heading)
+  if (heading.value > 0.8 || heading.value < -0.8) {
+    alert('Drohne nicht genordet! Momentane Abweichung: ' + heading.value + '!')
+  }
+}
+
+function getBatteryPercentage () {
+  // console.log(onlineDevices.data[0])
+  if (onlineDevices.data[0]) {
+    return deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+  } else {
+    return 100
+  }
+}
+
+function updateBatteryPercentage () {
+  batteryPercentage.value = getBatteryPercentage()
+  // console.log(batteryPercentage.value)
+  if (batteryPercentage.value <= 40) {
+    if (batteryPercentage.value % 5 === 0) {
+      alert('The Battery is at ' + batteryPercentage.value + '%!')
+    }
+  }
+}
+
+function updateStorage () {
+  if (onlineDevices.data[0]) {
+    storage_percent.value = deviceInfo.value[onlineDevices.data[0].sn].storage.total - deviceInfo.value[onlineDevices.data[0].sn].storage.used
+  }
+}
+
+function logDeviceInfo () {
+  if (onlineDevices.data[0]) {
+    console.log(deviceInfo.value[onlineDevices.data[0].sn])
+  }
 }
 
 // endregion
