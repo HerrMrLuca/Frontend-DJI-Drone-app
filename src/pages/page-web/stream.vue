@@ -12,13 +12,16 @@ import LivestreamAgora from '/@/components/livestream-agora.vue'
 import { computed, reactive, ref } from 'vue'
 import { ELocalStorageKey } from '/@/types'
 import { getDeviceTopo, getLiveCapacity, getPlatformInfo, getUserInfo } from '/@/api/manage'
+import { useMyStore } from '/@/store'
 
 /* region testing get-functions and content */
 
 const workspaceId = ref(localStorage.getItem(ELocalStorageKey.WorkspaceId)!)
 const userId = ref(localStorage.getItem(ELocalStorageKey.UserId)!)
 const device = ref(localStorage.getItem(ELocalStorageKey.Device)!)
-const deviceInfo = reactive(() => store.state.deviceState.deviceInfo)
+const store = useMyStore()
+const deviceInfoReactive = reactive(() => store.state.deviceState.deviceInfo)
+const deviceInfoComputed = computed(() => store.state.deviceState.deviceInfo)
 
 const state = reactive({
   currentType: '',
@@ -108,6 +111,14 @@ const deviceInfo = reactive({
 })
 
  */
+
+console.log('start deviceInfoComputed log')
+console.log(deviceInfoComputed)
+console.log('end deviceInfoComputed log')
+
+console.log('start deviceInfoReactive log')
+console.log(deviceInfoReactive)
+console.log('end deviceInfoReactive log')
 
 console.log('start workspaceId log')
 console.log(workspaceId.value)
