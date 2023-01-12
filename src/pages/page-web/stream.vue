@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import LivestreamAgora from '/@/components/livestream-agora.vue'
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { ELocalStorageKey } from '/@/types'
 import { getDeviceTopo, getLiveCapacity, getPlatformInfo, getUserInfo } from '/@/api/manage'
 
@@ -18,6 +18,7 @@ import { getDeviceTopo, getLiveCapacity, getPlatformInfo, getUserInfo } from '/@
 const workspaceId = ref(localStorage.getItem(ELocalStorageKey.WorkspaceId)!)
 const userId = ref(localStorage.getItem(ELocalStorageKey.UserId)!)
 const device = ref(localStorage.getItem(ELocalStorageKey.Device)!)
+const deviceInfo = reactive(() => store.state.deviceState.deviceInfo)
 
 const state = reactive({
   currentType: '',
