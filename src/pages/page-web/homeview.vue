@@ -408,6 +408,8 @@ function updateBatteryPercentage () {
 function updateStorage () {
   if (onlineDevices.data[0]) {
     storage_percent.value = deviceInfo.value[onlineDevices.data[0].sn].storage.total - deviceInfo.value[onlineDevices.data[0].sn].storage.used
+  } else {
+    storage_percent.value = 123
   }
 }
 
