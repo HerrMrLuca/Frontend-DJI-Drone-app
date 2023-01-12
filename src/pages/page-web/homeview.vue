@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <template>
   <div class="home-view">
     <div class="content">
@@ -15,7 +16,7 @@
       <div class="gps">
         <div>
           <p v-if="check">--</p>
-          <p v-else class="num">20
+          <p v-else class="num">{{ data.rtk_number }}
             <!--
             {{ deviceInfo[onlineDevices.data[0].sn].rkt_state.gps_number }} ||
             {{ deviceInfo[onlineDevices.data[0].sn].position_state.gps_number }}
@@ -32,7 +33,7 @@
             <img :src="battery" class="home-icon" alt="icon of battery">
           </div>
           <p v-if="check">-- <span class="unit">%</span></p>
-          <p v-else class="num">100
+          <p v-else class="num">{{ data.battery }}
             <!--          {{ deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent }}-->
             <span class="unit">%</span>
           </p>
@@ -46,7 +47,7 @@
             <img :src="storage" class="home-icon" alt="icon of storage">
           </div>
           <p v-if="check">-- <span class="unit">%</span></p>
-          <p v-else class="num">100 <!--  {{ storage_percent }}  todo 5 calc storage_percent with every update-->
+          <p v-else class="num">{{ data.storage }}  <!--todo 5 calc storage_percent with every update-->
             <span class="unit">%</span>
           </p>
         </div>
@@ -57,7 +58,7 @@
         <div>
           <h6>height</h6>
           <p v-if="check">0,0 <span class="unit">m</span></p>
-          <p v-else class="num">200,23 <!--todo 5 fill-->
+          <p v-else class="num">{{ data.height }} <!--todo 5 fill-->
             <span class="unit">m</span>
           </p>
         </div>
@@ -65,7 +66,7 @@
         <div>
           <h6>elevation</h6>
           <p v-if="check">0,0 <span class="unit">m</span></p>
-          <p v-else class="num">150,50 <!--todo 5 fill-->
+          <p v-else class="num">{{ data.elevation }} <!--todo 5 fill-->
             <span class="unit">m</span>
           </p>
         </div>
@@ -75,14 +76,14 @@
       <div class="coordinates">
         <div class="latitude">
           <h6>latitude</h6>
-          <p v-if="check">--,------</p>
-          <p v-else class="num">-23,423239</p>
+          <p v-if="check">--,-------</p>
+          <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
         </div>
 
         <div class="longitude">
           <h6>longitude</h6>
-          <p v-if="check">--,------</p>
-          <p v-else class="num">-11,111118</p>
+          <p v-if="check">--,-------</p>
+          <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
         </div>
         <h5>Coordinates</h5>
       </div>
@@ -100,8 +101,8 @@
         <div class="wind-speed">
           <h6>Speed</h6>
           <p v-if="check">-- <span class="unit">km/h</span></p>
-          <p v-else class="num">20 <!--todo 5 fill-->
-            <span class="unit">km/h</span>
+          <p v-else class="num">{{ data.wind_speed }}<!--todo 5 fill-->
+            <span class="unit">m/s</span>
           </p>
         </div>
         <h5>Wind</h5>
@@ -111,15 +112,15 @@
         <div class="speed-horizontal">
           <h6>horizontal</h6>
           <p v-if="check">-- <span class="unit">km/h</span></p>
-          <p v-else class="num">10 <!--todo 5 fill-->
-            <span class="unit">km/h</span>
+          <p v-else class="num">{{ data.horizontal_speed }} <!--todo 5 fill-->
+            <span class="unit">m/s</span>
           </p>
         </div>
         <div class="speed-vertical">
           <h6>vertical</h6>
           <p v-if="check">-- <span class="unit">km/h</span></p>
-          <p v-else class="num">30  <!--todo 5 fill-->
-            <span class="unit">km/h</span></p>
+          <p v-else class="num">{{ data.vertical_speed }}  <!--todo 5 fill-->
+            <span class="unit">m/s</span></p>
         </div>
         <h5>Drone Speed</h5>
       </div>
@@ -144,14 +145,12 @@
         </p>
         <h5>Weather</h5>
       </div>
-
-      <div class="map">
-        <img :src="map">
-      </div>
     </div>
     <br>
     <button @click="changeDir">change</button>
     <button @click="changeDirDrone">changeDrone</button>
+    <div id="map">
+    </div>
   </div>
 </template>
 
@@ -161,7 +160,9 @@ import compass from '/@/assets/icons/icons_homeview/compass 1.png'
 import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
 import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
 import needle from '/@/assets/icons/icons_homeview/needle.png'
-import map from '/@/assets/icons/Preview.png' // inverted
+// leaflet
+import 'leaflet/dist/leaflet.css'
+import L, { LatLng, LayerGroup } from 'leaflet'
 
 // region ---------------------------- tsa copy code ----------------------------
 import { computed, onMounted, reactive, ref, watch } from 'vue'
@@ -170,7 +171,7 @@ import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
 
-const check = ref(false)
+const check = ref(true)
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -225,6 +226,16 @@ onMounted(() => {
       }
     )
     getOnlineDeviceHms()
+    prepMap() // prep necessary map data
+    prepData()
+    if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+      check.value = false
+    }
+    setInterval(() => { // interval that regularly updates the various data
+      updateMap()
+      updateData()
+      // printData()
+    }, 3000)
   }, 3000)
 })
 
@@ -295,9 +306,148 @@ function getOnlineDeviceHms () {
 
 // endregion
 
+// region ------------------------------- Map Code ------------------------------
+
+// Map Variables
+const droneIcon = L.icon({
+  iconUrl: '/src/assets/icons/drone.png',
+  iconSize: [38, 38], // size of the icon
+  iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
+  popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+})
+
+const waypointIcon = L.icon({
+  iconUrl: '/src/assets/icons/marker.svg',
+  iconSize: [20, 20], // size of the icon
+  iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
+  popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+})
+
+const mapData = reactive({
+  map: null,
+  marker: null,
+  polyline: null,
+  waypointsLayer: null,
+  currentLocation: null, // initial location for the marker
+  latlngs: [[48, 14]]
+})
+
+function prepMap () {
+  mapData.currentLocation = getLocation()
+  console.log(mapData.currentLocation)
+  mapData.map = L.map('map').setView(mapData.currentLocation, 13)
+  L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+  }).addTo(mapData.map)
+
+  mapData.marker = L.marker(mapData.currentLocation, { icon: droneIcon }).addTo(mapData.map)
+}
+
+function updateMap () {
+  mapData.currentLocation = getLocation()
+  mapData.marker.setLatLng(mapData.currentLocation)
+  mapData.map.setView(mapData.currentLocation)
+}
+
+const fakeLocation = [[48.3, 14.3], [48.3, 14.35], [48.3, 14.4]]
+let index = 0
+function getLocation () {
+  // TODO Change fake to real
+  if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+    const latLong: [number, number] = [
+      deviceInfo.value[onlineDevices.data[0].sn].latitude,
+      deviceInfo.value[onlineDevices.data[0].sn].longitude
+    ]
+    return latLong
+  } else {
+    let latLong: [number, number]
+    if (fakeLocation[index][1] === 14.3) {
+      latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+      index = 1
+    } else if (fakeLocation[index][1] === 14.35) {
+      latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+      index = 2
+    } else {
+      latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+      index = 0
+    }
+    return latLong
+  }
+}
+
+// endregion
+
+// region ------------------------------ Data Code ------------------------------
+
+const data = reactive({
+  battery: null,
+  heading: null,
+  height: null,
+  elevation: null,
+  wind_direction: null, // initial location for the marker
+  wind_speed: null,
+  vertical_speed: null,
+  horizontal_speed: null,
+  rtk_number: null,
+  storage: null,
+  gimbal_yaw: null,
+  gimbal_pitch: null,
+
+})
+
+function prepData () {
+  if (!check.value) {
+    data.battery = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.heading = deviceInfo.value[onlineDevices.data[0].sn].heading
+    data.height = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].height * 100) / 100
+    data.elevation = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].elevation * 100) / 100
+    data.wind_direction = deviceInfo.value[onlineDevices.data[0].sn].wind_direction / 10
+    data.wind_speed = deviceInfo.value[onlineDevices.data[0].sn].wind_speed
+    data.vertical_speed = deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
+    data.horizontal_speed = deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
+    data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
+    data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
+    data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
+    data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
+  } else {
+    data.battery = 100
+    data.heading = 0
+    data.height = 500
+    data.elevation = 100
+    data.wind_direction = 3
+    data.wind_speed = 66
+    data.vertical_speed = 4.4
+    data.horizontal_speed = 1.1
+    data.rtk_number = 23
+    data.storage = Math.floor(100 - 121610000 / 7378000)
+    data.gimbal_yaw = -17.3
+    data.gimbal_pitch = -90
+  }
+}
+
+function updateData () {
+  data.battery -= 1
+  data.heading = Math.round((data.heading + 0.1) * 100) / 100
+  data.height += 1
+  data.elevation += 1
+  data.wind_direction = Math.round((data.wind_direction + 0.1) * 10) / 100
+  data.wind_speed -= 1
+  data.vertical_speed = Math.round((data.vertical_speed + 0.1) * 100) / 100
+  data.horizontal_speed = Math.round((data.horizontal_speed - 0.1) * 100) / 100
+  data.rtk_number -= 1
+  data.storage = Math.round(100 - 121610000 / 7378000 * data.heading)
+  data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
+  data.gimbal_pitch += 1
+}
+
+// endregion
+
 const storage_percent = ref(0)
 
 // region ---------------------------- compass logic  ----------------------------
+
+// compass
 const droneDir = ref(0)
 const direction = ref(0)
 // TODO delete in production
@@ -347,6 +497,7 @@ function changeDir () {
   i = Math.floor(Math.random() * 8)
   dirTest = dires[i]
   direction.value = chooseDeg(direction.value, -20)
+  check.value = false
 }
 
 function changeDirDrone () {
@@ -661,5 +812,10 @@ img {
   100% {
     rotate: 0deg;
   }
+}
+
+#map {
+  height: 300px;
+  width: 300px;
 }
 </style>

@@ -95,6 +95,7 @@
         "ant-design-vue/es/tooltip/style/css",
         "ant-design-vue/es/tree/style/css",
         "axios",
+        "leaflet",
         "mitt",
         "moment",
         "reconnecting-websocket",
