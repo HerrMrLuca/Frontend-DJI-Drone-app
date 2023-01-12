@@ -4,7 +4,7 @@
       <div id="map">
       </div>
     </div>
-    <div>
+    <div v-if="deviceInfo.value[onlineDevices.data[0].sn]">
       <div v-for="device in onlineDevices.data" :key="device.sn" style="background: #3c3c3c; height: 90px; width: 250px; margin-bottom: 10px;">
         <div>{{ deviceInfo[device.sn].battery.capacity_percent }}%</div>
         <div>Nordungsabweichung: {{ deviceInfo[device.sn].attitude_head }}</div>

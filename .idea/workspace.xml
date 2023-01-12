@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="431be474-cf7a-44a6-9913-044f67fa54b1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/api/http/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/http/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/page-web/bambi/bambi.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/page-web/bambi/bambi.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/page-web/homeview.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/page-web/homeview.vue" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="SCSS File" />
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
+  <component name="ProjectId" id="2JMqCGi1vYMWX9GbyEYY5Z5MnU1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.12.1&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.11.18&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Luca/Desktop/MTD/3. Semester/Hypermedia/UE/Rudisch-Sommer/docker/fhooe-symfony-dock/symfony/UE10&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;SCSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Luca\\Desktop\\MTD\\3. Semester\\Project\\Frontend\\Frontend-DJI-Drone-app\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Luca\Desktop\MTD\3. Semester\Project\Frontend\Frontend-DJI-Drone-app\src\pages\page-web\bambi" />
+      <recent name="C:\Users\Luca\Desktop\MTD\3. Semester\Project\Frontend\Frontend-DJI-Drone-app\public" />
+      <recent name="C:\Users\Luca\Desktop\MTD\3. Semester\Project\Frontend\Frontend-DJI-Drone-app\src\assets\icons" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Luca\Desktop\MTD\3. Semester\Project\Frontend\Frontend-DJI-Drone-app\src\assets\icons" />
+      <recent name="C:\Users\Luca\Desktop\MTD\3. Semester\Project\Frontend\Frontend-DJI-Drone-app\public" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="431be474-cf7a-44a6-9913-044f67fa54b1" name="Changes" comment="" />
+      <created>1671898172951</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1671898172951</updated>
+      <workItem from="1671898175787" duration="18674000" />
+      <workItem from="1672670778590" duration="27376000" />
+      <workItem from="1672825468129" duration="32858000" />
+      <workItem from="1673118195768" duration="75000" />
+      <workItem from="1673123308511" duration="741000" />
+      <workItem from="1673180527035" duration="1502000" />
+      <workItem from="1673199246456" duration="1038000" />
+      <workItem from="1673358190548" duration="236000" />
+      <workItem from="1673423620899" duration="4741000" />
+      <workItem from="1673469086149" duration="10000" />
+      <workItem from="1673527359151" duration="7478000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/api/http/request.js" />
+        <option value="$PROJECT_DIR$/src/api/http/request.js.map" />
+        <option value="$PROJECT_DIR$/src/api/http/config.js" />
+        <option value="$PROJECT_DIR$/src/api/http/config.js.map" />
+        <option value="$PROJECT_DIR$/src/antd.js" />
+        <option value="$PROJECT_DIR$/src/antd.js.map" />
+        <option value="$PROJECT_DIR$/src/use-common-components.js" />
+        <option value="$PROJECT_DIR$/src/use-common-components.js.map" />
+        <option value="$PROJECT_DIR$/src/main.js" />
+        <option value="$PROJECT_DIR$/src/main.js.map" />
+        <option value="$PROJECT_DIR$/src/root.js" />
+        <option value="$PROJECT_DIR$/src/root.js.map" />
+        <option value="$PROJECT_DIR$/src/api/wayline.js" />
+        <option value="$PROJECT_DIR$/src/api/wayline.js.map" />
+        <option value="$PROJECT_DIR$/src/api/layer.js" />
+        <option value="$PROJECT_DIR$/src/api/layer.js.map" />
+        <option value="$PROJECT_DIR$/src/api/pilot-bridge.js" />
+        <option value="$PROJECT_DIR$/src/api/pilot-bridge.js.map" />
+        <option value="$PROJECT_DIR$/src/api/manage.js" />
+        <option value="$PROJECT_DIR$/src/api/manage.js.map" />
+        <option value="$PROJECT_DIR$/src/api/media.js" />
+        <option value="$PROJECT_DIR$/src/api/media.js.map" />
+        <option value="$PROJECT_DIR$/src/api/http.js" />
+        <option value="$PROJECT_DIR$/src/api/http.js.map" />
+        <option value="$PROJECT_DIR$/src/api/http/type.js" />
+        <option value="$PROJECT_DIR$/src/api/http/type.js.map" />
+        <option value="$PROJECT_DIR$/src/api/device-cmd/index.js" />
+        <option value="$PROJECT_DIR$/src/api/device-cmd/index.js.map" />
+        <option value="$PROJECT_DIR$/src/api/device-log/index.js" />
+        <option value="$PROJECT_DIR$/src/api/device-log/index.js.map" />
+        <option value="$PROJECT_DIR$/src/api/device-upgrade/index.js" />
+        <option value="$PROJECT_DIR$/src/api/device-upgrade/index.js.map" />
+        <option value="$PROJECT_DIR$/src/hooks/use-g-map-cover.js" />
+        <option value="$PROJECT_DIR$/src/hooks/use-g-map-cover.js.map" />
+        <option value="$PROJECT_DIR$/src/hooks/use-mouse-tool.js" />
+        <option value="$PROJECT_DIR$/src/hooks/use-mouse-tool.js.map" />
+        <option value="$PROJECT_DIR$/src/hooks/use-g-map.js" />
+        <option value="$PROJECT_DIR$/src/hooks/use-g-map.js.map" />
+        <option value="$PROJECT_DIR$/src/hooks/use-connect-websocket.js" />
+        <option value="$PROJECT_DIR$/src/hooks/use-connect-websocket.js.map" />
+        <option value="$PROJECT_DIR$/src/hooks/use-g-map-tsa.js" />
+        <option value="$PROJECT_DIR$/src/hooks/use-g-map-tsa.js.map" />
+        <option value="$PROJECT_DIR$/src/store/index.js" />
+        <option value="$PROJECT_DIR$/src/store/index.js.map" />
+        <option value="$PROJECT_DIR$/src/types/device.js" />
+        <option value="$PROJECT_DIR$/src/types/device.js.map" />
+        <option value="$PROJECT_DIR$/src/types/wayline.js" />
+        <option value="$PROJECT_DIR$/src/types/wayline.js.map" />
+        <option value="$PROJECT_DIR$/src/types/mapLayer.js" />
+        <option value="$PROJECT_DIR$/src/types/mapLayer.js.map" />
+        <option value="$PROJECT_DIR$/src/types/device-log.js" />
+        <option value="$PROJECT_DIR$/src/types/device-log.js.map" />
+        <option value="$PROJECT_DIR$/src/types/map-enum.js" />
+        <option value="$PROJECT_DIR$/src/types/map-enum.js.map" />
+        <option value="$PROJECT_DIR$/src/types/live-stream.js" />
+        <option value="$PROJECT_DIR$/src/types/live-stream.js.map" />
+        <option value="$PROJECT_DIR$/src/types/index.js" />
+        <option value="$PROJECT_DIR$/src/types/index.js.map" />
+        <option value="$PROJECT_DIR$/src/types/enums.js" />
+        <option value="$PROJECT_DIR$/src/types/enums.js.map" />
+        <option value="$PROJECT_DIR$/src/types/airport-tsa.js" />
+        <option value="$PROJECT_DIR$/src/types/airport-tsa.js.map" />
+        <option value="$PROJECT_DIR$/src/types/device-cmd.js" />
+        <option value="$PROJECT_DIR$/src/types/device-cmd.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/color.js" />
+        <option value="$PROJECT_DIR$/src/utils/color.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/uuid.js" />
+        <option value="$PROJECT_DIR$/src/utils/uuid.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/map-layer-utils.js" />
+        <option value="$PROJECT_DIR$/src/utils/map-layer-utils.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/genjson.js" />
+        <option value="$PROJECT_DIR$/src/utils/genjson.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/download.js" />
+        <option value="$PROJECT_DIR$/src/utils/download.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/data-process.js" />
+        <option value="$PROJECT_DIR$/src/utils/data-process.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/storage.js" />
+        <option value="$PROJECT_DIR$/src/utils/storage.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/bytes.js" />
+        <option value="$PROJECT_DIR$/src/utils/bytes.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/time.js" />
+        <option value="$PROJECT_DIR$/src/utils/time.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/common.js" />
+        <option value="$PROJECT_DIR$/src/utils/common.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/constants.js" />
+        <option value="$PROJECT_DIR$/src/utils/constants.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/logger.js" />
+        <option value="$PROJECT_DIR$/src/utils/logger.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/device-cmd.js" />
+        <option value="$PROJECT_DIR$/src/utils/device-cmd.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/layer-tree.js" />
+        <option value="$PROJECT_DIR$/src/utils/layer-tree.js.map" />
+        <option value="$PROJECT_DIR$/src/router/index.js" />
+        <option value="$PROJECT_DIR$/src/router/index.js.map" />
+        <option value="$PROJECT_DIR$/src/plugins/svgBuilder.js" />
+        <option value="$PROJECT_DIR$/src/plugins/svgBuilder.js.map" />
+        <option value="$PROJECT_DIR$/src/constants/index.js" />
+        <option value="$PROJECT_DIR$/src/constants/index.js.map" />
+        <option value="$PROJECT_DIR$/src/constants/map.js" />
+        <option value="$PROJECT_DIR$/src/constants/map.js.map" />
+        <option value="$PROJECT_DIR$/src/constants/mock-layers.js" />
+        <option value="$PROJECT_DIR$/src/constants/mock-layers.js.map" />
+        <option value="$PROJECT_DIR$/src/event-bus/index.js" />
+        <option value="$PROJECT_DIR$/src/event-bus/index.js.map" />
+        <option value="$PROJECT_DIR$/src/websocket/index.js" />
+        <option value="$PROJECT_DIR$/src/websocket/index.js.map" />
+        <option value="$PROJECT_DIR$/src/websocket/util/config.js" />
+        <option value="$PROJECT_DIR$/src/websocket/util/config.js.map" />
+        <option value="$PROJECT_DIR$/src/components/g-map/useDockControl.js" />
+        <option value="$PROJECT_DIR$/src/components/g-map/useDockControl.js.map" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-log/use-device-log-upload-progress-event.js" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-log/use-device-log-upload-progress-event.js.map" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-log/use-device-log-upload-detail.js" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-log/use-device-log-upload-detail.js.map" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-upgrade/use-device-upgrade.js" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-upgrade/use-device-upgrade.js.map" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-upgrade/use-device-upgrade-event.js" />
+        <option value="$PROJECT_DIR$/src/components/devices/device-upgrade/use-device-upgrade-event.js.map" />
+        <option value="$PROJECT_DIR$/src/components/task/use-task-progress-event.js" />
+        <option value="$PROJECT_DIR$/src/components/task/use-task-progress-event.js.map" />
+        <option value="$PROJECT_DIR$/src/components/task/use-format-task.js" />
+        <option value="$PROJECT_DIR$/src/components/task/use-format-task.js.map" />
+        <option value="$PROJECT_DIR$/src/utils/error-code/index.js" />
+        <option value="$PROJECT_DIR$/src/utils/error-code/index.js.map" />
+        <option value="$PROJECT_DIR$/src/api/device-setting/index.js" />
+        <option value="$PROJECT_DIR$/src/api/device-setting/index.js.map" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

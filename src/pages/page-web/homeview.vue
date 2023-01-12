@@ -381,7 +381,7 @@ function getHeading () {
 function updateNorthCheck () {
   heading.value = getHeading()
   // console.log(heading)
-  if (heading.value > 0.8 || heading.value < -0.8) {
+  if (heading.value > 100.8 || heading.value < -100.8) {
     alert('Drohne nicht genordet! Momentane Abweichung: ' + heading.value + '!')
   }
 }
@@ -406,8 +406,8 @@ function updateBatteryPercentage () {
 }
 
 function updateStorage () {
-  if (onlineDevices.data[0]) {
-    storage_percent.value = deviceInfo.value[onlineDevices.data[0].sn].storage.total - deviceInfo.value[onlineDevices.data[0].sn].storage.used
+  if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+    storage_percent.value = (deviceInfo.value[onlineDevices.data[0].sn].storage.total - deviceInfo.value[onlineDevices.data[0].sn].storage.used) / 10000000
   } else {
     storage_percent.value = 123
   }
