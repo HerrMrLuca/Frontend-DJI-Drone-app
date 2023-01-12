@@ -55,10 +55,19 @@
         >{{ item.label }}</a-select-option
         >
       </a-select>
+      <a-input
+          v-model:value="dronePara.droneList[0]"
+          placeholder="Drone"
+      ></a-input>
+      <a-input
+          v-model:value="dronePara.cameraList[0]"
+          placeholder="Camera"
+      ></a-input>
+      <a-input
+          v-model:value="clarityList[0].label"
+          placeholder="Clarity"
+      ></a-input>
     </div>
-    <p class="fz16 mt10">
-      Note: Obtain The Following Parameters From https://console.agora.io
-    </p>
     <div class="flex-row flex-justify-center flex-align-center">
       <a-input v-model:value="agoraPara.appid" placeholder="APP ID"></a-input>
       <a-input
@@ -83,6 +92,7 @@
       <a-button class="ml20" type="primary" large @click="onRefresh"
       >Refresh Live Capacity</a-button
       >
+      <button @click="test"></button>
     </div>
   </div>
 </template>
@@ -206,6 +216,16 @@ const handleError = (err: any) => {
 }
 const handleJoinChannel = (uid: any) => {
   agoraPara.uid = uid
+}
+
+function test () {
+  console.log(
+    'drone parameter：',
+    dronePara.droneSelected,
+    dronePara.cameraSelected,
+    dronePara.videoSelected,
+    dronePara.claritySelected
+  )
 }
 
 const onStart = async () => {
