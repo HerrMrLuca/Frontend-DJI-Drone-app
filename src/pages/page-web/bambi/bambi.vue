@@ -5,9 +5,11 @@
       </div>
     </div>
     <div>
-      <div v-for="device in onlineDevices.data" :key="device.sn" style="background: #3c3c3c; height: 90px; width: 250px; margin-bottom: 10px;">
-        <div>{{ deviceInfo[device.sn].battery.capacity_percent }}%</div>
-        <div>Nordungsabweichung: {{ deviceInfo[device.sn].attitude_head }}</div>
+      <div v-if:="onlineDevices.data[0] && deviceInfo[onlineDevices.data[0].sn]">
+        <div v-for="device in onlineDevices.data" :key="device.sn" style="background: #3c3c3c; height: 90px; width: 250px; margin-bottom: 10px;">
+          <div>{{ deviceInfo[device.sn].battery.capacity_percent }}%</div>
+          <div>Nordungsabweichung: {{ deviceInfo[device.sn].attitude_head }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -259,7 +261,7 @@ onMounted(() => {
     updateMap()
     updateBatteryPercentage()
     updateNorthCheck()
-    printData()
+    // printData()
   }, 1000)
 }
 )
@@ -306,20 +308,28 @@ const fakeWaypoint = [[51.1, 0], [51.2, 0], [51.1, 0.1], [51.2, 0.1]]
 let index = 0
 function getLocation () {
   // TODO Change fake to real
-  // let latLong: [number, number] = [deviceInfo.value[onlineDevices.data[0].sn].longitude, deviceInfo.value[onlineDevices.data[0].sn].latitude]
-  let latLong: [number, number]
-  if (fakeLocation[index][1] === 0) {
-    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
-    index = 1
-  } else if (fakeLocation[index][1] === 1) {
-    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
-    index = 2
+  if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+    // console.log(deviceInfo.value[onlineDevices.data[0].sn])
+    const latLong: [number, number] = [
+      deviceInfo.value[onlineDevices.data[0].sn].latitude,
+      deviceInfo.value[onlineDevices.data[0].sn].longitude
+    ]
+    return latLong
   } else {
-    latLong = [fakeLocation[index][0], fakeLocation[index][1]]
-    index = 0
+    let latLong: [number, number]
+    if (fakeLocation[index][1] === 0) {
+      latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+      index = 1
+    } else if (fakeLocation[index][1] === 1) {
+      latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+      index = 2
+    } else {
+      latLong = [fakeLocation[index][0], fakeLocation[index][1]]
+      index = 0
+    }
+    return latLong
   }
   // console.log(latLong)
-  return latLong
 }
 
 function getWaypoints () {
@@ -402,7 +412,6 @@ function onScroll (e: any) {
 
 function updateBatteryPercentage () {
   const batteryPercentage = getBatteryPercentage()
-  console.log(batteryPercentage)
   if (batteryPercentage <= 40) {
     if (batteryPercentage % 5 === 0) {
       alert('The Battery is at ' + batteryPercentage + '%!')
@@ -411,9 +420,8 @@ function updateBatteryPercentage () {
 }
 
 function getBatteryPercentage () {
-  console.log(onlineDevices.data[0])
-  if (onlineDevices.data[0]) {
-    return deviceInfo.value[onlineDevices.data[0].sn].battery
+  if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+    return deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
   } else {
     return 100
   }
@@ -421,14 +429,14 @@ function getBatteryPercentage () {
 
 function updateNorthCheck () {
   const heading = getHeading()
-  console.log(heading)
-  if (heading > 0.5 || heading < -0.5) {
+  if (heading > 150.5 || heading < -150.5) {
     alert('Drohne nicht genordet! Momentane Abweichung: ' + heading + '!')
   }
 }
 
 function getHeading () {
-  if (onlineDevices.data[0]) {
+  if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+    console.log(deviceInfo.value[onlineDevices.data[0].sn])
     return deviceInfo.value[onlineDevices.data[0].sn].attitude_head
   }
   return 0
@@ -687,7 +695,8 @@ function readHms (visiable: boolean, sn: string) {
 //
 function printData () {
   let str = 'Data: \n'
-  if (onlineDevices.data[0]) {
+  if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+    console.log(deviceInfo.value[onlineDevices.data[0].sn])
     str += 'lat:'
     str += deviceInfo.value[onlineDevices.data[0].sn].latitude
     str += '\nlong:'

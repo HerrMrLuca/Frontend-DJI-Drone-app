@@ -15,7 +15,9 @@ export const getWaylineFiles = async function (wid: string, body: {}): Promise<I
   const url = `${HTTP_PREFIX}/workspaces/${wid}/waylines?order_by=${body.order_by}&page=${body.page}&page_size=${body.page_size}`
   const result = await request.get(url)
   console.log('getWaylineFiles: ')
-  console.log(result.data)
+  if (result) {
+    console.log(result.data)
+  }
   return result.data
 }
 
