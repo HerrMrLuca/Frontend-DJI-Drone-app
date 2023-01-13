@@ -54,7 +54,7 @@ import { useMyStore } from '/@/store'
 import { useMyFakeStore } from '/@/store/fakestore.ts'
 import { EHmsLevel } from '/@/types/enums'
 import { DistanceLimitStatus, NightLightsStateEnum, ObstacleAvoidance } from '/@/types/device-setting'
-import Livestream from '/@/pages/page-web/bambi/livestream.vue'
+import Livestream from '/@/pages/page-web/livestream-view.vue'
 import Agora from '/@/pages/page-web/bambi/agora.vue'
 
 const store = useMyStore()
