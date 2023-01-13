@@ -6,15 +6,15 @@
     </div>
 
     <a-space class="fz16 height-100" size="large">
-        <router-link
-        v-for="item in options"
-        :key="item.key"
-        :to="item.path"
-        :class="{
+      <router-link
+          v-for="item in options"
+          :key="item.key"
+          :to="item.path"
+          :class="{
             'menu-item': true,
         }">
-          <span @click="selectedRoute(item.path)" :style="selected === item.path ? 'color: #2d8cf0;' : 'color: white'">{{ item.label }}</span>
-        </router-link>
+        <span @click="selectedRoute(item.path)" :style="selected === item.path ? 'color: #2d8cf0;' : 'color: white'">{{ item.label }}</span>
+      </router-link>
     </a-space>
 
     <div class="height-100 fz16 flex-row flex-justify-between flex-align-center">
@@ -51,20 +51,21 @@ interface IOptions {
   key: number
   label: string
   path:
-    | string
-    | {
-        path: string
-        query?: any
-      }
+      | string
+      | {
+    path: string
+    query?: any
+  }
   icon: string
 }
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
 const workspaceName = ref('')
 const options = [
-  { key: 0, label: ERouterName.WORKSPACE.charAt(0).toUpperCase() + ERouterName.WORKSPACE.substr(1), path: '/' + ERouterName.WORKSPACE },
-  { key: 1, label: ERouterName.MEMBERS.charAt(0).toUpperCase() + ERouterName.MEMBERS.substr(1), path: '/' + ERouterName.MEMBERS },
+  { key: 0, label: ERouterName.BAMBI.charAt(0).toUpperCase() + ERouterName.BAMBI.substr(1), path: '/' + ERouterName.BAMBIWORKSPACE },
+  { key: 1, label: ERouterName.MAP.charAt(0).toUpperCase() + ERouterName.MAP.substr(1), path: '/' + ERouterName.MAP },
   { key: 2, label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1), path: '/' + ERouterName.DEVICES },
-  { key: 3, label: ERouterName.BAMBI.charAt(0).toUpperCase() + ERouterName.BAMBI.substr(1), path: '/' + ERouterName.BAMBIWORKSPACE }
+  { key: 3, label: ERouterName.WAYLINE.charAt(0).toUpperCase() + ERouterName.WAYLINE.substr(1), path: '/' + ERouterName.WAYLINE + 'BAMBI' }
+
 ]
 
 const selected = ref<string>(root.$route.path)
@@ -87,6 +88,7 @@ const logout = () => {
 
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';
+@import '/@/styles/bambi.scss';
 
 .fontBold {
   font-weight: 500;

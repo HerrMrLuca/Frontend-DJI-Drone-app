@@ -24,7 +24,9 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue", 
-    "src/vendors/coordtransform.js"
-    ]
+    "src/**/*.vue",
+    "node_modules/leaflet/dist/leaflet.js",
+    "src/vendors/coordtransform.js",
+    "node_modules/@types/node/globals.d.ts"
+  ]
 }
