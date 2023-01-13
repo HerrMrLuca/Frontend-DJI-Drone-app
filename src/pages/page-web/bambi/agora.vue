@@ -159,9 +159,9 @@ const onRefresh = async () => {
   dronePara.droneList = []
   dronePara.cameraList = []
   dronePara.videoList = []
-  dronePara.droneSelected = ''
-  dronePara.cameraSelected = ''
-  dronePara.videoSelected = ''
+  dronePara.droneSelected = '1581F62HD226U00B7033'
+  dronePara.cameraSelected = '53-0-0'
+  dronePara.videoSelected = 'zoom-0'
   await getLiveCapacity({})
     .then(res => {
       if (res.code === 0) {
@@ -221,9 +221,13 @@ const handleJoinChannel = (uid: any) => {
 function test () {
   console.log(
     'drone parameter：',
+    'drone: ',
     dronePara.droneSelected,
+    'camera: ',
     dronePara.cameraSelected,
+    'video: ',
     dronePara.videoSelected,
+    'clarity',
     dronePara.claritySelected
   )
 }
