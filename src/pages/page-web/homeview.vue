@@ -1,155 +1,171 @@
 <!--suppress ALL -->
 <template>
-  <div class="home-view">
-    <div class="content">
-      <div class="north">
-        <div class="content-container">
-          <div class="icon-container north">
-            <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: droneDir + 'deg'}">
+  <div class="outer-div">
+    <div class="home-view">
+      <div class="content">
+        <div class="north">
+          <div class="content-container">
+            <div class="icon-container north">
+              <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: droneDir + 'deg'}">
+            </div>
+            <p v-if="check" class="num">-- °</p>
+            <p v-else-if="testing" class="num">{{ droneDir }} °</p>
+            <p v-else class="num">{{ droneDir }} °</p> <!--todo 5 add nordung-->
           </div>
-          <p v-if="check">--°</p>
-          <p v-else class="num">{{droneDir}}°</p> <!--todo 5 add nordung-->
+          <h5>Nordung</h5>
         </div>
-        <h5>Nordung</h5>
-      </div>
 
-      <div class="gps">
-        <div>
-          <p v-if="check">--</p>
-          <p v-else class="num">{{ data.rtk_number }}
-            <!--
-            {{ deviceInfo[onlineDevices.data[0].sn].rkt_state.gps_number }} ||
-            {{ deviceInfo[onlineDevices.data[0].sn].position_state.gps_number }}
-            -->
-            <span class="unit">Satelliten</span>
-          </p>
-        </div>
-        <h5>RKT State</h5>
-      </div>
-
-      <div class="battery">
-        <div class="content-container">
-          <div class="icon-container">
-            <img :src="battery" class="home-icon" alt="icon of battery">
+        <div class="gps">
+          <div>
+            <p v-if="check" class="num">-- <span class="unit">Satelliten</span></p>
+            <p v-else-if="testing" class="num">30
+              <span class="unit">Satelliten</span>
+            </p>
+            <p v-else class="num">{{ data.rtk_number }}
+              <span class="unit">Satelliten</span>
+            </p>
           </div>
-          <p v-if="check">-- <span class="unit">%</span></p>
-          <p v-else class="num">{{ data.battery }}
-            <!--          {{ deviceInfo[onlineDevices.data[0].sn].battery.capacity_percent }}-->
-            <span class="unit">%</span>
-          </p>
+          <h5>RKT State</h5>
         </div>
-        <h5>Batterie</h5>
-      </div>
 
-      <div class="storage">
-        <div class="content-container">
-          <div class="icon-container">
-            <img :src="storage" class="home-icon" alt="icon of storage">
+        <div class="battery">
+          <div class="content-container">
+            <div class="icon-container">
+              <img :src="battery" class="home-icon" alt="icon of battery">
+            </div>
+            <p v-if="check" class="num">-- <span class="unit">%</span></p>
+            <p v-else-if="testing" class="num">100
+              <span class="unit">%</span>
+            </p>
+            <p v-else class="num">{{ data.battery }}
+              <span class="unit">%</span>
+            </p>
           </div>
-          <p v-if="check">-- <span class="unit">%</span></p>
-          <p v-else class="num">{{ data.storage }}  <!--todo 5 calc storage_percent with every update-->
-            <span class="unit">%</span>
-          </p>
-        </div>
-        <h5>Storage</h5>
-      </div>
-
-      <div class="height">
-        <div>
-          <h6>height</h6>
-          <p v-if="check">0,0 <span class="unit">m</span></p>
-          <p v-else class="num">{{ data.height }} <!--todo 5 fill-->
-            <span class="unit">m</span>
-          </p>
+          <h5>Batterie</h5>
         </div>
 
-        <div>
-          <h6>elevation</h6>
-          <p v-if="check">0,0 <span class="unit">m</span></p>
-          <p v-else class="num">{{ data.elevation }} <!--todo 5 fill-->
-            <span class="unit">m</span>
-          </p>
+        <div class="storage">
+          <div class="content-container">
+            <div class="icon-container">
+              <img :src="storage" class="home-icon" alt="icon of storage">
+            </div>
+            <p v-if="check" class="num">-- <span class="unit">%</span></p>
+            <p v-else-if="testing" class="num">100
+              <span class="unit">%</span>
+            </p>
+            <p v-else class="num">{{ data.storage }}
+              <span class="unit">%</span>
+            </p>
+          </div>
+          <h5>Storage</h5>
         </div>
-        <h5>Höhen</h5>
-      </div>
 
-      <div class="coordinates">
-        <div class="latitude">
-          <h6>latitude</h6>
-          <p v-if="check">--,-------</p>
-          <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
+        <div id="map" class="map" style="display: block"></div>
+
+        <div class="height">
+          <div>
+            <h6>height</h6>
+            <p v-if="check" class="num">---,- <span class="unit">m</span></p>
+            <p v-else-if="testing" class="num">350
+              <span class="unit">m</span>
+            </p>
+            <p v-else class="num">{{ data.height }}
+              <span class="unit">m</span>
+            </p>
+          </div>
+
+          <div>
+            <h6>elevation</h6>
+            <p v-if="check" class="num">---,- <span class="unit">m</span></p>
+            <p v-else-if="testing" class="num">100<span class="unit">m</span></p>
+            <p v-else class="num">{{ data.elevation }}<span class="unit">m</span></p>
+          </div>
+          <h5>Höhen</h5>
         </div>
 
-        <div class="longitude">
-          <h6>longitude</h6>
-          <p v-if="check">--,-------</p>
-          <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
-        </div>
-        <h5>Coordinates</h5>
-      </div>
+        <div class="coordinates">
+          <div class="latitude">
+            <h6>latitude</h6>
+            <p v-if="check" class="num">--,------</p>
+            <p v-else-if="testing" class="num">-23,423239</p>
+            <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
+          </div>
 
-      <div class="wind">
-        <div class="wind-dir"> <!--todo check with icon and rotation
+          <div class="longitude">
+            <h6>longitude</h6>
+            <p v-if="check" class="num">--,------</p>
+            <p v-else-if="testing" class="num">-11,111118</p>
+            <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
+          </div>
+          <h5>Coordinates</h5>
+        </div>
+
+        <div class="wind">
+          <div class="wind-dir"> <!--todo check with icon and rotation
           {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
-          <!--          <h6>Direction</h6>-->
-          <div class="compass">
-            <img class="cardinal-points" :src="cardinalPoints">
-            <img class="needle" :class="direction" :src="needle" :style="{rotate: direction + 'deg'}">
+            <!--          <h6>Direction</h6>-->
+            <div class="compass">
+              <img class="cardinal-points" :src="cardinalPoints">
+              <img class="needle" :class="direction" :src="needle" :style="{rotate: direction + 'deg'}">
+            </div>
           </div>
+
+          <div class="wind-speed">
+            <h6>Speed</h6>
+            <p v-if="check" class="num">-- <span class="unit">m/s</span></p>
+            <p v-else-if="testing" class="num">
+              <span class="unit">m/s</span>
+            </p>
+            <p v-else class="num">{{ data.wind_speed }}
+              <span class="unit">m/s</span>
+            </p>
+          </div>
+          <h5>Wind</h5>
         </div>
 
-        <div class="wind-speed">
-          <h6>Speed</h6>
-          <p v-if="check">-- <span class="unit">km/h</span></p>
-          <p v-else class="num">{{ data.wind_speed }}<!--todo 5 fill-->
-            <span class="unit">m/s</span>
-          </p>
+        <div class="drone-speed">
+          <div class="speed-horizontal">
+            <h6>horizontal</h6>
+            <p v-if="check" class="num">-- <span class="unit">m/s</span></p>
+            <p v-else-if="testing" class="num">2.5<span class="unit">m/s</span></p>
+            <p v-else class="num">{{ data.horizontal_speed }}<span class="unit">m/s</span></p>
+          </div>
+          <div class="speed-vertical">
+            <h6>vertical</h6>
+            <p v-if="check" class="num">-- <span class="unit">m/s</span></p>
+            <p v-else-if="testing" class="num">2.35<span class="unit">m/s</span></p>
+            <p v-else class="num">{{ data.vertical_speed }}<span class="unit">m/s</span></p>
+          </div>
+          <h5>Drone Speed</h5>
         </div>
-        <h5>Wind</h5>
-      </div>
 
-      <div class="drone-speed">
-        <div class="speed-horizontal">
-          <h6>horizontal</h6>
-          <p v-if="check">-- <span class="unit">km/h</span></p>
-          <p v-else class="num">{{ data.horizontal_speed }} <!--todo 5 fill-->
-            <span class="unit">m/s</span>
-          </p>
+        <div class="flight-time">
+          <div class="since-start">
+            <p v-if="check" class="num">--:--</p>
+            <p v-else-if="testing" class="num">00:30</p>
+            <p v-else class="num">00:30</p> <!--todo 5 fill-->
+            <h6>since start</h6>
+          </div>
+          <div class="remaining-flight-time">
+            <p v-if="check" class="num">--:--</p>
+            <p v-else-if="testing" class="num">20:30</p>
+            <p v-else class="num">20:30</p> <!--todo 5 fill-->
+            <h6>remaining (battery)</h6>
+          </div>
+          <h5>Flight Time</h5>
         </div>
-        <div class="speed-vertical">
-          <h6>vertical</h6>
-          <p v-if="check">-- <span class="unit">km/h</span></p>
-          <p v-else class="num">{{ data.vertical_speed }}  <!--todo 5 fill-->
-            <span class="unit">m/s</span></p>
+        <div class="temperature">
+          <!-- todo 3 if else check -->
+          <p v-if="check" class="num">--<span class="unit">°C</span></p>
+          <p v-else-if="testing" class="num">-20<span class="unit">°C</span></p>
+          <p v-else>{{}}<span class="unit">°C</span></p> <!-- TODO 3 add data-->
+          <h5>Weather</h5>
         </div>
-        <h5>Drone Speed</h5>
       </div>
+      <br>
+      <button @click="changeDir">change</button>
+      <button @click="changeDirDrone">changeDrone</button>
 
-      <div class="flight-time">
-        <div class="since-start">
-          <p v-if="check">--:--</p>
-          <p v-else class="num">00:30</p>
-          <h6>since start</h6>
-        </div>
-        <div class="remaining-flight-time">
-          <p v-if="check">--:--</p>
-          <p v-else class="num">20:30</p>
-          <h6>remaining (battery)</h6>
-        </div>
-        <h5>Flight Time</h5>
-      </div>
-      <div class="temperature">
-        <!-- todo 3 if else check -->
-        <p class="num">-20
-          <span class="unit">°C</span>
-        </p>
-        <h5>Weather</h5>
-      </div>
-    </div>
-    <br>
-    <button @click="changeDir">change</button>
-    <button @click="changeDirDrone">changeDrone</button>
-    <div id="map">
     </div>
   </div>
 </template>
@@ -171,7 +187,8 @@ import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
 
-const check = ref(true)
+const check = ref(false)
+const testing = ref(true)
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -352,6 +369,8 @@ function updateMap () {
 
 const fakeLocation = [[48.3, 14.3], [48.3, 14.35], [48.3, 14.4]]
 let index = 0
+
+// TODO 2 add something until map is loaded
 function getLocation () {
   // TODO Change fake to real
   if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
@@ -385,7 +404,7 @@ const data = reactive({
   heading: null,
   height: null,
   elevation: null,
-  wind_direction: null, // initial location for the marker
+  wind_direction: 1, // initial location for the marker
   wind_speed: null,
   vertical_speed: null,
   horizontal_speed: null,
@@ -431,7 +450,7 @@ function updateData () {
   data.heading = Math.round((data.heading + 0.1) * 100) / 100
   data.height += 1
   data.elevation += 1
-  data.wind_direction = Math.round((data.wind_direction + 0.1) * 10) / 100
+  data.wind_direction = Math.round((data.wind_direction + 0.1) * 10) / 100 // note is it a value?
   data.wind_speed -= 1
   data.vertical_speed = Math.round((data.vertical_speed + 0.1) * 100) / 100
   data.horizontal_speed = Math.round((data.horizontal_speed - 0.1) * 100) / 100
@@ -452,7 +471,19 @@ const droneDir = ref(0)
 const direction = ref(0)
 // TODO delete in production
 let i = -1
-const dires = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest']
+const dires = [
+  'North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'
+]
+const dirsObj = {
+  1: 'North',
+  2: 'Northeast',
+  3: 'East',
+  4: 'Southeast',
+  5: 'South',
+  6: 'Southwest',
+  7: 'West',
+  8: 'Northwest'
+}
 let dirTest = 'North'
 
 function closestAngle (from: number, to: number) {
@@ -560,15 +591,21 @@ img {
   font-size: 10px;
 }
 
-.home-view {
+.outer-div {
   width: 100%;
   height: calc(100% - (2 * $bottom-bar-height));
-  border: $bambi-white 3px solid;
   background-color: $bambi-white;
-
   padding: 2vw;
 
   overflow-y: scroll;
+}
+
+.home-view {
+  width: 100%;
+  //height: calc(100% - (2 * $bottom-bar-height));
+  border: $bambi-white 4px solid;
+  border-radius: 10px;
+  background-color: $bambi-white;
 
   .content {
     width: 100%;
@@ -578,6 +615,7 @@ img {
     row-gap: min(2vw, 2.5em);
     column-gap: min(2vw, 2.5em);
     grid-template-columns: repeat(8, 1fr);
+    grid-auto-rows: 1fr;
 
     //region grid layout
     .north,
@@ -665,8 +703,15 @@ img {
           flex-shrink: 0;
         }
 
-        .icon-container:not(.north){
-          flex-basis: 30%;
+        .icon-container /*:not(.north)*/
+        {
+          height: 1.8em;
+          flex-basis: auto;
+
+          img {
+            height: 100%;
+            width: auto;
+          }
         }
 
         .icon-container.north { //change size for pfeil
@@ -682,7 +727,8 @@ img {
         height: 100%;
         width: auto;
       }
-      p{
+
+      p {
         display: block;
         flex-basis: 60%;
         text-align: right;
@@ -749,7 +795,7 @@ img {
     .drone-speed,
     .height,
     .temperature,
-    .flight-time{
+    .flight-time {
       justify-content: space-around;
 
       h5 {
@@ -783,6 +829,7 @@ img {
         filter: invert(100%);
       }
     }
+
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -812,10 +859,5 @@ img {
   100% {
     rotate: 0deg;
   }
-}
-
-#map {
-  height: 300px;
-  width: 300px;
 }
 </style>

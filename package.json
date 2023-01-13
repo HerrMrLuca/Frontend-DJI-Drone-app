@@ -15,6 +15,7 @@
     "agora-rtc-sdk-ng": "^4.12.1",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.21.1",
+    "leaflet": "^1.9.3",
     "mitt": "^3.0.0",
     "query-string": "^7.0.1",
     "reconnecting-websocket": "^4.4.0",

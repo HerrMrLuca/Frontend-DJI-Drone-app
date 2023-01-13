@@ -2489,6 +2489,11 @@
   "resolved" "https://registry.npm.taobao.org/kind-of/download/kind-of-6.0.3.tgz"
   "version" "6.0.3"
 
+"leaflet@^1.9.3":
+  "integrity" "sha512-iB2cR9vAkDOu5l3HAay2obcUHZ7xwUBBjph8+PGtmW/2lYhbLizWtG7nTeYht36WfOslixQF9D/uSIzhZgGMfQ=="
+  "resolved" "https://registry.npmmirror.com/leaflet/-/leaflet-1.9.3.tgz"
+  "version" "1.9.3"
+
 "levn@^0.4.1":
   "integrity" "sha1-rkViwAdHO5MqYgDUAyaN0v/8at4="
   "resolved" "https://registry.npm.taobao.org/levn/download/levn-0.4.1.tgz"

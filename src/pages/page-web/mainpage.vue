@@ -112,6 +112,7 @@ router-view{
 }
 
 .bottom-bar {
+  background-color: $bambi-white;
   display: block;
   position: fixed;
   bottom: 0;
