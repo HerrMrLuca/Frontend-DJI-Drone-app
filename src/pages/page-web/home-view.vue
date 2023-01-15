@@ -6,22 +6,22 @@
         <div class="north">
           <div class="content-container">
             <div class="icon-container north">
-              <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: droneDir + 'deg'}">
+              <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: data.heading + 'deg'}">
             </div>
-            <p v-if="check" class="num">-- °</p>
+            <p v-if="!connected" class="num">-- °</p>
             <p v-else-if="testing" class="num">{{ droneDir }} °</p>
-            <p v-else class="num">{{ droneDir }} °</p> <!--todo 5 add nordung-->
+            <p v-else class="num">{{ data.heading }} °</p> <!--todo 5 add nordung-->
           </div>
           <h5>Nordung</h5>
         </div>
 
         <div class="gps">
           <div>
-            <p v-if="check" class="num">-- <span class="unit">Satelliten</span></p>
-            <p v-else-if="testing" class="num">30
-              <span class="unit">Satelliten</span>
+            <p v-if="!connected" class="num">-- <span class="unit">Satelliten</span></p>
+            <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}
+              <span class="unit">RTK</span>
             </p>
-            <p v-else class="num">{{ data.rtk_number }}
+            <p v-else class="num">{{ data.gps_number }}
               <span class="unit">Satelliten</span>
             </p>
           </div>
@@ -33,7 +33,7 @@
             <div class="icon-container">
               <img :src="battery" class="home-icon" alt="icon of battery">
             </div>
-            <p v-if="check" class="num">-- <span class="unit">%</span></p>
+            <p v-if="!connected" class="num">-- <span class="unit">%</span></p>
             <p v-else-if="testing" class="num">100
               <span class="unit">%</span>
             </p>
@@ -49,7 +49,7 @@
             <div class="icon-container">
               <img :src="storage" class="home-icon" alt="icon of storage">
             </div>
-            <p v-if="check" class="num">-- <span class="unit">%</span></p>
+            <p v-if="!connected" class="num">-- <span class="unit">%</span></p>
             <p v-else-if="testing" class="num">100
               <span class="unit">%</span>
             </p>
@@ -60,12 +60,12 @@
           <h5>Storage</h5>
         </div>
 
-        <div id="map" class="map" style="display: block"></div>
+        <div id="map" class="map" style="display: block"><img src="/src/assets/icons/loading.webp" style="width: 30%; height: 30%; margin: auto; margin-top: 40%;"></div>
 
         <div class="height">
           <div>
             <h6>height</h6>
-            <p v-if="check" class="num">---,- <span class="unit">m</span></p>
+            <p v-if="!connected" class="num">---,- <span class="unit">m</span></p>
             <p v-else-if="testing" class="num">350
               <span class="unit">m</span>
             </p>
@@ -76,7 +76,7 @@
 
           <div>
             <h6>elevation</h6>
-            <p v-if="check" class="num">---,- <span class="unit">m</span></p>
+            <p v-if="!connected" class="num">---,- <span class="unit">m</span></p>
             <p v-else-if="testing" class="num">100<span class="unit">m</span></p>
             <p v-else class="num">{{ data.elevation }}<span class="unit">m</span></p>
           </div>
@@ -86,14 +86,14 @@
         <div class="coordinates">
           <div class="latitude">
             <h6>latitude</h6>
-            <p v-if="check" class="num">--,------</p>
+            <p v-if="!connected" class="num">--,------</p>
             <p v-else-if="testing" class="num">-23,423239</p>
             <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
           </div>
 
           <div class="longitude">
             <h6>longitude</h6>
-            <p v-if="check" class="num">--,------</p>
+            <p v-if="!connected" class="num">--,------</p>
             <p v-else-if="testing" class="num">-11,111118</p>
             <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
           </div>
@@ -112,7 +112,7 @@
 
           <div class="wind-speed">
             <h6>Speed</h6>
-            <p v-if="check" class="num">-- <span class="unit">m/s</span></p>
+            <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
             <p v-else-if="testing" class="num">
               <span class="unit">m/s</span>
             </p>
@@ -126,13 +126,13 @@
         <div class="drone-speed">
           <div class="speed-horizontal">
             <h6>horizontal</h6>
-            <p v-if="check" class="num">-- <span class="unit">m/s</span></p>
+            <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
             <p v-else-if="testing" class="num">2.5<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.horizontal_speed }}<span class="unit">m/s</span></p>
           </div>
           <div class="speed-vertical">
             <h6>vertical</h6>
-            <p v-if="check" class="num">-- <span class="unit">m/s</span></p>
+            <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
             <p v-else-if="testing" class="num">2.35<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.vertical_speed }}<span class="unit">m/s</span></p>
           </div>
@@ -141,13 +141,13 @@
 
         <div class="flight-time">
           <div class="since-start">
-            <p v-if="check" class="num">--:--</p>
+            <p v-if="!connected" class="num">--:--</p>
             <p v-else-if="testing" class="num">00:30</p>
             <p v-else class="num">00:30</p> <!--todo 5 fill-->
             <h6>since start</h6>
           </div>
           <div class="remaining-flight-time">
-            <p v-if="check" class="num">--:--</p>
+            <p v-if="!connected" class="num">--:--</p>
             <p v-else-if="testing" class="num">20:30</p>
             <p v-else class="num">20:30</p> <!--todo 5 fill-->
             <h6>remaining (battery)</h6>
@@ -156,7 +156,7 @@
         </div>
         <div class="temperature">
           <!-- todo 3 if else check -->
-          <p v-if="check" class="num">--<span class="unit">°C</span></p>
+          <p v-if="!connected" class="num">--<span class="unit">°C</span></p>
           <p v-else-if="testing" class="num">-20<span class="unit">°C</span></p>
           <p v-else>{{}}<span class="unit">°C</span></p> <!-- TODO 3 add data-->
           <h5>Weather</h5>
@@ -187,8 +187,9 @@ import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
 
-const check = ref(false)
-const testing = ref(true)
+const connected = ref(false)
+// TODO 3 Remove Testing
+const testing = ref(false)
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -246,7 +247,7 @@ onMounted(() => {
     prepMap() // prep necessary map data
     prepData()
     if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
-      check.value = false
+      connected.value = true
     }
     setInterval(() => { // interval that regularly updates the various data
       updateMap()
@@ -351,7 +352,6 @@ const mapData = reactive({
 
 function prepMap () {
   mapData.currentLocation = getLocation()
-  console.log(mapData.currentLocation)
   mapData.map = L.map('map').setView(mapData.currentLocation, 13)
   L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     maxZoom: 20,
@@ -373,7 +373,7 @@ let index = 0
 // TODO 2 add something until map is loaded
 function getLocation () {
   // TODO Change fake to real
-  if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+  if (connected.value && onlineDevices.data[0]) {
     const latLong: [number, number] = [
       deviceInfo.value[onlineDevices.data[0].sn].latitude,
       deviceInfo.value[onlineDevices.data[0].sn].longitude
@@ -399,6 +399,10 @@ function getLocation () {
 
 // region ------------------------------ Data Code ------------------------------
 
+// compass
+const droneDir = ref(0)
+const direction = ref(0)
+
 const data = reactive({
   battery: null,
   heading: null,
@@ -409,6 +413,8 @@ const data = reactive({
   vertical_speed: null,
   horizontal_speed: null,
   rtk_number: null,
+  gps_number: null,
+  is_fixed: null,
   storage: null,
   gimbal_yaw: null,
   gimbal_pitch: null,
@@ -416,16 +422,18 @@ const data = reactive({
 })
 
 function prepData () {
-  if (!check.value) {
+  if (connected.value) {
     data.battery = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
-    data.heading = deviceInfo.value[onlineDevices.data[0].sn].heading
+    data.heading = deviceInfo.value[onlineDevices.data[0].sn].attitude_head
     data.height = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].height * 100) / 100
     data.elevation = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].elevation * 100) / 100
-    data.wind_direction = deviceInfo.value[onlineDevices.data[0].sn].wind_direction / 10
-    data.wind_speed = deviceInfo.value[onlineDevices.data[0].sn].wind_speed
+    data.wind_direction = deviceInfo.value[onlineDevices.data[0].sn].wind_direction
+    data.wind_speed = deviceInfo.value[onlineDevices.data[0].sn].wind_speed / 10
     data.vertical_speed = deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
     data.horizontal_speed = deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
     data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
+    data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
+    data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
     data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
     data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
@@ -434,9 +442,9 @@ function prepData () {
     data.heading = 0
     data.height = 500
     data.elevation = 100
-    data.wind_direction = 3
-    data.wind_speed = 66
-    data.vertical_speed = 4.4
+    data.wind_direction = 0
+    data.wind_speed = 66 / 10
+    data.vertical_speed = 0.4
     data.horizontal_speed = 1.1
     data.rtk_number = 23
     data.storage = Math.floor(100 - 121610000 / 7378000)
@@ -446,18 +454,41 @@ function prepData () {
 }
 
 function updateData () {
-  data.battery -= 1
-  data.heading = Math.round((data.heading + 0.1) * 100) / 100
-  data.height += 1
-  data.elevation += 1
-  data.wind_direction = Math.round((data.wind_direction + 0.1) * 10) / 100 // note is it a value?
-  data.wind_speed -= 1
-  data.vertical_speed = Math.round((data.vertical_speed + 0.1) * 100) / 100
-  data.horizontal_speed = Math.round((data.horizontal_speed - 0.1) * 100) / 100
-  data.rtk_number -= 1
-  data.storage = Math.round(100 - 121610000 / 7378000 * data.heading)
-  data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
-  data.gimbal_pitch += 1
+  if (connected.value && onlineDevices.data[0]) {
+    data.battery = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.heading = deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+    data.height = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].height * 100) / 100
+    data.elevation = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].elevation * 100) / 100
+    data.wind_direction = deviceInfo.value[onlineDevices.data[0].sn].wind_direction
+    data.wind_speed = deviceInfo.value[onlineDevices.data[0].sn].wind_speed / 10
+    data.vertical_speed = deviceInfo.value[onlineDevices.data[0].sn].vertical_speed
+    data.horizontal_speed = deviceInfo.value[onlineDevices.data[0].sn].horizontal_speed
+    data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
+    data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
+    data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
+    data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
+    data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
+    data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
+  } else {
+    data.battery -= 1
+    data.heading = Math.round((data.heading + 4.362) * 10) / 10
+    data.height += 1
+    data.elevation += 1
+    data.wind_direction += 1
+    data.wind_speed = Math.round(data.wind_speed + 1.3)
+    data.vertical_speed = Math.round((data.vertical_speed + 0.1) * 100) / 100
+    data.horizontal_speed = Math.round((data.horizontal_speed - 0.1) * 100) / 100
+    data.rtk_number += 1
+    data.gps_number += 1
+    data.is_fixed = 2
+    data.storage = Math.round(100 - 121610000 / 7378000 * data.vertical_speed)
+    data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
+    data.gimbal_pitch += 1
+
+    droneDir.value = data.heading
+    direction.value = data.wind_direction
+    changeDir()
+  }
 }
 
 // endregion
@@ -466,11 +497,7 @@ const storage_percent = ref(0)
 
 // region ---------------------------- compass logic  ----------------------------
 
-// compass
-const droneDir = ref(0)
-const direction = ref(0)
 // TODO delete in production
-let i = -1
 const dires = [
   'North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'
 ]
@@ -525,14 +552,9 @@ function chooseDeg (direction: number, deg: number) {
 }
 
 function changeDir () {
-  i = Math.floor(Math.random() * 8)
-  dirTest = dires[i]
+  dirTest = dires[data.wind_direction]
   direction.value = chooseDeg(direction.value, -20)
-  check.value = false
-}
-
-function changeDirDrone () {
-  droneDir.value = chooseDeg(droneDir.value, Math.floor(Math.random() * 380))
+  connected.value = true
 }
 
 // endregion

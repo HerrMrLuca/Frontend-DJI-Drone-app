@@ -1,33 +1,33 @@
 <template>
   <div class="mt20 flex-column flex-justify-start flex-align-center">
     <div id="player" style="width: 720px; height: 420px; border: 1px solid"></div>
-    <p class="fz24">Live streaming source selection</p>
-    <div class="flex-row flex-justify-center flex-align-center mt10">
-      <a-select
-        style="width:150px"
-        placeholder="Select Drone"
-        @select="onDroneSelect"
-      >
-        <a-select-option
-          v-for="item in dronePara.droneList"
-          :key="item.value"
-          :value="item.value"
-          >{{ item.label }}</a-select-option
-        >
-      </a-select>
-      <a-select
-        class="ml10"
-        style="width:150px"
-        placeholder="Select Camera"
-        @select="onCameraSelect"
-      >
-        <a-select-option
-          v-for="item in dronePara.cameraList"
-          :key="item.value"
-          :value="item.value"
-          >{{ item.label }}</a-select-option
-        >
-      </a-select>
+<!--    <p class="fz24">Live streaming</p>-->
+<!--    <div class="flex-row flex-justify-center flex-align-center mt10">-->
+<!--      <a-select-->
+<!--        style="width:150px"-->
+<!--        placeholder="Select Drone"-->
+<!--        @select="onDroneSelect"-->
+<!--      >-->
+<!--        <a-select-option-->
+<!--          v-for="item in dronePara.droneList"-->
+<!--          :key="item.value"-->
+<!--          :value="item.value"-->
+<!--          >{{ item.label }}</a-select-option-->
+<!--        >-->
+<!--      </a-select>-->
+<!--      <a-select-->
+<!--        class="ml10"-->
+<!--        style="width:150px"-->
+<!--        placeholder="Select Camera"-->
+<!--        @select="onCameraSelect"-->
+<!--      >-->
+<!--        <a-select-option-->
+<!--          v-for="item in dronePara.cameraList"-->
+<!--          :key="item.value"-->
+<!--          :value="item.value"-->
+<!--          >{{ item.label }}</a-select-option-->
+<!--        >-->
+<!--      </a-select>-->
       <!-- <a-select
         class="ml10"
         style="width:150px"
@@ -42,47 +42,44 @@
           >{{ item.label }}</a-select-option
         >
       </a-select> -->
-      <a-select
-        class="ml10"
-        style="width:150px"
-        placeholder="Select Clarity"
-        @select="onClaritySelect"
-      >
-        <a-select-option
-          v-for="item in clarityList"
-          :key="item.value"
-          :value="item.value"
-          >{{ item.label }}</a-select-option
-        >
-      </a-select>
-    </div>
-    <p class="fz16 mt10">
-      Note: Obtain The Following Parameters From https://console.agora.io
-    </p>
-    <div class="flex-row flex-justify-center flex-align-center">
-      <a-input v-model:value="agoraPara.appid" placeholder="APP ID"></a-input>
-      <a-input
-        class="ml10"
-        v-model:value="agoraPara.token"
-        placeholder="Token"
-      ></a-input>
-      <a-input
-        class="ml10"
-        v-model:value="agoraPara.channel"
-        placeholder="Channel"
-      ></a-input>
-    </div>
+<!--      <a-select-->
+<!--        class="ml10"-->
+<!--        style="width:150px"-->
+<!--        placeholder="Select Clarity"-->
+<!--        @select="onClaritySelect"-->
+<!--      >-->
+<!--        <a-select-option-->
+<!--          v-for="item in clarityList"-->
+<!--          :key="item.value"-->
+<!--          :value="item.value"-->
+<!--          >{{ item.label }}</a-select-option-->
+<!--        >-->
+<!--      </a-select>-->
+<!--    </div>-->
+<!--    <div class="flex-row flex-justify-center flex-align-center">-->
+<!--      <a-input v-model:value="agoraPara.appid" placeholder="APP ID"></a-input>-->
+<!--      <a-input-->
+<!--        class="ml10"-->
+<!--        v-model:value="agoraPara.token"-->
+<!--        placeholder="Token"-->
+<!--      ></a-input>-->
+<!--      <a-input-->
+<!--        class="ml10"-->
+<!--        v-model:value="agoraPara.channel"-->
+<!--        placeholder="Channel"-->
+<!--      ></a-input>-->
+<!--    </div>-->
     <div class="mt20 flex-row flex-justify-center flex-align-center">
       <a-button type="primary" large @click="onStart">Play</a-button>
       <a-button class="ml20" type="primary" large @click="onStop"
         >Stop</a-button
       >
-      <a-button class="ml20" type="primary" large @click="onUpdateQuality"
-        >Update Clarity</a-button
-      >
-      <a-button class="ml20" type="primary" large @click="onRefresh"
-        >Refresh Live Capacity</a-button
-      >
+<!--      <a-button class="ml20" type="primary" large @click="onUpdateQuality"-->
+<!--        >Update Clarity</a-button-->
+<!--      >-->
+<!--      <a-button class="ml20" type="primary" large @click="onRefresh"-->
+<!--        >Refresh Live Capacity</a-button-->
+<!--      >-->
     </div>
   </div>
 </template>
@@ -167,6 +164,9 @@ const onRefresh = async () => {
         if (dronePara.livestreamSource) {
           dronePara.livestreamSource.forEach((ele: any) => {
             dronePara.droneList.push({ label: ele.name + '-' + ele.sn, value: ele.sn })
+            dronePara.droneSelected = ele.sn
+            dronePara.cameraSelected = '53-0-0'
+            dronePara.videoSelected = 'zoom-0'
           })
         }
       }
