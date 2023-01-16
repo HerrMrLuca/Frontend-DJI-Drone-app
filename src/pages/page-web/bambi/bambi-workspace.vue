@@ -1,24 +1,25 @@
 <template>
   <a-layout class="width-100 flex-display" style="height: 100vh">
-    <MyTopbar />
-    <router-view>
+    <a-layout-header class="header">
+      <bambi-topbar />
+    </a-layout-header>
+    <a-layout-content>
+      <router-view />
+    </a-layout-content>
 
-    </router-view>
-    <div class="bottom-bar">
-      <BottomBar />
-    </div>
   </a-layout>
 </template>
-
 <script lang="ts" setup>
-import BottomBar from '/@/components/common/bottombar.vue'
-import MyTopbar from '/@/components/common/my-topbar.vue'
 
-// region ---------------------------- workspace copy code ----------------------------
+import Sidebar from '/@/components/common/sidebar.vue'
+import MediaPanel from '/@/components/MediaPanel.vue'
+import TaskPanel from '/@/components/TaskPanel.vue'
+import GMap from '/@/components/GMap.vue'
+import { EBizCode, ERouterName } from '/@/types'
 import { getRoot } from '/@/root'
 import { useMyStore } from '/@/store'
-import { EBizCode } from '/@/types'
 import { useConnectWebSocket } from '/@/hooks/use-connect-websocket'
+import BambiTopbar from '/@/components/common/bambiTopbar.vue'
 
 const root = getRoot()
 const store = useMyStore()
@@ -93,30 +94,58 @@ const messageHandler = async (payload: any) => {
   }
 }
 
-// Auf WebSocket-Nachrichten warten
+// 监听ws 消息
 useConnectWebSocket(messageHandler)
-// endregion
 
 </script>
-
 <style lang="scss" scoped>
-//@import '/@/styles/index.scss';
-@import '/@/styles/variables.scss';
-.fontBold {
-  font-weight: 500;
-  font-size: 18px;
-}
+@import '/@/styles/index.scss';
 
-router-view{
-  height: auto;
-}
-
-.bottom-bar {
-  background-color: $bambi-white;
-  display: block;
-  position: fixed;
-  bottom: 0;
+.project-app-wrapper {
+  display: flex;
+  position: absolute;
+  transition: width 0.2s ease;
+  height: 100%;
   width: 100%;
-  overflow: hidden;
+  .left {
+    width: 400px;
+    display: flex;
+    background-color: #232323;
+    float: left;
+  }
+  .right {
+    width: 100%;
+    height: 100%;
+    .map-wrapper {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .main-content {
+    flex: 1;
+    color: $text-white-basic;
+  }
+  .media-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    background: #f6f8fa;
+  }
+  .wayline-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    background: #f6f8fa;
+    padding: 16px;
+  }
+}
+.header {
+  background-color: #77c580;
+  color: white;
+  height: 60px;
+  font-size: 15px;
+  padding: 0 20px;
 }
 </style>

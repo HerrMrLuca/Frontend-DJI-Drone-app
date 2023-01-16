@@ -1,33 +1,33 @@
 <template>
   <div class="mt20 flex-column flex-justify-start flex-align-center">
     <div id="player" style="width: 720px; height: 420px; border: 1px solid"></div>
-<!--    <p class="fz24">Live streaming</p>-->
-<!--    <div class="flex-row flex-justify-center flex-align-center mt10">-->
-<!--      <a-select-->
-<!--        style="width:150px"-->
-<!--        placeholder="Select Drone"-->
-<!--        @select="onDroneSelect"-->
-<!--      >-->
-<!--        <a-select-option-->
-<!--          v-for="item in dronePara.droneList"-->
-<!--          :key="item.value"-->
-<!--          :value="item.value"-->
-<!--          >{{ item.label }}</a-select-option-->
-<!--        >-->
-<!--      </a-select>-->
-<!--      <a-select-->
-<!--        class="ml10"-->
-<!--        style="width:150px"-->
-<!--        placeholder="Select Camera"-->
-<!--        @select="onCameraSelect"-->
-<!--      >-->
-<!--        <a-select-option-->
-<!--          v-for="item in dronePara.cameraList"-->
-<!--          :key="item.value"-->
-<!--          :value="item.value"-->
-<!--          >{{ item.label }}</a-select-option-->
-<!--        >-->
-<!--      </a-select>-->
+    <p class="fz24">Live streaming source selection</p>
+    <div class="flex-row flex-justify-center flex-align-center mt10">
+      <a-select
+          style="width:150px"
+          placeholder="Select Drone"
+          @select="onDroneSelect"
+      >
+        <a-select-option
+            v-for="item in dronePara.droneList"
+            :key="item.value"
+            :value="item.value"
+        >{{ item.label }}</a-select-option
+        >
+      </a-select>
+      <a-select
+          class="ml10"
+          style="width:150px"
+          placeholder="Select Camera"
+          @select="onCameraSelect"
+      >
+        <a-select-option
+            v-for="item in dronePara.cameraList"
+            :key="item.value"
+            :value="item.value"
+        >{{ item.label }}</a-select-option
+        >
+      </a-select>
       <!-- <a-select
         class="ml10"
         style="width:150px"
@@ -42,44 +42,57 @@
           >{{ item.label }}</a-select-option
         >
       </a-select> -->
-<!--      <a-select-->
-<!--        class="ml10"-->
-<!--        style="width:150px"-->
-<!--        placeholder="Select Clarity"-->
-<!--        @select="onClaritySelect"-->
-<!--      >-->
-<!--        <a-select-option-->
-<!--          v-for="item in clarityList"-->
-<!--          :key="item.value"-->
-<!--          :value="item.value"-->
-<!--          >{{ item.label }}</a-select-option-->
-<!--        >-->
-<!--      </a-select>-->
-<!--    </div>-->
-<!--    <div class="flex-row flex-justify-center flex-align-center">-->
-<!--      <a-input v-model:value="agoraPara.appid" placeholder="APP ID"></a-input>-->
-<!--      <a-input-->
-<!--        class="ml10"-->
-<!--        v-model:value="agoraPara.token"-->
-<!--        placeholder="Token"-->
-<!--      ></a-input>-->
-<!--      <a-input-->
-<!--        class="ml10"-->
-<!--        v-model:value="agoraPara.channel"-->
-<!--        placeholder="Channel"-->
-<!--      ></a-input>-->
-<!--    </div>-->
+      <a-select
+          class="ml10"
+          style="width:150px"
+          placeholder="Select Clarity"
+          @select="onClaritySelect"
+      >
+        <a-select-option
+            v-for="item in clarityList"
+            :key="item.value"
+            :value="item.value"
+        >{{ item.label }}</a-select-option
+        >
+      </a-select>
+      <a-input
+          v-model:value="dronePara.droneList[0]"
+          placeholder="Drone"
+      ></a-input>
+      <a-input
+          v-model:value="dronePara.cameraList[0]"
+          placeholder="Camera"
+      ></a-input>
+      <a-input
+          v-model:value="clarityList[0].label"
+          placeholder="Clarity"
+      ></a-input>
+    </div>
+    <div class="flex-row flex-justify-center flex-align-center">
+      <a-input v-model:value="agoraPara.appid" placeholder="APP ID"></a-input>
+      <a-input
+          class="ml10"
+          v-model:value="agoraPara.token"
+          placeholder="Token"
+      ></a-input>
+      <a-input
+          class="ml10"
+          v-model:value="agoraPara.channel"
+          placeholder="Channel"
+      ></a-input>
+    </div>
     <div class="mt20 flex-row flex-justify-center flex-align-center">
       <a-button type="primary" large @click="onStart">Play</a-button>
       <a-button class="ml20" type="primary" large @click="onStop"
-        >Stop</a-button
+      >Stop</a-button
       >
-<!--      <a-button class="ml20" type="primary" large @click="onUpdateQuality"-->
-<!--        >Update Clarity</a-button-->
-<!--      >-->
-<!--      <a-button class="ml20" type="primary" large @click="onRefresh"-->
-<!--        >Refresh Live Capacity</a-button-->
-<!--      >-->
+      <a-button class="ml20" type="primary" large @click="onUpdateQuality"
+      >Update Clarity</a-button
+      >
+      <a-button class="ml20" type="primary" large @click="onRefresh"
+      >Refresh Live Capacity</a-button
+      >
+      <button @click="test"></button>
     </div>
   </div>
 </template>
@@ -146,9 +159,9 @@ const onRefresh = async () => {
   dronePara.droneList = []
   dronePara.cameraList = []
   dronePara.videoList = []
-  dronePara.droneSelected = ''
-  dronePara.cameraSelected = ''
-  dronePara.videoSelected = ''
+  dronePara.droneSelected = '1581F62HD226U00B7033'
+  dronePara.cameraSelected = '53-0-0'
+  dronePara.videoSelected = 'zoom-0'
   await getLiveCapacity({})
     .then(res => {
       if (res.code === 0) {
@@ -164,9 +177,6 @@ const onRefresh = async () => {
         if (dronePara.livestreamSource) {
           dronePara.livestreamSource.forEach((ele: any) => {
             dronePara.droneList.push({ label: ele.name + '-' + ele.sn, value: ele.sn })
-            dronePara.droneSelected = ele.sn
-            dronePara.cameraSelected = '53-0-0'
-            dronePara.videoSelected = 'zoom-0'
           })
         }
       }
@@ -208,6 +218,20 @@ const handleJoinChannel = (uid: any) => {
   agoraPara.uid = uid
 }
 
+function test () {
+  console.log(
+    'drone parameter：',
+    'drone: ',
+    dronePara.droneSelected,
+    'camera: ',
+    dronePara.cameraSelected,
+    'video: ',
+    dronePara.videoSelected,
+    'clarity',
+    dronePara.claritySelected
+  )
+}
+
 const onStart = async () => {
   const that = this
   console.log(
@@ -221,9 +245,9 @@ const onStart = async () => {
   const liveTimestamp = timestamp
   if (
     dronePara.droneSelected == null ||
-    dronePara.cameraSelected == null ||
-    dronePara.videoSelected == null ||
-    dronePara.claritySelected == null
+      dronePara.cameraSelected == null ||
+      dronePara.videoSelected == null ||
+      dronePara.claritySelected == null
   ) {
     message.warn('waring: not select live para!!!')
     return
@@ -234,23 +258,23 @@ const onStart = async () => {
       .join(agoraPara.appid, agoraPara.channel, agoraPara.token)
   }
   livePara.videoId =
-    dronePara.droneSelected +
-    '/' +
-    dronePara.cameraSelected +
-    '/' +
-    dronePara.videoSelected
+      dronePara.droneSelected +
+      '/' +
+      dronePara.cameraSelected +
+      '/' +
+      dronePara.videoSelected
   console.log(agoraPara)
   agoraPara.token = encodeURIComponent(agoraPara.token)
 
   livePara.url =
-    'channel=' +
-    agoraPara.channel +
-    '&sn=' +
-    dronePara.droneSelected +
-    '&token=' +
-    agoraPara.token +
-    '&uid=' +
-    agoraPara.uid
+      'channel=' +
+      agoraPara.channel +
+      '&sn=' +
+      dronePara.droneSelected +
+      '&token=' +
+      agoraPara.token +
+      '&uid=' +
+      agoraPara.uid
 
   startLivestream({
     url: livePara.url,
@@ -259,6 +283,7 @@ const onStart = async () => {
     video_quality: dronePara.claritySelected
   })
     .then(res => {
+      console.log(res) // TODO console.log to Test
       livePara.liveState = true
     })
     .catch(err => {
@@ -267,11 +292,11 @@ const onStart = async () => {
 }
 const onStop = async () => {
   livePara.videoId =
-    dronePara.droneSelected +
-    '/' +
-    dronePara.cameraSelected +
-    '/' +
-    dronePara.videoSelected
+      dronePara.droneSelected +
+      '/' +
+      dronePara.cameraSelected +
+      '/' +
+      dronePara.videoSelected
   stopLivestream({
     video_id: livePara.videoId
   }).then(res => {

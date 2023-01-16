@@ -72,8 +72,8 @@ export default defineComponent({
       },
       {
         key: 1,
-        label: ERouterName.MEMBERS.charAt(0).toUpperCase() + ERouterName.MEMBERS.substr(1),
-        path: '/' + ERouterName.MEMBERS,
+        label: ERouterName.LIVESTREAM.charAt(0).toUpperCase() + ERouterName.LIVESTREAM.substr(1),
+        path: '/' + ERouterName.LIVESTREAM,
         icon: videoIcon
       },
       {
