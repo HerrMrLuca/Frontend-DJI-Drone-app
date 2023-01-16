@@ -1,6 +1,7 @@
 <template>
-  <div class="mt20 flex-column flex-justify-start flex-align-center">
-    <div id="player" style="width: 720px; height: 420px; border: 1px solid"></div>
+  <div class="mt20 flex-column flex-justify-start flex-align-center" style="margin-top: 5px !important;">
+<!--    <div id="player" style="width: 90%; height: 830px; border: 1px solid"></div>-->
+    <div id="player" style="width: 90%; height: 210px; border: 1px solid"></div>
 <!--    <p class="fz24">Live streaming</p>-->
 <!--    <div class="flex-row flex-justify-center flex-align-center mt10">-->
 <!--      <a-select-->
@@ -69,7 +70,7 @@
 <!--        placeholder="Channel"-->
 <!--      ></a-input>-->
 <!--    </div>-->
-    <div class="mt20 flex-row flex-justify-center flex-align-center">
+    <div class="mt20 flex-row flex-justify-center flex-align-center" style="margin-top: 5px !important;">
       <a-button type="primary" large @click="onStart">Play</a-button>
       <a-button class="ml20" type="primary" large @click="onStop"
         >Stop</a-button

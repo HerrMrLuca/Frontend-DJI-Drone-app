@@ -9,7 +9,6 @@
               <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: data.heading + 'deg'}">
             </div>
             <p v-if="!connected" class="num">-- °</p>
-            <p v-else-if="testing" class="num">{{ droneDir }} °</p>
             <p v-else class="num">{{ data.heading }} °</p> <!--todo 5 add nordung-->
           </div>
           <h5>Nordung</h5>
@@ -34,10 +33,7 @@
               <img :src="battery" class="home-icon" alt="icon of battery">
             </div>
             <p v-if="!connected" class="num">-- <span class="unit">%</span></p>
-            <p v-else-if="testing" class="num">100
-              <span class="unit">%</span>
-            </p>
-            <p v-else class="num">{{ data.battery }}
+            <p v-else class="num">{{ data.battery_percent }}
               <span class="unit">%</span>
             </p>
           </div>
@@ -50,9 +46,6 @@
               <img :src="storage" class="home-icon" alt="icon of storage">
             </div>
             <p v-if="!connected" class="num">-- <span class="unit">%</span></p>
-            <p v-else-if="testing" class="num">100
-              <span class="unit">%</span>
-            </p>
             <p v-else class="num">{{ data.storage }}
               <span class="unit">%</span>
             </p>
@@ -66,9 +59,6 @@
           <div>
             <h6>height</h6>
             <p v-if="!connected" class="num">---,- <span class="unit">m</span></p>
-            <p v-else-if="testing" class="num">350
-              <span class="unit">m</span>
-            </p>
             <p v-else class="num">{{ data.height }}
               <span class="unit">m</span>
             </p>
@@ -77,7 +67,6 @@
           <div>
             <h6>elevation</h6>
             <p v-if="!connected" class="num">---,- <span class="unit">m</span></p>
-            <p v-else-if="testing" class="num">100<span class="unit">m</span></p>
             <p v-else class="num">{{ data.elevation }}<span class="unit">m</span></p>
           </div>
           <h5>Höhen</h5>
@@ -87,14 +76,12 @@
           <div class="latitude">
             <h6>latitude</h6>
             <p v-if="!connected" class="num">--,------</p>
-            <p v-else-if="testing" class="num">-23,423239</p>
             <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
           </div>
 
           <div class="longitude">
             <h6>longitude</h6>
             <p v-if="!connected" class="num">--,------</p>
-            <p v-else-if="testing" class="num">-11,111118</p>
             <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
           </div>
           <h5>Coordinates</h5>
@@ -113,9 +100,6 @@
           <div class="wind-speed">
             <h6>Speed</h6>
             <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
-            <p v-else-if="testing" class="num">
-              <span class="unit">m/s</span>
-            </p>
             <p v-else class="num">{{ data.wind_speed }}
               <span class="unit">m/s</span>
             </p>
@@ -127,13 +111,11 @@
           <div class="speed-horizontal">
             <h6>horizontal</h6>
             <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
-            <p v-else-if="testing" class="num">2.5<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.horizontal_speed }}<span class="unit">m/s</span></p>
           </div>
           <div class="speed-vertical">
             <h6>vertical</h6>
             <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
-            <p v-else-if="testing" class="num">2.35<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.vertical_speed }}<span class="unit">m/s</span></p>
           </div>
           <h5>Drone Speed</h5>
@@ -142,14 +124,12 @@
         <div class="flight-time">
           <div class="since-start">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else-if="testing" class="num">00:30</p>
-            <p v-else class="num">00:30</p> <!--todo 5 fill-->
+            <p v-else class="num">{{ data.time_string }}</p> <!--todo 5 fill-->
             <h6>since start</h6>
           </div>
           <div class="remaining-flight-time">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else-if="testing" class="num">20:30</p>
-            <p v-else class="num">20:30</p> <!--todo 5 fill-->
+            <p v-else class="num">{{ data.minutes }}:{{ data.second }}</p> <!--todo 5 fill-->
             <h6>remaining (battery)</h6>
           </div>
           <h5>Flight Time</h5>
@@ -157,14 +137,14 @@
         <div class="temperature">
           <!-- todo 3 if else check -->
           <p v-if="!connected" class="num">--<span class="unit">°C</span></p>
-          <p v-else-if="testing" class="num">-20<span class="unit">°C</span></p>
-          <p v-else>{{}}<span class="unit">°C</span></p> <!-- TODO 3 add data-->
+          <p v-else>{{}}8<span class="unit">°C</span></p> <!-- TODO 3 add data-->
           <h5>Weather</h5>
         </div>
       </div>
       <br>
-      <button @click="changeDir">change</button>
-      <button @click="changeDirDrone">changeDrone</button>
+<!--      TODO 3 delete buttons -->
+<!--      <button @click="changeDir">change</button>-->
+<!--      <button @click="changeDirDrone">changeDrone</button>-->
 
     </div>
   </div>
@@ -188,8 +168,6 @@ import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
 
 const connected = ref(false)
-// TODO 3 Remove Testing
-const testing = ref(false)
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -404,7 +382,8 @@ const droneDir = ref(0)
 const direction = ref(0)
 
 const data = reactive({
-  battery: null,
+  battery_percent: null,
+  remain_flight_time: null,
   heading: null,
   height: null,
   elevation: null,
@@ -418,12 +397,18 @@ const data = reactive({
   storage: null,
   gimbal_yaw: null,
   gimbal_pitch: null,
+  start_time: null,
+  time: null,
+  time_string: null,
+  minutes: null,
+  second: null
 
 })
 
 function prepData () {
   if (connected.value) {
-    data.battery = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.battery_percent = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.remain_flight_time = deviceInfo.value[onlineDevices.data[0].sn].battery.remain_flight_time
     data.heading = deviceInfo.value[onlineDevices.data[0].sn].attitude_head
     data.height = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].height * 100) / 100
     data.elevation = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].elevation * 100) / 100
@@ -438,7 +423,8 @@ function prepData () {
     data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
     data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
   } else {
-    data.battery = 100
+    data.battery_percent = 100
+    data.remain_flight_time = 1733
     data.heading = 0
     data.height = 500
     data.elevation = 100
@@ -447,16 +433,23 @@ function prepData () {
     data.vertical_speed = 0.4
     data.horizontal_speed = 1.1
     data.rtk_number = 23
+    data.is_fixed = 0
     data.storage = Math.floor(100 - 121610000 / 7378000)
     data.gimbal_yaw = -17.3
     data.gimbal_pitch = -90
+    data.start_time = new Date()
+    data.time = new Date()
+    data.minutes = '--'
+    data.second = '--'
+    data.time_string = '--:--'
   }
 }
 
 function updateData () {
   if (connected.value && onlineDevices.data[0]) {
-    data.battery = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
-    data.heading = deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+    data.battery_percent = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.remain_flight_time = deviceInfo.value[onlineDevices.data[0].sn].battery.remain_flight_time
+    data.heading = Math.round(deviceInfo.value[onlineDevices.data[0].sn].attitude_head)
     data.height = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].height * 100) / 100
     data.elevation = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].elevation * 100) / 100
     data.wind_direction = deviceInfo.value[onlineDevices.data[0].sn].wind_direction
@@ -470,8 +463,9 @@ function updateData () {
     data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
     data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
   } else {
-    data.battery -= 1
-    data.heading = Math.round((data.heading + 4.362) * 10) / 10
+    data.battery_percent -= 1
+    data.remain_flight_time -= 3
+    data.heading = Math.round((data.heading - 4) * 10) / 10
     data.height += 1
     data.elevation += 1
     data.wind_direction += 1
@@ -484,11 +478,42 @@ function updateData () {
     data.storage = Math.round(100 - 121610000 / 7378000 * data.vertical_speed)
     data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
     data.gimbal_pitch += 1
-
-    droneDir.value = data.heading
-    direction.value = data.wind_direction
-    changeDir()
   }
+
+  data.time.setTime(new Date() - data.start_time)
+  data.minutes = Math.floor(data.remain_flight_time / 60)
+  data.second = Math.floor((data.remain_flight_time / 60 - data.minutes) * 60)
+
+  data.time_string = addZero(data.time.getMinutes()) + ':' + addZero(data.time.getSeconds())
+  data.second = addZero(data.second)
+  data.minutes = addZero(data.minutes)
+
+  droneDir.value = data.heading
+  direction.value = data.wind_direction
+  changeDir()
+
+  if (data.heading < -3 || data.heading > 3) {
+    document.getElementsByClassName('north').item(0).classList.add('content-warning')
+  } else {
+    document.getElementsByClassName('north').item(0).classList.remove('content-warning')
+  }
+
+  if (data.is_fixed > 2) {
+    document.getElementsByClassName('gps').item(0).classList.add('content-warning')
+  } else {
+    document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
+  }
+
+  if (data.battery_percent < 60) {
+    document.getElementsByClassName('battery').item(0).classList.add('content-warning')
+  } else {
+    document.getElementsByClassName('battery').item(0).classList.remove('content-warning')
+  }
+}
+
+function addZero (i) {
+  if (i < 10) { i = '0' + i }
+  return i
 }
 
 // endregion
@@ -795,6 +820,14 @@ img {
       div {
         width: 100%;
       }
+    }
+
+    .yellow {
+      background-color: #ebff65;
+    }
+
+    .red {
+      background-color: #db4646;
     }
 
     .map {
