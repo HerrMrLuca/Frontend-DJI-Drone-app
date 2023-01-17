@@ -492,22 +492,24 @@ function updateData () {
   direction.value = data.wind_direction
   changeDir()
 
-  if (data.heading < -3 || data.heading > 3) {
-    document.getElementsByClassName('north').item(0).classList.add('content-warning')
-  } else {
-    document.getElementsByClassName('north').item(0).classList.remove('content-warning')
-  }
+  if (document.getElementsByClassName('north').item(0)) {
+    if (data.heading < -3 || data.heading > 3) {
+      document.getElementsByClassName('north').item(0).classList.add('content-warning')
+    } else {
+      document.getElementsByClassName('north').item(0).classList.remove('content-warning')
+    }
 
-  if (data.is_fixed > 2) {
-    document.getElementsByClassName('gps').item(0).classList.add('content-warning')
-  } else {
-    document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
-  }
+    if (data.is_fixed > 2) {
+      document.getElementsByClassName('gps').item(0).classList.add('content-warning')
+    } else {
+      document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
+    }
 
-  if (data.battery_percent < 60) {
-    document.getElementsByClassName('battery').item(0).classList.add('content-warning')
-  } else {
-    document.getElementsByClassName('battery').item(0).classList.remove('content-warning')
+    if (data.battery_percent < 60) {
+      document.getElementsByClassName('battery').item(0).classList.add('content-warning')
+    } else {
+      document.getElementsByClassName('battery').item(0).classList.remove('content-warning')
+    }
   }
 }
 
@@ -517,8 +519,6 @@ function addZero (i) {
 }
 
 // endregion
-
-const storage_percent = ref(0)
 
 // region ---------------------------- compass logic  ----------------------------
 
@@ -579,7 +579,7 @@ function chooseDeg (direction: number, deg: number) {
 function changeDir () {
   dirTest = dires[data.wind_direction]
   direction.value = chooseDeg(direction.value, -20)
-  connected.value = true
+  // connected.value = true
 }
 
 // endregion
