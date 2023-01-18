@@ -12,6 +12,7 @@ export interface CreatePlan {
 
 // Get Wayline Files
 export const getWaylineFiles = async function (wid: string, body: {}): Promise<IWorkspaceResponse<any>> {
+  // @ts-ignore
   const url = `${HTTP_PREFIX}/workspaces/${wid}/waylines?order_by=${body.order_by}&page=${body.page}&page_size=${body.page_size}`
   const result = await request.get(url)
   console.log('getWaylineFiles: ')

@@ -387,7 +387,7 @@ const data = reactive({
   heading: null,
   height: null,
   elevation: null,
-  wind_direction: 1, // initial location for the marker
+  wind_direction: 0, // initial location for the marker
   wind_speed: null,
   vertical_speed: null,
   horizontal_speed: null,
@@ -420,8 +420,6 @@ function prepData () {
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
-    data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
-    data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
   } else {
     data.battery_percent = 100
     data.remain_flight_time = 1733
@@ -460,8 +458,6 @@ function updateData () {
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
-    data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
-    data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
   } else {
     data.battery_percent -= 1
     data.remain_flight_time -= 3
@@ -499,7 +495,8 @@ function updateData () {
       document.getElementsByClassName('north').item(0).classList.remove('content-warning')
     }
 
-    if (data.is_fixed > 2) {
+    if (data.is_fixed < 2) {
+      console.log(data.is_fixed)
       document.getElementsByClassName('gps').item(0).classList.add('content-warning')
     } else {
       document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
@@ -524,62 +521,12 @@ function addZero (i) {
 
 // TODO delete in production
 const dires = [
-  'North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'
+  0, 45, 90, 135, 180, 225, 270, 315
 ]
-const dirsObj = {
-  1: 'North',
-  2: 'Northeast',
-  3: 'East',
-  4: 'Southeast',
-  5: 'South',
-  6: 'Southwest',
-  7: 'West',
-  8: 'Northwest'
-}
-let dirTest = 'North'
-
-function closestAngle (from: number, to: number) {
-  // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
-  return from + ((((to - from) % 360) + 540) % 360) - 180
-}
-
-function chooseDeg (direction: number, deg: number) {
-  switch (dirTest) { // todo change in production
-    case 'North':
-      direction = closestAngle(direction, 0)
-      break
-    case 'Northeast':
-      direction = closestAngle(direction, 45)
-      break
-    case 'East':
-      direction = closestAngle(direction, 90)
-      break
-    case 'Southeast':
-      direction = closestAngle(direction, 135)
-      break
-    case 'South':
-      direction = closestAngle(direction, 180)
-      break
-    case 'Southwest':
-      direction = closestAngle(direction, 225)
-      break
-    case 'West':
-      direction = closestAngle(direction, 270)
-      break
-    case 'Northwest':
-      direction = closestAngle(direction, 315)
-      break
-  }
-  if (deg !== -20) {
-    direction = closestAngle(direction, deg)
-  }
-  return direction
-}
 
 function changeDir () {
-  dirTest = dires[data.wind_direction]
-  direction.value = chooseDeg(direction.value, -20)
-  // connected.value = true
+  direction.value = dires[data.wind_direction]
+  connected.value = true
 }
 
 // endregion
