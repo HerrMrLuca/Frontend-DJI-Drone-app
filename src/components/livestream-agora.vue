@@ -1,6 +1,7 @@
 <template>
   <div class="mt20 flex-column flex-justify-start flex-align-center">
-    <div id="player" style="width: 720px; height: 420px; border: 1px solid"></div>
+    <div id="player"></div>
+
 <!--    <p class="fz24">Live streaming</p>-->
 <!--    <div class="flex-row flex-justify-center flex-align-center mt10">-->
 <!--      <a-select-->
@@ -347,4 +348,14 @@ const onUpdateQuality = () => {
 
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';
+@import '/@/styles/variables.scss';
+$width-player: 90vw;
+
+#player {
+  width: 720px;
+  width: $width-player;
+  height: 420px;
+  height: calc(($width-player/3)*2);
+  border: 1px solid;
+}
 </style>

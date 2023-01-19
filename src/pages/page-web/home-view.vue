@@ -6,24 +6,21 @@
         <div class="north">
           <div class="content-container">
             <div class="icon-container north">
-              <img :src="compass" alt="icon of compass" class="home-icon compass" :style="{rotate: data.heading + 'deg'}">
+              <img :src="compass" alt="icon of compass" class="home-icon compass"
+                   :style="{rotate: data.heading + 'deg'}">
             </div>
-            <p v-if="!connected" class="num">-- °</p>
-            <p v-else-if="testing" class="num">{{ droneDir }} °</p>
-            <p v-else class="num">{{ data.heading }} °</p> <!--todo 5 add nordung-->
+            <p v-if="!connected" class="num">--°</p>
+            <p v-else-if="testing" class="num">{{ droneDir }}°</p>
+            <p v-else class="num">{{ data.heading }}°</p> <!--todo 5 add nordung-->
           </div>
           <h5>Nordung</h5>
         </div>
 
         <div class="gps">
           <div>
-            <p v-if="!connected" class="num">-- <span class="unit">Satelliten</span></p>
-            <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}
-              <span class="unit">RTK</span>
-            </p>
-            <p v-else class="num">{{ data.gps_number }}
-              <span class="unit">Satelliten</span>
-            </p>
+            <p v-if="!connected" class="num">--<span class="unit">RKT</span></p>
+            <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
+            <p v-else class="num">{{ data.gps_number }}<span class="unit">RKT</span></p>
           </div>
           <h5>RKT State</h5>
         </div>
@@ -33,13 +30,9 @@
             <div class="icon-container">
               <img :src="battery" class="home-icon" alt="icon of battery">
             </div>
-            <p v-if="!connected" class="num">-- <span class="unit">%</span></p>
-            <p v-else-if="testing" class="num">100
-              <span class="unit">%</span>
-            </p>
-            <p v-else class="num">{{ data.battery }}
-              <span class="unit">%</span>
-            </p>
+            <p v-if="!connected" class="num">--<span class="unit">%</span></p>
+            <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
+            <p v-else class="num">{{ data.battery }}<span class="unit">%</span></p>
           </div>
           <h5>Batterie</h5>
         </div>
@@ -49,29 +42,23 @@
             <div class="icon-container">
               <img :src="storage" class="home-icon" alt="icon of storage">
             </div>
-            <p v-if="!connected" class="num">-- <span class="unit">%</span></p>
-            <p v-else-if="testing" class="num">100
-              <span class="unit">%</span>
-            </p>
-            <p v-else class="num">{{ data.storage }}
-              <span class="unit">%</span>
-            </p>
+            <p v-if="!connected" class="num">--<span class="unit">%</span></p>
+            <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
+            <p v-else class="num">{{ data.storage }}<span class="unit">%</span></p>
           </div>
           <h5>Storage</h5>
         </div>
 
-        <div id="map" class="map" style="display: block"><img src="/src/assets/icons/loading.webp" style="width: 30%; height: 30%; margin: auto; margin-top: 40%;"></div>
+        <div id="map" class="map" style="display: block"><img src="/src/assets/icons/loading.webp"
+                                                              style="width: 30%; height: 30%; margin: auto; margin-top: 40%;">
+        </div>
 
         <div class="height">
           <div>
             <h6>height</h6>
-            <p v-if="!connected" class="num">---,- <span class="unit">m</span></p>
-            <p v-else-if="testing" class="num">350
-              <span class="unit">m</span>
-            </p>
-            <p v-else class="num">{{ data.height }}
-              <span class="unit">m</span>
-            </p>
+            <p v-if="!connected" class="num">---,-<span class="unit">m</span></p>
+            <p v-else-if="testing" class="num">350 <span class="unit">m</span></p>
+            <p v-else class="num">{{ data.height }}<span class="unit">m</span></p>
           </div>
 
           <div>
@@ -112,13 +99,9 @@
 
           <div class="wind-speed">
             <h6>Speed</h6>
-            <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
-            <p v-else-if="testing" class="num">
-              <span class="unit">m/s</span>
-            </p>
-            <p v-else class="num">{{ data.wind_speed }}
-              <span class="unit">m/s</span>
-            </p>
+            <p v-if="!connected" class="num">--<span class="unit">m/s</span></p>
+            <p v-else-if="testing" class="num">2.3<span class="unit">m/s</span></p>
+            <p v-else class="num">{{ data.wind_speed }}<span class="unit">m/s</span></p>
           </div>
           <h5>Wind</h5>
         </div>
@@ -126,13 +109,13 @@
         <div class="drone-speed">
           <div class="speed-horizontal">
             <h6>horizontal</h6>
-            <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
+            <p v-if="!connected" class="num">--<span class="unit">m/s</span></p>
             <p v-else-if="testing" class="num">2.5<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.horizontal_speed }}<span class="unit">m/s</span></p>
           </div>
           <div class="speed-vertical">
             <h6>vertical</h6>
-            <p v-if="!connected" class="num">-- <span class="unit">m/s</span></p>
+            <p v-if="!connected" class="num">--<span class="unit">m/s</span></p>
             <p v-else-if="testing" class="num">2.35<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.vertical_speed }}<span class="unit">m/s</span></p>
           </div>
@@ -163,9 +146,10 @@
         </div>
       </div>
       <br>
+      <!--
       <button @click="changeDir">change</button>
       <button @click="changeDirDrone">changeDrone</button>
-
+      -->
     </div>
   </div>
 </template>
@@ -600,7 +584,6 @@ img {
   display: block;
   width: 100%;
   height: auto;
-  max-width: 100%;
 }
 
 .num {
@@ -611,6 +594,7 @@ img {
 .unit {
   color: $bambi-shade-darker-1;
   font-size: 10px;
+  padding-left: 0.2rem;
 }
 
 .outer-div {
