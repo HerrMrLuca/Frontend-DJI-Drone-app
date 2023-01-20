@@ -7,8 +7,8 @@ export const CURRENT_CONFIG = {
 
   // http
   // TODO change IP
-  baseURL: 'http://192.168.1.106:6789/', // This url must end with "/". Example: 'http://192.168.1.1:6789/'
-  websocketURL: 'ws://192.168.1.106:6789/api/v1/ws', // Example: 'ws://192.168.1.1:6789/api/v1/ws'
+  baseURL: 'http://192.168.1.100:6789/', // This url must end with "/". Example: 'http://192.168.1.1:6789/'
+  websocketURL: 'ws://192.168.1.100:6789/api/v1/ws', // Example: 'ws://192.168.1.1:6789/api/v1/ws'
 
   // livestreaming
   // RTMP  Note: This IP is the address of the streaming server. If you want to see livestream on web page, you need to convert the RTMP stream to WebRTC stream.
@@ -27,7 +27,7 @@ export const CURRENT_CONFIG = {
   rtspPort: '8554',
   // Agora
   agoraAPPID: '81151cf17c8641c18bf00e453ccaede4',
-  agoraToken: '007eJxTYNhnLnNnytcV/Grmb5an3T1kKr2Nz7+clSdo/SXB/mS3o3YKDBaGhqaGyWmG5skWZiaGyYYWSWkGBqkmpsbJyYmpKakmwbPLkxsCGRksl3UzMzJAIIjPxZCUmJuUmVKUn5fKwAAAmWogTA==',
+  agoraToken: '007eJxTYPiuyrZw58r4L5IPGd/tOpqz3rPqAEd6yRW/vqz5d+odnI8rMFgYGpoaJqcZmidbmJkYJhtaJKUZGKSamBonJyempqSahF04mtwQyMgwSXUPIyMDBIL4XAxJiblJmSlF+XmpDAwAhhAjbA==',
   agoraChannel: 'bambidrone',
 
   // map

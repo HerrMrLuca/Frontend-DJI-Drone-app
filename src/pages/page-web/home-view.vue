@@ -64,7 +64,6 @@
           <div>
             <h6>elevation</h6>
             <p v-if="!connected" class="num">---,- <span class="unit">m</span></p>
-            <p v-else-if="testing" class="num">100<span class="unit">m</span></p>
             <p v-else class="num">{{ data.elevation }}<span class="unit">m</span></p>
           </div>
           <h5>Höhen</h5>
@@ -74,14 +73,12 @@
           <div class="latitude">
             <h6>latitude</h6>
             <p v-if="!connected" class="num">--,------</p>
-            <p v-else-if="testing" class="num">-23,423239</p>
             <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
           </div>
 
           <div class="longitude">
             <h6>longitude</h6>
             <p v-if="!connected" class="num">--,------</p>
-            <p v-else-if="testing" class="num">-11,111118</p>
             <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
           </div>
           <h5>Coordinates</h5>
@@ -125,14 +122,12 @@
         <div class="flight-time">
           <div class="since-start">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else-if="testing" class="num">00:30</p>
-            <p v-else class="num">00:30</p> <!--todo 5 fill-->
+            <p v-else class="num">{{ data.time_string }}</p> <!--todo 5 fill-->
             <h6>since start</h6>
           </div>
           <div class="remaining-flight-time">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else-if="testing" class="num">20:30</p>
-            <p v-else class="num">20:30</p> <!--todo 5 fill-->
+            <p v-else class="num">{{ data.minutes }}:{{ data.second }}</p> <!--todo 5 fill-->
             <h6>remaining (battery)</h6>
           </div>
           <h5>Flight Time</h5>
@@ -140,8 +135,7 @@
         <div class="temperature">
           <!-- todo 3 if else check -->
           <p v-if="!connected" class="num">--<span class="unit">°C</span></p>
-          <p v-else-if="testing" class="num">-20<span class="unit">°C</span></p>
-          <p v-else>{{}}<span class="unit">°C</span></p> <!-- TODO 3 add data-->
+          <p v-else>{{ data.temperature }}<span class="unit">°C</span></p>
           <h5>Weather</h5>
         </div>
       </div>
@@ -172,8 +166,6 @@ import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
 
 const connected = ref(false)
-// TODO 3 Remove Testing
-const testing = ref(false)
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -230,6 +222,7 @@ onMounted(() => {
     getOnlineDeviceHms()
     prepMap() // prep necessary map data
     prepData()
+    getWeather()
     if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
       connected.value = true
     }
@@ -388,11 +381,12 @@ const droneDir = ref(0)
 const direction = ref(0)
 
 const data = reactive({
-  battery: null,
+  battery_percent: null,
+  remain_flight_time: null,
   heading: null,
   height: null,
   elevation: null,
-  wind_direction: 1, // initial location for the marker
+  wind_direction: 0, // initial location for the marker
   wind_speed: null,
   vertical_speed: null,
   horizontal_speed: null,
@@ -402,12 +396,19 @@ const data = reactive({
   storage: null,
   gimbal_yaw: null,
   gimbal_pitch: null,
+  start_time: null,
+  time: null,
+  time_string: null,
+  minutes: null,
+  second: null,
+  temperature: null
 
 })
 
 function prepData () {
   if (connected.value) {
-    data.battery = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.battery_percent = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.remain_flight_time = deviceInfo.value[onlineDevices.data[0].sn].battery.remain_flight_time
     data.heading = deviceInfo.value[onlineDevices.data[0].sn].attitude_head
     data.height = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].height * 100) / 100
     data.elevation = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].elevation * 100) / 100
@@ -419,10 +420,9 @@ function prepData () {
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
-    data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
-    data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
   } else {
-    data.battery = 100
+    data.battery_percent = 100
+    data.remain_flight_time = 1733
     data.heading = 0
     data.height = 500
     data.elevation = 100
@@ -431,16 +431,23 @@ function prepData () {
     data.vertical_speed = 0.4
     data.horizontal_speed = 1.1
     data.rtk_number = 23
+    data.is_fixed = 0
     data.storage = Math.floor(100 - 121610000 / 7378000)
     data.gimbal_yaw = -17.3
     data.gimbal_pitch = -90
+    data.start_time = new Date()
+    data.time = new Date()
+    data.minutes = '--'
+    data.second = '--'
+    data.time_string = '--:--'
   }
 }
 
 function updateData () {
   if (connected.value && onlineDevices.data[0]) {
-    data.battery = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
-    data.heading = deviceInfo.value[onlineDevices.data[0].sn].attitude_head
+    data.battery_percent = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
+    data.remain_flight_time = deviceInfo.value[onlineDevices.data[0].sn].battery.remain_flight_time
+    data.heading = Math.round(deviceInfo.value[onlineDevices.data[0].sn].attitude_head)
     data.height = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].height * 100) / 100
     data.elevation = Math.floor(deviceInfo.value[onlineDevices.data[0].sn].elevation * 100) / 100
     data.wind_direction = deviceInfo.value[onlineDevices.data[0].sn].wind_direction
@@ -451,11 +458,10 @@ function updateData () {
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
-    data.gimbal_yaw = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_yaw
-    data.gimbal_pitch = deviceInfo.value[onlineDevices.data[0].sn].payloads.gimbal_pitch
   } else {
-    data.battery -= 1
-    data.heading = Math.round((data.heading + 4.362) * 10) / 10
+    data.battery_percent -= 1
+    data.remain_flight_time -= 3
+    data.heading = Math.round((data.heading - 4) * 10) / 10
     data.height += 1
     data.elevation += 1
     data.wind_direction += 1
@@ -468,76 +474,68 @@ function updateData () {
     data.storage = Math.round(100 - 121610000 / 7378000 * data.vertical_speed)
     data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
     data.gimbal_pitch += 1
+  }
 
-    droneDir.value = data.heading
-    direction.value = data.wind_direction
-    changeDir()
+  data.time.setTime(new Date() - data.start_time)
+  data.minutes = Math.floor(data.remain_flight_time / 60)
+  data.second = Math.floor((data.remain_flight_time / 60 - data.minutes) * 60)
+
+  data.time_string = addZero(data.time.getMinutes()) + ':' + addZero(data.time.getSeconds())
+  data.second = addZero(data.second)
+  data.minutes = addZero(data.minutes)
+
+  droneDir.value = data.heading
+  direction.value = data.wind_direction
+  changeDir()
+
+  if (document.getElementsByClassName('north').item(0)) {
+    if (data.heading < -3 || data.heading > 3) {
+      document.getElementsByClassName('north').item(0).classList.add('content-warning')
+    } else {
+      document.getElementsByClassName('north').item(0).classList.remove('content-warning')
+    }
+
+    if (data.is_fixed < 2) {
+      console.log(data.is_fixed)
+      document.getElementsByClassName('gps').item(0).classList.add('content-warning')
+    } else {
+      document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
+    }
+
+    if (data.battery_percent < 60) {
+      document.getElementsByClassName('battery').item(0).classList.add('content-warning')
+    } else {
+      document.getElementsByClassName('battery').item(0).classList.remove('content-warning')
+    }
   }
 }
 
-// endregion
+function addZero (i) {
+  if (i < 10) { i = '0' + i }
+  return i
+}
 
-const storage_percent = ref(0)
+async function getWeather () {
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=48.31&longitude=14.29&hourly=temperature_2m&current_weather=true', {
+    method: 'GET'
+  })
+    .then(function (response) { return response.json() })
+    .then(function (json) {
+      data.temperature = json.hourly.temperature_2m[10]
+    })
+}
+
+// endregion
 
 // region ---------------------------- compass logic  ----------------------------
 
 // TODO delete in production
 const dires = [
-  'North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'
+  0, 45, 90, 135, 180, 225, 270, 315
 ]
-const dirsObj = {
-  1: 'North',
-  2: 'Northeast',
-  3: 'East',
-  4: 'Southeast',
-  5: 'South',
-  6: 'Southwest',
-  7: 'West',
-  8: 'Northwest'
-}
-let dirTest = 'North'
-
-function closestAngle (from: number, to: number) {
-  // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
-  return from + ((((to - from) % 360) + 540) % 360) - 180
-}
-
-function chooseDeg (direction: number, deg: number) {
-  switch (dirTest) { // todo change in production
-    case 'North':
-      direction = closestAngle(direction, 0)
-      break
-    case 'Northeast':
-      direction = closestAngle(direction, 45)
-      break
-    case 'East':
-      direction = closestAngle(direction, 90)
-      break
-    case 'Southeast':
-      direction = closestAngle(direction, 135)
-      break
-    case 'South':
-      direction = closestAngle(direction, 180)
-      break
-    case 'Southwest':
-      direction = closestAngle(direction, 225)
-      break
-    case 'West':
-      direction = closestAngle(direction, 270)
-      break
-    case 'Northwest':
-      direction = closestAngle(direction, 315)
-      break
-  }
-  if (deg !== -20) {
-    direction = closestAngle(direction, deg)
-  }
-  return direction
-}
 
 function changeDir () {
-  dirTest = dires[data.wind_direction]
-  direction.value = chooseDeg(direction.value, -20)
+  direction.value = dires[data.wind_direction]
   connected.value = true
 }
 
@@ -779,6 +777,14 @@ img {
       div {
         width: 100%;
       }
+    }
+
+    .yellow {
+      background-color: #ebff65;
+    }
+
+    .red {
+      background-color: #db4646;
     }
 
     .map {

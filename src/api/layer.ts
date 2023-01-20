@@ -23,6 +23,7 @@ export const getLayers = async (reqParams: elementGroupsReq): UnknownResponse =>
 // Get elements groups request
 export const getElementGroupsReq = async (body: elementGroupsReq): Promise<IWorkspaceResponse<any>> => {
   const url = `${PREFIX}/workspaces/` + workspace_id + '/element-groups'
+  // @ts-ignore
   const result = await request.get(url, body)
   return result.data
 }
