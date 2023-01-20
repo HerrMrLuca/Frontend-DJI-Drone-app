@@ -348,9 +348,6 @@ const onUpdateQuality = () => {
 }
 
 async function getAgoraToken () {
-  // const url = 'https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/835958/?expiry=10'
-  // const result = await request.get(url)
-
   fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/835958/?expiry=300', {
     method: 'GET'
   })

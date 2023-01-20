@@ -137,15 +137,11 @@
         <div class="temperature">
           <!-- todo 3 if else check -->
           <p v-if="!connected" class="num">--<span class="unit">°C</span></p>
-          <p v-else>{{}}8<span class="unit">°C</span></p> <!-- TODO 3 add data-->
+          <p v-else>{{ data.temperature }}<span class="unit">°C</span></p>
           <h5>Weather</h5>
         </div>
       </div>
       <br>
-<!--      TODO 3 delete buttons -->
-<!--      <button @click="changeDir">change</button>-->
-<!--      <button @click="changeDirDrone">changeDrone</button>-->
-
     </div>
   </div>
 </template>
@@ -224,6 +220,7 @@ onMounted(() => {
     getOnlineDeviceHms()
     prepMap() // prep necessary map data
     prepData()
+    getWeather()
     if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
       connected.value = true
     }
@@ -401,7 +398,8 @@ const data = reactive({
   time: null,
   time_string: null,
   minutes: null,
-  second: null
+  second: null,
+  temperature: null
 
 })
 
@@ -513,6 +511,16 @@ function updateData () {
 function addZero (i) {
   if (i < 10) { i = '0' + i }
   return i
+}
+
+async function getWeather () {
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=48.31&longitude=14.29&hourly=temperature_2m&current_weather=true', {
+    method: 'GET'
+  })
+    .then(function (response) { return response.json() })
+    .then(function (json) {
+      data.temperature = json.hourly.temperature_2m[10]
+    })
 }
 
 // endregion
