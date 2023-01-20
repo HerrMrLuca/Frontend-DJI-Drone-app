@@ -92,6 +92,7 @@ import { onMounted, reactive } from 'vue'
 import { CURRENT_CONFIG as config } from '/@/api/http/config'
 import { getLiveCapacity, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
+import request from '/@/api/http/request'
 
 const root = getRoot()
 
@@ -178,6 +179,7 @@ const onRefresh = async () => {
 }
 
 onMounted(() => {
+  getAgoraToken()
   onRefresh()
   agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' })
   // Subscribe when a remote user publishes a stream
@@ -343,6 +345,20 @@ const onUpdateQuality = () => {
       message.success('Set the clarity to ' + clarityList[dronePara.claritySelected].label)
     }
   })
+}
+
+async function getAgoraToken () {
+  // const url = 'https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/835958/?expiry=10'
+  // const result = await request.get(url)
+
+  fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/835958/?expiry=300', {
+    method: 'GET'
+  })
+    .then(function (response) { return response.json() })
+    .then(function (json) {
+      console.log(json.rtcToken)
+      agoraPara.token = json.rtcToken
+    })
 }
 </script>
 
