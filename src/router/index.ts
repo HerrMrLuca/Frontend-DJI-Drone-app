@@ -43,11 +43,13 @@ const routes: Array<RouteRecordRaw> = [
           }
         ]
       },
+
       {
-        path: '/' + ERouterName.DEVICES,
-        name: ERouterName.DEVICES,
-        component: () => import('/@/pages/page-web/projects/devices.vue')
+        path: '/' + ERouterName.PROFILE,
+        name: ERouterName.PROFILE,
+        component: () => import('/@/pages/page-web/profile-view.vue')
       }
+
     ]
   },
 

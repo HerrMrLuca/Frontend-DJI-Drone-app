@@ -1,5 +1,5 @@
 <template>
-  <div class="mt20 flex-column flex-justify-start flex-align-center">
+  <div class="mt20" id="livestream">
     <div id="player"></div>
 
 <!--    <p class="fz24">Live streaming</p>-->
@@ -365,10 +365,12 @@ async function getAgoraToken () {
 $width-player: 90vw;
 
 #player {
-  width: 720px;
+  margin: 0 auto;
+  //width: 720px;
   width: $width-player;
-  height: 420px;
-  height: calc(($width-player/3)*2);
+  //height: 420px;
+  height: calc(($width-player/3)*2); // 3:2
   border: 1px solid;
 }
+
 </style>

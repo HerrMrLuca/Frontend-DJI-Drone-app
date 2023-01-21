@@ -26,6 +26,7 @@ export enum ERouterName {
 
     MAINPAGE = 'mainpage',
     HOMEPAGE = 'homepage',
+    PROFILE = 'profile'
 }
 
 export enum EStorageKey {

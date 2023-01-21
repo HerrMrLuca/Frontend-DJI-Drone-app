@@ -80,7 +80,7 @@ export default defineComponent({
       {
         key: 2,
         label: 'Profile',
-        path: '/' + ERouterName.DEVICES,
+        path: '/' + ERouterName.PROFILE,
         icon: settingsIcon
       }
     ]
