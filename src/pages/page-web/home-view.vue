@@ -555,6 +555,47 @@ function changeDir () {
   connected.value = true // TODO ? must be true for testing
 }
 
+function closestAngle (from: number, to: number) {
+  // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
+  return from + ((((to - from) % 360) + 540) % 360) - 180
+}
+
+// todo 5 implement this method in wind_direction to get closest target for animation
+function chooseDeg (direction: number, deg: number) {
+  switch (data.wind_direction) {
+    case 0:
+      direction = closestAngle(dires['0'], 0)
+      break
+    case 1:
+      direction = closestAngle(direction, 45) // todo 5 change
+      break
+    case 2:
+      direction = closestAngle(direction, 90)
+      break
+    case 'Southeast': // todo 5 change
+      direction = closestAngle(direction, 135)
+      break
+    case 'South':
+      direction = closestAngle(direction, 180)
+      break
+    case 'Southwest':
+      direction = closestAngle(direction, 225)
+      break
+    case 'West':
+      direction = closestAngle(direction, 270)
+      break
+    case 'Northwest':
+      direction = closestAngle(direction, 315)
+      break
+  }
+  /*
+  if (deg !== -20) {
+    direction = closestAngle(direction, deg)
+  }
+  */
+  return direction; //direction in degrees for the animiation
+}
+
 // endregion
 
 // todo 2 add little animation for warning and alert
