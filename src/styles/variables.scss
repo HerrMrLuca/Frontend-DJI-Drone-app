@@ -88,11 +88,13 @@ $bambi-gray: #3C3C3C;
 $bambi-warning-color: #ED9937;
 $bambi-warning-color-translucent: rgba(237, 153, 55, 0.65);
 $bambi-alert-color: #ED4337;
-$bambi-alert-color-translucent: rgba(237, 67, 55, 0.61);
+$bambi-alert-color-translucent: rgba(235, 66, 56, 0.69);
+$bambi-alert-glow: 0px 0px 10px $bambi-alert-color;
 
 $bambi-font-open-sans: 'Open Sans', sans-serif;
 $bambi-font-fredoka: 'Fredoka', sans-serif;
 
+$bambi-home-view-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 
 $bottom-bar-height: 60px;
 

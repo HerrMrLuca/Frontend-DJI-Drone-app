@@ -4,7 +4,7 @@
     <div class="home-view">
       <h1>Home</h1>
       <div class="content">
-        <div class="north">
+        <div class="north content-alert">
           <div class="content-container">
             <div class="icon-container north">
               <img :src="compass" alt="icon of compass" class="home-icon compass"
@@ -17,7 +17,7 @@
           <h5>Nordung</h5>
         </div>
 
-        <div class="gps">
+        <div class="gps content-alert">
           <div>
             <p v-if="!connected" class="num">--<span class="unit">RKT</span></p>
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
@@ -474,7 +474,12 @@ function updateData () {
     data.heading = Math.round((data.heading - 4) * 10) / 10
     data.height += 1
     data.elevation += 1
-    data.wind_direction += 1
+    if (data.wind_direction === 9) {
+      data.wind_direction = 0
+    } else {
+      data.wind_direction += 1
+    }
+
     data.wind_speed = Math.round(data.wind_speed + 1.3)
     data.vertical_speed = Math.round((data.vertical_speed + 0.1) * 100) / 100
     data.horizontal_speed = Math.round((data.horizontal_speed - 0.1) * 100) / 100
@@ -495,7 +500,7 @@ function updateData () {
   data.minutes = addZero(data.minutes)
 
   droneDir.value = data.heading
-  direction.value = data.wind_direction
+  // direction.value = closestAngle(direction.value, dires[data.wind_direction])
   changeDir()
 
   if (connected.value && !testing.value) {
@@ -551,7 +556,7 @@ const dires = [
 ]
 
 function changeDir () {
-  direction.value = dires[data.wind_direction]
+  direction.value = closestAngle(direction.value, dires[data.wind_direction])
   connected.value = true // TODO ? must be true for testing
 }
 
@@ -593,7 +598,7 @@ function chooseDeg (direction: number, deg: number) {
     direction = closestAngle(direction, deg)
   }
   */
-  return direction; //direction in degrees for the animiation
+  return direction // direction in degrees for the animiation
 }
 
 // endregion
@@ -670,6 +675,20 @@ img {
   overflow-y: scroll;
 }
 
+.loading {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 30%;
+    max-height: auto;
+    height: auto;
+    width: 30%;
+  }
+}
+
 .home-view {
   border: $bambi-white 4px solid;
   border-radius: 10px;
@@ -739,7 +758,7 @@ img {
       border-color: $bambi-stroke-light;
 
       //region box shadow
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px; //#36
+      box-shadow: $bambi-home-view-box-shadow; //#36
       //box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px; //76
       //box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px; //35
       //box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; //0
@@ -763,24 +782,22 @@ img {
       }
 
       .content-container {
-        display: flex;
-        justify-content: space-evenly;
+        display: grid;
+        width: 100%;
+        grid-template-columns: 30% 60%;
+        justify-content: center;
         align-items: center;
-        gap: 0.5em;
+        gap: 0.1em;
 
         p {
+          display: block;
           flex-shrink: 0;
+          grid-column: 2/3;
         }
 
         .icon-container /*:not(.north)*/
         {
-          height: 1.8em;
-          flex-basis: auto;
-
-          img {
-            height: 100%;
-            width: auto;
-          }
+          grid-column: 1/2;
         }
 
         .icon-container.north { //change size for pfeil
@@ -835,17 +852,16 @@ img {
       }
     }
 
-    .north,
+    /*.north,
     .gps,
     .battery,
     .storage {
       .content-container {
         width: 100%;
-
-        div {
-          width: 60%;
-        }
       }
+    }*/
+    .gps{
+      align-items: flex-end;
     }
 
     .map {
@@ -885,7 +901,7 @@ img {
 
     .content-warning {
       background-color: $bambi-warning-color;
-      transition: background-color;
+      transition: background-color border-box;
       animation: 3s ease-in-out infinite pulse-warning;
 
       .unit {
@@ -895,19 +911,32 @@ img {
 
     .content-alert {
       background-color: $bambi-alert-color;
-      transition: background-color;
-      animation: 1s ease-in-out infinite pulse-alert;
+      transition: background-color border-box;
+      animation: 0.7s ease-in-out infinite pulse-alert;
       position: relative;
+      h6{
+        color: $bambi-nat-ultralight;
+      }
     }
 
-    .content-alert:after{
+    .content-alert:after {
       display: block;
       content: "";
       width: 25%;
       height: 25%;
-      background: transparent url('/@/assets/icons/triangle-warning.png') no-repeat;
+      background: transparent url('/@/assets/icons/triangle-alert-white.png') no-repeat;
       background-size: contain;
       position: absolute;
+      //right: -0.7em;
+      top: 2em;
+    }
+
+    .coordinates.content-alert:after,
+    .wind.content-alert:after,
+    .drone-speed.content-alert:after,
+    .height.content-alert:after,
+    .temperature.content-alert:after,
+    .flight-time.content-alert:after {
       right: -0.7em;
       top: 0.5em;
     }
@@ -928,8 +957,8 @@ img {
   .home-view {
     .content {
       max-width: 700px;
-      grid-template-columns: repeat(12, 1fr);
       grid-auto-rows: 1fr;
+      grid-template-columns: repeat(12, 1fr);
 
       //region grid layout
       .north {
@@ -1001,21 +1030,6 @@ img {
   }
 }
 
-.loading {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img{
-    max-width: 30%;
-    max-height: 30%;
-    height: auto;
-    width: auto;
-    max-height: auto;
-  }
-}
-
 @media screen and (min-width: 900px) {
   .home-view {
     .content {
@@ -1072,30 +1086,32 @@ img {
   }
 }
 
-@keyframes pulse-alert{
-  0%{
-    background-color: $bambi-alert-color ;
-
+@keyframes pulse-alert {
+  0% {
+    background-color: $bambi-alert-color;
+    box-shadow: $bambi-alert-glow;
   }
-  50%{
+  50% {
     background-color: $bambi-alert-color-translucent;
+    box-shadow: none;
 
   }
-  100%{
-    background-color: $bambi-alert-color ;
+  100% {
+    background-color: $bambi-alert-color;
+    box-shadow: $bambi-alert-glow;
 
   }
 }
 
-@keyframes pulse-warning{
-  0%{
+@keyframes pulse-warning {
+  0% {
     background-color: $bambi-warning-color;
   }
-  50%{
+  50% {
     background-color: $bambi-warning-color-translucent;
 
   }
-  100%{
+  100% {
     background-color: $bambi-warning-color;
   }
 }
