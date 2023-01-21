@@ -2,7 +2,7 @@
   <div class="width-100 flex-row flex-justify-between flex-align-center topbar">
     <div class="height-100 logo not-selectable">
       <img :src="bambiLogo"/>
-      <p> <span>Bambi</span> Info Center</p>
+      <p><span>Bambi</span> Info Center</p>
     </div>
   </div>
 </template>
@@ -52,11 +52,12 @@ const logout = () => {
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
 
-p, span{
-  font-family: 'Fredoka', sans-serif;
+p, span {
+  font-family: $bambi-font-fredoka;
   font-size: large;
 }
-span{
+
+span {
   text-transform: uppercase;
 }
 
@@ -69,7 +70,6 @@ span{
   height: $bottom-bar-height;
   width: 100%;
   background-color: $bambi-nat-ultralight;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
 
   .logo {
     display: flex;
@@ -78,7 +78,7 @@ span{
     align-items: center;
     margin: 0 0 0 10px;
 
-    p{
+    p {
       margin: 0 0 0 10px;
       font-weight: 550;
     }

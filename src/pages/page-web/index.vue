@@ -1,10 +1,9 @@
 <template>
-  <div
-      class="login flex-column flex-justify-center flex-align-center m0 b0">
-    <img
-        :src="bambiLogo"
-    />
-    <p class="fz35 pb60 title">Bambi</p>
+  <div class="login flex-column flex-justify-center flex-align-center m0 b0">
+    <div class="logo">
+      <img :src="bambiLogo"/>
+      <p class="fz35 pb60 title">Bambi</p>
+    </div>
     <a-form
         layout="inline"
         :model="formState"
@@ -95,6 +94,12 @@ const onSubmit = async (e: any) => {
 
 .login {
 
+  .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   img {
     width: 50vw;
     height: auto;
@@ -124,7 +129,7 @@ const onSubmit = async (e: any) => {
 
     .login-button {
 
-      margin: 5px 0 0;  //reset button margin except top
+      margin: 5px 0 0; //reset button margin except top
 
       button {
         background-color: $bambi-shade-darker-2;
@@ -132,6 +137,19 @@ const onSubmit = async (e: any) => {
       }
     }
   }
+}
+
+@media screen and (orientation: landscape) {
+  .login {
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-content: center;
+
+    .title{
+      margin-bottom: 0;
+    }
+  }
+
 }
 
 </style>

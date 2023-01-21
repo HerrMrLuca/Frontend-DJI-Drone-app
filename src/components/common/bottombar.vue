@@ -16,7 +16,8 @@
                alt="Icon for page ${{item.label}}"
                class="icons">
           <!--todo 1 get itemlable to fill text-->
-          <!--{{item.label}}-->
+          <p class="label"> {{ item.label }}
+          </p>
         </span>
       </router-link>
     </div>
@@ -66,19 +67,19 @@ export default defineComponent({
     const options = [
       {
         key: 0,
-        label: ERouterName.HOMEPAGE.charAt(0).toUpperCase() + ERouterName.HOMEPAGE.substr(1),
+        label: 'Home',
         path: '/' + ERouterName.HOMEPAGE,
         icon: homeIcon
       },
       {
         key: 1,
-        label: ERouterName.LIVESTREAM.charAt(0).toUpperCase() + ERouterName.LIVESTREAM.substr(1),
+        label: 'Livestream',
         path: '/' + ERouterName.LIVESTREAM,
         icon: videoIcon
       },
       {
         key: 2,
-        label: ERouterName.DEVICES.charAt(0).toUpperCase() + ERouterName.DEVICES.substr(1),
+        label: 'Profile',
         path: '/' + ERouterName.DEVICES,
         icon: settingsIcon
       }
@@ -103,6 +104,14 @@ export default defineComponent({
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
 
+p {
+  font-family: $bambi-font-open-sans;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .fontBold {
   font-weight: 500;
   font-size: 18px;
@@ -120,7 +129,7 @@ export default defineComponent({
     width: 100%;
     max-width: 300px;
     height: 100%;
-    justify-content: center;
+    justify-content: space-evenly;
     align-content: center;
     //gap: 10vw;
 
@@ -136,19 +145,58 @@ export default defineComponent({
       img {
         filter: brightness(0%);
       }
+
+      .label {
+        color: black;
+      }
     }
 
     a.selected {
       img {
         filter: none;
       }
+
+      .label {
+        color: $bambi-main;
+      }
     }
 
     .icons {
       height: 100%;
       max-height: 30px;
-      width: 100%;
+      width: auto;
       color: $bambi-nat-ultralight;
+    }
+
+    .label {
+      user-select: none;
+      display: none;
+    }
+  }
+}
+
+@media screen and (orientation: landscape) {
+  .all {
+    background-color: $bambi-nat-ultralight;
+
+    .items {
+      max-width: 500px;
+
+      a {
+        span {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .label {
+        //font-family:;
+
+        margin-left: 0.5rem;
+        margin-bottom: 0;
+        display: block;
+      }
     }
   }
 }

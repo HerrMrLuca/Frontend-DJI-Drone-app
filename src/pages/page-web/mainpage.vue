@@ -1,18 +1,22 @@
 <template>
-  <a-layout class="width-100 flex-display" style="height: 100vh">
-    <MyTopbar />
-    <router-view>
-
-    </router-view>
-    <div class="bottom-bar">
-      <BottomBar />
+  <div id="main-page" class="width-100">
+    <div class="top-bar">
+      <MyTopbar/>
     </div>
-  </a-layout>
+    <div class="content">
+      <router-view>
+
+      </router-view>
+    </div>
+    <div class="bottom-bar">
+      <BottomBar/>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import BottomBar from '/@/components/common/bottombar.vue'
-import MyTopbar from '/@/components/common/my-topbar.vue'
+import MyTopbar from '/@/components/common/topbar.vue'
 
 // region ---------------------------- workspace copy code ----------------------------
 import { getRoot } from '/@/root'
@@ -79,8 +83,7 @@ const messageHandler = async (payload: any) => {
     case EBizCode.ChargeOpen:
     case EBizCode.ChargeClose:
     case EBizCode.DeviceFormat:
-    case EBizCode.DroneFormat:
-    {
+    case EBizCode.DroneFormat: {
       store.commit('SET_DEVICES_CMD_EXECUTE_INFO', {
         biz_code: payload.biz_code,
         timestamp: payload.timestamp,
@@ -102,21 +105,63 @@ useConnectWebSocket(messageHandler)
 <style lang="scss" scoped>
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
+
+p{
+  margin-bottom: 0;
+}
+
+#main-page {
+  position: fixed;
+  display: grid;
+  height: 100%;
+  grid-template-rows: $bottom-bar-height calc(100% - (2*$bottom-bar-height)) $bottom-bar-height;
+}
+
 .fontBold {
   font-weight: 500;
   font-size: 18px;
 }
 
-router-view{
-  height: auto;
+.top-bar{
+  z-index: 50;
+  width: 100%;
+  grid-row: 1/2;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+  clip-path: inset(-5px 0px -5px -5px);
+}
+
+.content {
+  height: 100%;
+  grid-row: 2/3;
 }
 
 .bottom-bar {
+  z-index: 100;
+  grid-row: 3/4;
   background-color: $bambi-white;
-  display: block;
-  position: fixed;
-  bottom: 0;
   width: 100%;
   overflow: hidden;
 }
+
+@media screen and (orientation: landscape) {
+  #main-page {
+    grid-template-rows: $bottom-bar-height calc(100% - $bottom-bar-height);
+    grid-template-columns: 50% 50%;
+  }
+
+  .top-bar {
+
+  }
+
+  .bottom-bar {
+    grid-row: 1/2;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+    clip-path: inset(-5px -5px -5px 0px);
+  }
+
+  .content {
+    grid-column: 1/3;
+  }
+}
+
 </style>

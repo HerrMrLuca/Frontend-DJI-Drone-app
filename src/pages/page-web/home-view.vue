@@ -2,6 +2,7 @@
 <template>
   <div class="outer-div">
     <div class="home-view">
+      <h1>Home</h1>
       <div class="content">
         <div class="north">
           <div class="content-container">
@@ -10,8 +11,8 @@
                    :style="{rotate: data.heading + 'deg'}">
             </div>
             <p v-if="!connected" class="num">--°</p>
-            <p v-else-if="testing" class="num">{{ droneDir }}°</p>
-            <p v-else class="num">{{ data.heading }}°</p> <!--todo 5 add nordung-->
+            <p v-else-if="testing" class="num">359°</p>
+            <p v-else class="num">{{ data.heading }}°</p>
           </div>
           <h5>Nordung</h5>
         </div>
@@ -32,7 +33,7 @@
             </div>
             <p v-if="!connected" class="num">--<span class="unit">%</span></p>
             <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
-            <p v-else class="num">{{ data.battery }}<span class="unit">%</span></p>
+            <p v-else class="num">{{ data.battery_percent }}<span class="unit">%</span></p>
           </div>
           <h5>Batterie</h5>
         </div>
@@ -49,21 +50,24 @@
           <h5>Storage</h5>
         </div>
 
-        <div id="map" class="map" style="display: block"><img src="/src/assets/icons/loading.webp"
-                                                              style="width: 30%; height: 30%; margin: auto; margin-top: 40%;">
+        <div id="map" class="map" style="display: block">
+          <div class="loading">
+            <img :src="loading">
+          </div>
         </div>
 
-        <div class="height">
+        <div class="height content-alert">
           <div>
             <h6>height</h6>
             <p v-if="!connected" class="num">---,-<span class="unit">m</span></p>
-            <p v-else-if="testing" class="num">350 <span class="unit">m</span></p>
+            <p v-else-if="testing" class="num">350<span class="unit">m</span></p>
             <p v-else class="num">{{ data.height }}<span class="unit">m</span></p>
           </div>
 
           <div>
             <h6>elevation</h6>
-            <p v-if="!connected" class="num">---,- <span class="unit">m</span></p>
+            <p v-if="!connected" class="num">---,-<span class="unit">m</span></p>
+            <p v-else-if="testing" class="num">100<span class="unit">m</span></p>
             <p v-else class="num">{{ data.elevation }}<span class="unit">m</span></p>
           </div>
           <h5>Höhen</h5>
@@ -73,12 +77,14 @@
           <div class="latitude">
             <h6>latitude</h6>
             <p v-if="!connected" class="num">--,------</p>
+            <p v-else-if="testing" class="num">-11,111118</p>
             <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
           </div>
 
           <div class="longitude">
             <h6>longitude</h6>
             <p v-if="!connected" class="num">--,------</p>
+            <p v-else-if="testing" class="num">-23,423239</p>
             <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
           </div>
           <h5>Coordinates</h5>
@@ -122,20 +128,22 @@
         <div class="flight-time">
           <div class="since-start">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else class="num">{{ data.time_string }}</p> <!--todo 5 fill-->
+            <p v-else-if="testing" class="num">20:06</p>
+            <p v-else class="num">{{ data.time_string }}</p>
             <h6>since start</h6>
           </div>
           <div class="remaining-flight-time">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else class="num">{{ data.minutes }}:{{ data.second }}</p> <!--todo 5 fill-->
+            <p v-else-if="testing" class="num">08:06</p>
+            <p v-else class="num">{{ data.minutes }}:{{ data.second }}</p>
             <h6>remaining (battery)</h6>
           </div>
           <h5>Flight Time</h5>
         </div>
         <div class="temperature">
-          <!-- todo 3 if else check -->
           <p v-if="!connected" class="num">--<span class="unit">°C</span></p>
-          <p v-else>{{ data.temperature }}<span class="unit">°C</span></p>
+          <p v-else-if="testing" class="num">20<span class="unit">°C</span></p>
+          <p v-else class="num">{{ data.temperature }}<span class="unit">°C</span></p>
           <h5>Weather</h5>
         </div>
       </div>
@@ -154,6 +162,7 @@ import compass from '/@/assets/icons/icons_homeview/compass 1.png'
 import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
 import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
 import needle from '/@/assets/icons/icons_homeview/needle.png'
+import loading from '/@/assets/icons/loading.webp'
 // leaflet
 import 'leaflet/dist/leaflet.css'
 import L, { LatLng, LayerGroup } from 'leaflet'
@@ -166,6 +175,7 @@ import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
 
 const connected = ref(false)
+const testing = ref(false)
 
 const store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
@@ -323,7 +333,7 @@ const mapData = reactive({
   marker: null,
   polyline: null,
   waypointsLayer: null,
-  currentLocation: null, // initial location for the marker
+  currentLocation: [[48, 14]], // initial location for the marker
   latlngs: [[48, 14]]
 })
 
@@ -344,7 +354,7 @@ function updateMap () {
   mapData.map.setView(mapData.currentLocation)
 }
 
-const fakeLocation = [[48.3, 14.3], [48.3, 14.35], [48.3, 14.4]]
+const fakeLocation = [[48.356453, 14.356456], [48.345346, 14.358786], [48.387664, 14.456456]]
 let index = 0
 
 // TODO 2 add something until map is loaded
@@ -488,30 +498,34 @@ function updateData () {
   direction.value = data.wind_direction
   changeDir()
 
-  if (document.getElementsByClassName('north').item(0)) {
-    if (data.heading < -3 || data.heading > 3) {
-      document.getElementsByClassName('north').item(0).classList.add('content-warning')
-    } else {
-      document.getElementsByClassName('north').item(0).classList.remove('content-warning')
-    }
+  if (connected.value && !testing.value) {
+    if (document.getElementsByClassName('north').item(0)) {
+      if (data.heading < -3 || data.heading > 3) {
+        document.getElementsByClassName('north').item(0).classList.add('content-warning')
+      } else {
+        document.getElementsByClassName('north').item(0).classList.remove('content-warning')
+      }
 
-    if (data.is_fixed < 2) {
-      console.log(data.is_fixed)
-      document.getElementsByClassName('gps').item(0).classList.add('content-warning')
-    } else {
-      document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
-    }
+      if (data.is_fixed < 2) {
+        console.log(data.is_fixed)
+        document.getElementsByClassName('gps').item(0).classList.add('content-warning')
+      } else {
+        document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
+      }
 
-    if (data.battery_percent < 60) {
-      document.getElementsByClassName('battery').item(0).classList.add('content-warning')
-    } else {
-      document.getElementsByClassName('battery').item(0).classList.remove('content-warning')
+      if (data.battery_percent < 60) {
+        document.getElementsByClassName('battery').item(0).classList.add('content-warning')
+      } else {
+        document.getElementsByClassName('battery').item(0).classList.remove('content-warning')
+      }
     }
   }
 }
 
-function addZero (i) {
-  if (i < 10) { i = '0' + i }
+function addZero (i: number) {
+  if (i < 10) {
+    i = '0' + i
+  }
   return i
 }
 
@@ -519,7 +533,9 @@ async function getWeather () {
   fetch('https://api.open-meteo.com/v1/forecast?latitude=48.31&longitude=14.29&hourly=temperature_2m&current_weather=true', {
     method: 'GET'
   })
-    .then(function (response) { return response.json() })
+    .then(function (response) {
+      return response.json()
+    })
     .then(function (json) {
       data.temperature = json.hourly.temperature_2m[10]
     })
@@ -536,7 +552,7 @@ const dires = [
 
 function changeDir () {
   direction.value = dires[data.wind_direction]
-  connected.value = true
+  connected.value = true // TODO ? must be true for testing
 }
 
 // endregion
@@ -578,7 +594,16 @@ h5 {
   text-align: center;
 }
 
+h1 {
+  font-family: 'Fredoka', sans-serif;
+  color: $bambi-main;
+  display: none;
+  margin-bottom: 0;
+}
+
 img {
+  max-width: 100%;
+  max-height: auto;
   display: block;
   width: 100%;
   height: auto;
@@ -597,7 +622,7 @@ img {
 
 .outer-div {
   width: 100%;
-  height: calc(100% - (2 * $bottom-bar-height));
+  height: 100%;
   background-color: $bambi-white;
   padding: 2vw;
 
@@ -605,13 +630,12 @@ img {
 }
 
 .home-view {
-  width: 100%;
-  //height: calc(100% - (2 * $bottom-bar-height));
   border: $bambi-white 4px solid;
   border-radius: 10px;
   background-color: $bambi-white;
 
   .content {
+    margin: 0 auto;
     width: 100%;
     height: auto;
     display: grid;
@@ -774,17 +798,13 @@ img {
     .gps,
     .battery,
     .storage {
-      div {
+      .content-container {
         width: 100%;
+
+        div {
+          width: 60%;
+        }
       }
-    }
-
-    .yellow {
-      background-color: #ebff65;
-    }
-
-    .red {
-      background-color: #db4646;
     }
 
     .map {
@@ -824,28 +844,142 @@ img {
 
     .content-warning {
       background-color: $bambi-warning-color;
+      transition: background-color;
+      animation: 3s ease-in-out infinite pulse-warning;
 
-      // TODO maybe also change styles
+      .unit {
+        color: black;
+      }
     }
 
     .content-alert {
       background-color: $bambi-alert-color;
+      transition: background-color;
+      animation: 1s ease-in-out infinite pulse-alert;
+      position: relative;
+    }
 
-      .unit,
-      h5,
-      .num {
-        color: white;
-      }
-
-      img {
-        filter: invert(100%);
-      }
+    .content-alert:after{
+      display: block;
+      content: "";
+      width: 25%;
+      height: 25%;
+      background: transparent url('/@/assets/icons/triangle-warning.png') no-repeat;
+      background-size: contain;
+      position: absolute;
+      right: -0.7em;
+      top: 0.5em;
     }
 
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  h1 {
+    //display: block;
+    font-size: 2rem;
+  }
+
+  .home-view {
+    .content {
+      max-width: 700px;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 1fr;
+
+      //region grid layout
+      .north {
+        grid-column: 1/3;
+        grid-row: 1/2;
+      }
+
+      .gps {
+        grid-column: 3/5;
+        grid-row: 1/2;
+      }
+
+      .battery {
+        grid-column: 5/7;
+        grid-row: 1/2;
+      }
+
+      .storage {
+        grid-column: 7/9;
+        grid-row: 1/2;
+      }
+
+      .height {
+        grid-column: 1/5;
+        grid-row: 2/3;
+      }
+
+      .coordinates {
+        grid-column: 5/9;
+        grid-row: 2/3;
+      }
+
+      .wind {
+        grid-column: 1/4;
+
+        .wind-dir {
+
+          .compass {
+            height: 3rem;
+            width: 3rem;
+
+            img {
+              max-height: 100%;
+              max-width: auto;
+            }
+          }
+        }
+      }
+
+      .drone-speed {
+        grid-column: 4/7;
+      }
+
+      .flight-time {
+        grid-column: 7/11;
+      }
+
+      .temperature {
+        grid-column: 11/13;
+      }
+
+      .map {
+        grid-column: 9/13;
+        grid-row: 1/3;
+      }
+
+      //endregion
+    }
+  }
+}
+
+.loading {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img{
+    max-width: 30%;
+    max-height: 30%;
+    height: auto;
+    width: auto;
+    max-height: auto;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .home-view {
+    .content {
+      max-width: 700px;
+    }
   }
 }
 
@@ -857,11 +991,35 @@ img {
   -moz-box-shadow: $shadow;
   box-shadow: $shadow;
 
+  .unit {
+    color: black;
+  }
+
   //todo 2 add little animation for warning and alert
 }
 
 .alert {
   border-color: $bambi-alert-color;
+}
+
+.content-warning {
+  background-color: $bambi-warning-color;
+
+  // TODO maybe also change styles
+}
+
+.content-alert {
+  background-color: $bambi-alert-color;
+
+  .unit,
+  h5,
+  .num {
+    color: white;
+  }
+
+  img {
+    filter: invert(100%);
+  }
 }
 
 @keyframes north {
@@ -870,6 +1028,34 @@ img {
   }
   100% {
     rotate: 0deg;
+  }
+}
+
+@keyframes pulse-alert{
+  0%{
+    background-color: $bambi-alert-color ;
+
+  }
+  50%{
+    background-color: $bambi-alert-color-translucent;
+
+  }
+  100%{
+    background-color: $bambi-alert-color ;
+
+  }
+}
+
+@keyframes pulse-warning{
+  0%{
+    background-color: $bambi-warning-color;
+  }
+  50%{
+    background-color: $bambi-warning-color-translucent;
+
+  }
+  100%{
+    background-color: $bambi-warning-color;
   }
 }
 </style>
