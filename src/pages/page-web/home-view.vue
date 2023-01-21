@@ -4,7 +4,7 @@
     <div class="home-view">
       <h1>Home</h1>
       <div class="content">
-        <div class="north content-alert">
+        <div class="north">
           <div class="content-container">
             <div class="icon-container north">
               <img :src="compass" alt="icon of compass" class="home-icon compass"
@@ -17,7 +17,7 @@
           <h5>Nordung</h5>
         </div>
 
-        <div class="gps content-alert">
+        <div class="gps">
           <div>
             <p v-if="!connected" class="num">--<span class="unit">RKT</span></p>
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <div class="height content-alert">
+        <div class="height">
           <div>
             <h6>height</h6>
             <p v-if="!connected" class="num">---,-<span class="unit">m</span></p>
@@ -611,7 +611,6 @@ function chooseDeg (direction: number, deg: number) {
 <style lang="scss" scoped>
 @import "/@/styles/variables.scss";
 
-$num-font-size: 1.1rem;
 * {
   user-drag: none;
   -webkit-user-drag: none;
@@ -657,7 +656,7 @@ img {
 
 .num {
   font-feature-settings: "tnum";
-  font-size: $num-font-size;
+  font-size: 1.1rem;
 }
 
 .unit {
@@ -676,16 +675,14 @@ img {
 }
 
 .loading {
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 
   img {
-    max-width: 30%;
-    max-height: auto;
-    height: auto;
-    width: 30%;
+    max-height: 20%;
   }
 }
 
@@ -795,13 +792,8 @@ img {
           grid-column: 2/3;
         }
 
-        .icon-container /*:not(.north)*/
-        {
+        .icon-container {
           grid-column: 1/2;
-        }
-
-        .icon-container.north { //change size for pfeil
-
         }
       }
     }
@@ -849,18 +841,11 @@ img {
     .gps {
       .unit {
         display: block;
+        padding-left: 0;
       }
     }
 
-    /*.north,
-    .gps,
-    .battery,
-    .storage {
-      .content-container {
-        width: 100%;
-      }
-    }*/
-    .gps{
+    .gps {
       align-items: flex-end;
     }
 
@@ -914,7 +899,8 @@ img {
       transition: background-color border-box;
       animation: 0.7s ease-in-out infinite pulse-alert;
       position: relative;
-      h6{
+
+      h6 {
         color: $bambi-nat-ultralight;
       }
     }
@@ -922,12 +908,12 @@ img {
     .content-alert:after {
       display: block;
       content: "";
-      width: 25%;
-      height: 25%;
+      width: 20%;
+      height: 20%;
       background: transparent url('/@/assets/icons/triangle-alert-white.png') no-repeat;
       background-size: contain;
       position: absolute;
-      //right: -0.7em;
+      right: 0.5em;
       top: 2em;
     }
 
@@ -997,9 +983,6 @@ img {
         .wind-dir {
 
           .compass {
-            height: 3rem;
-            width: 3rem;
-
             img {
               max-height: 100%;
               max-width: auto;
@@ -1029,11 +1012,86 @@ img {
     }
   }
 }
-
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 700px) and (orientation: portrait) {
+  h5 {
+    font-size: 1.2rem;
+  }
+  h6 {
+    font-size: 0.9rem;
+  }
+  .num{
+    font-size: 1.3rem;
+  }
+  .unit{
+    font-size: 0.7rem;
+  }
   .home-view {
     .content {
-      max-width: 700px;
+      max-width: 650px;
+    }
+  }
+}
+
+@media screen and (min-width: 899px) {
+  h5 {
+    font-size: 1.2rem;
+  }
+  h6 {
+    font-size: 0.9rem;
+  }
+  .num{
+    font-size: 1.3rem;
+  }
+  .unit{
+    font-size: 0.7rem;
+  }
+  .home-view {
+    .content {
+      max-width: 800px;
+    }
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  h5 {
+    font-size: 1.3rem;
+  }
+  h6 {
+    font-size: 1rem;
+  }
+  .num{
+    font-size: 1.4rem;
+  }
+  .unit{
+    font-size: 0.8rem;
+  }
+  .home-view {
+    .content {
+      max-width: 900px;
+    }
+  }
+}
+
+
+@media screen and (min-width: 1400px) {
+  p {
+
+  }
+  h5 {
+    font-size: 1.5rem;
+  }
+  h6 {
+    font-size: 1.2rem;
+  }
+  .num{
+    font-size: 1.6rem;
+  }
+  .unit{
+    font-size: 1rem;
+  }
+  .home-view {
+    .content {
+      max-width: 1100px;
     }
   }
 }
@@ -1049,8 +1107,6 @@ img {
   .unit {
     color: black;
   }
-
-  //todo 2 add little animation for warning and alert
 }
 
 .alert {

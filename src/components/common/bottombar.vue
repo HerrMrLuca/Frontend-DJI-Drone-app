@@ -191,7 +191,7 @@ p {
       }
 
       .label {
-        //font-family:;
+        //font-family: ;
 
         margin-left: 0.5rem;
         margin-bottom: 0;
@@ -200,4 +200,11 @@ p {
     }
   }
 }
+
+@media screen and (orientation: landscape) and (min-width: 1500px) {
+  .all {
+    height: 80px;
+  }
+}
+
 </style>
