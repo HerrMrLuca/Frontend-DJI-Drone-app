@@ -348,13 +348,17 @@ const onUpdateQuality = () => {
 }
 
 async function getAgoraToken () {
-  fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/835958/?expiry=300', {
+  fetch(`https://agora-token-service-production-154d.up.railway.app/rtc/${agoraPara.channel}/2/uid/${agoraPara.uid}`, {
     method: 'GET'
   })
     .then(function (response) { return response.json() })
     .then(function (json) {
       console.log(json.rtcToken)
-      agoraPara.token = json.rtcToken
+      // console.log(agoraPara.channel)
+      // console.log(agoraPara.appid)
+      // console.log(agoraPara)
+      // agoraPara.channel = 'bambi'
+      // agoraPara.token = '007eJxTYHj/70ngnauq9kc27RUuC236JTqjQtP+/ce0xOcOc2ZfalqlwGBhaGhqmJxmaJ5sYWZimGxokZRmYJBqYmqcnJyYmpJqsk30YnJDICPDgx/vWBgZIBDEZ2VISsxNymRgAAB2GSPr'
     })
 }
 </script>

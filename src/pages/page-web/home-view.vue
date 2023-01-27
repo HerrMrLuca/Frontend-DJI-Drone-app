@@ -169,11 +169,12 @@ import { useMyStore } from '/@/store'
 import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
+import { getWaylineFiles, getWaylineJobs } from '/@/api/wayline'
+import request from '/@/api/http/request'
 
 const connected = ref(false)
 const testing = ref(false)
-
-const store = useMyStore()
+let store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
 const workspaceId = ref(localStorage.getItem(ELocalStorageKey.WorkspaceId)!)
 const osdVisible = ref({} as OSDVisible)
@@ -214,29 +215,37 @@ const hmsInfo = computed({
 onMounted(() => {
   getOnlineTopo()
   setTimeout(() => {
-    watch(() => store.state.deviceStatusEvent,
-      data => {
-        getOnlineTopo()
-        if (data.deviceOnline.sn) {
-          getUnreadHms(data.deviceOnline.sn)
-        }
-      },
-      {
-        deep: true
-      }
-    )
-    getOnlineDeviceHms()
-    prepMap() // prep necessary map data
-    prepData()
-    getWeather()
-    if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
-      connected.value = true
+    let maxCall = 0
+    while (!store && maxCall < 500) {
+      console.log(maxCall)
+      store = useMyStore()
+      maxCall++
     }
-    setInterval(() => { // interval that regularly updates the various data
-      updateMap()
-      updateData()
-      // printData()
-    }, 3000)
+    if (store) {
+      watch(() => store.state.deviceStatusEvent,
+        data => {
+          getOnlineTopo()
+          if (data.deviceOnline.sn) {
+            getUnreadHms(data.deviceOnline.sn)
+          }
+        },
+        {
+          deep: true
+        }
+      )
+      getOnlineDeviceHms()
+      prepMap() // prep necessary map data
+      prepData()
+      getWeather()
+      if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+        connected.value = true
+      }
+      setInterval(() => { // interval that regularly updates the various data
+        updateMap()
+        updateData()
+        // printData()
+      }, 3000)
+    }
   }, 3000)
 })
 
@@ -335,7 +344,7 @@ const mapData = reactive({
 
 function prepMap () {
   mapData.currentLocation = getLocation()
-  mapData.map = L.map('map').setView(mapData.currentLocation, 13)
+  mapData.map = L.map('map').setView(mapData.currentLocation, 9)
   L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     maxZoom: 20,
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
