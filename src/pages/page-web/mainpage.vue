@@ -106,6 +106,10 @@ useConnectWebSocket(messageHandler)
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
 
+@media screen and (orientation: landscape) and (min-width: 1500px){
+    $bottom-bar-height: 80px;
+}
+
 p{
   margin-bottom: 0;
 }
@@ -114,7 +118,7 @@ p{
   position: fixed;
   display: grid;
   height: 100%;
-  grid-template-rows: $bottom-bar-height calc(100% - (2*$bottom-bar-height)) $bottom-bar-height;
+  grid-template-rows:var(--bottom-bar-height) calc(100% - (2*var(--bottom-bar-height))) var(--bottom-bar-height);
 }
 
 .fontBold {
@@ -145,7 +149,7 @@ p{
 
 @media screen and (orientation: landscape) {
   #main-page {
-    grid-template-rows: $bottom-bar-height calc(100% - $bottom-bar-height);
+    grid-template-rows: var(--bottom-bar-height) calc(100% - var(--bottom-bar-height));
     grid-template-columns: 50% 50%;
   }
 

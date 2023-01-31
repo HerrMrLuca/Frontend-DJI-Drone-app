@@ -21,7 +21,7 @@
           <div>
             <p v-if="!connected" class="num">--<span class="unit">RKT</span></p>
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
-            <p v-else class="num">{{ data.gps_number }}<span class="unit">RKT</span></p>
+            <p v-else class="num">{{ data.gps_number }}<span class="unit">Satelliten</span></p>
           </div>
           <h5>RKT State</h5>
         </div>
@@ -560,12 +560,12 @@ function changeDir () {
   connected.value = true // TODO ? must be true for testing
 }
 
+// todo 5 implement this method in wind_direction to get closest target for animation
 function closestAngle (from: number, to: number) {
   // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
   return from + ((((to - from) % 360) + 540) % 360) - 180
 }
 
-// todo 5 implement this method in wind_direction to get closest target for animation
 function chooseDeg (direction: number, deg: number) {
   switch (data.wind_direction) {
     case 0:
@@ -602,8 +602,6 @@ function chooseDeg (direction: number, deg: number) {
 }
 
 // endregion
-
-// todo 2 add little animation for warning and alert
 
 // todo 2 https://open-meteo.com/ search for good api for temperature and fetch data or maybe drone has data
 </script>
@@ -1071,7 +1069,6 @@ img {
     }
   }
 }
-
 
 @media screen and (min-width: 1400px) {
   p {

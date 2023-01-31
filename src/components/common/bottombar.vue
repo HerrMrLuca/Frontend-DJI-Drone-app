@@ -121,7 +121,7 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: $bottom-bar-height;
+  height: var(--bottom-bar-height);
   background-color: white;
 
   .items {
@@ -191,8 +191,6 @@ p {
       }
 
       .label {
-        //font-family: ;
-
         margin-left: 0.5rem;
         margin-bottom: 0;
         display: block;
@@ -200,11 +198,4 @@ p {
     }
   }
 }
-
-@media screen and (orientation: landscape) and (min-width: 1500px) {
-  .all {
-    height: 80px;
-  }
-}
-
 </style>

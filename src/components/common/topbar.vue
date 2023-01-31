@@ -52,10 +52,6 @@ const logout = () => {
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
 
-@media screen and (orientation: landscape) and (min-width: 1500px){
-  $bottom-bar-height: 120px;
-}
-
 p, span {
   font-family: $bambi-font-fredoka;
   font-size: large;
@@ -71,7 +67,7 @@ span {
 }
 
 .topbar {
-  height: $bottom-bar-height;
+  height: var(--bottom-bar-height);
   width: 100%;
   background-color: $bambi-nat-ultralight;
 
@@ -124,5 +120,4 @@ span {
     }
   }
 }
-
 </style>

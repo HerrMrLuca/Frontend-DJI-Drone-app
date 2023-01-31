@@ -96,7 +96,29 @@ $bambi-font-fredoka: 'Fredoka', sans-serif;
 
 $bambi-home-view-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 
-$bottom-bar-height: 60px;
+:root{
+  --bottom-bar-height: 60px;
+  --font-size-bar: 1.1rem;
+}
+
+//$bottom-bar-height: 60px;
+
+@media screen and (orientation: landscape) and (min-width: 1500px){
+  :root{
+    --bottom-bar-height: 80px
+  }
+}
+
+@media screen and (orientation: landscape) and (min-width: 1800px){
+  :root{
+    --bottom-bar-height: 100px
+  }
+}
+@media screen and (orientation: landscape) and (min-width: 2000px){
+  :root{
+    --bottom-bar-height: 120px
+  }
+}
 
 .not-selectable{
   -webkit-user-select: none;
