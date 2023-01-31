@@ -1,7 +1,9 @@
 <template>
-  <agora>
+  <div class="livestream-wrapper">
+    <agora>
 
-  </agora>
+    </agora>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -9,6 +11,7 @@ import { onMounted, ref, watch } from 'vue'
 import { getRoot } from '/@/root'
 import { ERouterName } from '/@/types'
 import Agora from '/@/components/livestream-agora.vue'
+
 const root = getRoot()
 const routeName = ref<string>()
 const showLive = ref<boolean>(false)
@@ -36,7 +39,12 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+.livestream-wrapper:nth-child(1n + 2){
+  display: none;
+}
+
 .full-modal {
   .ant-modal {
     max-width: 100%;

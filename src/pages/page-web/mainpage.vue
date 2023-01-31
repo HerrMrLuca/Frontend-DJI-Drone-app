@@ -118,7 +118,7 @@ p{
   position: fixed;
   display: grid;
   height: 100%;
-  grid-template-rows:var(--bottom-bar-height) calc(100% - (2*var(--bottom-bar-height))) var(--bottom-bar-height);
+  grid-template-rows:var(--bar-height) calc(100% - (2*var(--bar-height))) var(--bar-height);
 }
 
 .fontBold {
@@ -149,7 +149,7 @@ p{
 
 @media screen and (orientation: landscape) {
   #main-page {
-    grid-template-rows: var(--bottom-bar-height) calc(100% - var(--bottom-bar-height));
+    grid-template-rows: var(--bar-height) calc(100% - var(--bar-height));
     grid-template-columns: 50% 50%;
   }
 

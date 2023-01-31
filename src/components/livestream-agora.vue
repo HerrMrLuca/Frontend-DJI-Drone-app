@@ -1,100 +1,29 @@
 <template>
-  <div class="mt20" id="livestream">
-    <div id="player"></div>
-
-<!--    <p class="fz24">Live streaming</p>-->
-<!--    <div class="flex-row flex-justify-center flex-align-center mt10">-->
-<!--      <a-select-->
-<!--        style="width:150px"-->
-<!--        placeholder="Select Drone"-->
-<!--        @select="onDroneSelect"-->
-<!--      >-->
-<!--        <a-select-option-->
-<!--          v-for="item in dronePara.droneList"-->
-<!--          :key="item.value"-->
-<!--          :value="item.value"-->
-<!--          >{{ item.label }}</a-select-option-->
-<!--        >-->
-<!--      </a-select>-->
-<!--      <a-select-->
-<!--        class="ml10"-->
-<!--        style="width:150px"-->
-<!--        placeholder="Select Camera"-->
-<!--        @select="onCameraSelect"-->
-<!--      >-->
-<!--        <a-select-option-->
-<!--          v-for="item in dronePara.cameraList"-->
-<!--          :key="item.value"-->
-<!--          :value="item.value"-->
-<!--          >{{ item.label }}</a-select-option-->
-<!--        >-->
-<!--      </a-select>-->
-      <!-- <a-select
-        class="ml10"
-        style="width:150px"
-        placeholder="Select Lens"
-        @select="onVideoSelect"
-      >
-        <a-select-option
-          class="ml10"
-          v-for="item in dronePara.videoList"
-          :key="item.value"
-          :value="item.value"
-          >{{ item.label }}</a-select-option
-        >
-      </a-select> -->
-<!--      <a-select-->
-<!--        class="ml10"-->
-<!--        style="width:150px"-->
-<!--        placeholder="Select Clarity"-->
-<!--        @select="onClaritySelect"-->
-<!--      >-->
-<!--        <a-select-option-->
-<!--          v-for="item in clarityList"-->
-<!--          :key="item.value"-->
-<!--          :value="item.value"-->
-<!--          >{{ item.label }}</a-select-option-->
-<!--        >-->
-<!--      </a-select>-->
-<!--    </div>-->
-<!--    <div class="flex-row flex-justify-center flex-align-center">-->
-<!--      <a-input v-model:value="agoraPara.appid" placeholder="APP ID"></a-input>-->
-<!--      <a-input-->
-<!--        class="ml10"-->
-<!--        v-model:value="agoraPara.token"-->
-<!--        placeholder="Token"-->
-<!--      ></a-input>-->
-<!--      <a-input-->
-<!--        class="ml10"-->
-<!--        v-model:value="agoraPara.channel"-->
-<!--        placeholder="Channel"-->
-<!--      ></a-input>-->
-<!--    </div>-->
+  <div class="mt20" id="livestream" >
+    <div id="player" :class="{fullscreen: fullscreen}">
+      <button @click="manageFullscreen"><img></button>
+    </div>
     <div class="mt20 flex-row flex-justify-center flex-align-center" style="margin-top: 5px !important;">
+      <!--
       <a-button type="primary" large @click="onStart">Play</a-button>
-      <a-button class="ml20" type="primary" large @click="onStop"
-        >Stop</a-button
-      >
-<!--      <a-button class="ml20" type="primary" large @click="onUpdateQuality"-->
-<!--        >Update Clarity</a-button-->
-<!--      >-->
-<!--      <a-button class="ml20" type="primary" large @click="onRefresh"-->
-<!--        >Refresh Live Capacity</a-button-->
-<!--      >-->
+      <a-button class="ml20" type="primary" large @click="onStop">Stop</a-button>
+      -->
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted, onUnmounted, reactive } from 'vue'
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng'
 import { message } from 'ant-design-vue'
-import { onMounted, reactive } from 'vue'
+
 import { CURRENT_CONFIG as config } from '/@/api/http/config'
 import { getLiveCapacity, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
 import request from '/@/api/http/request'
 
 const root = getRoot()
+const fullscreen = ref(false)
 
 const clarityList = [
   {
@@ -165,7 +94,10 @@ const onRefresh = async () => {
 
         if (dronePara.livestreamSource) {
           dronePara.livestreamSource.forEach((ele: any) => {
-            dronePara.droneList.push({ label: ele.name + '-' + ele.sn, value: ele.sn })
+            dronePara.droneList.push({
+              label: ele.name + '-' + ele.sn,
+              value: ele.sn
+            })
             dronePara.droneSelected = ele.sn
             dronePara.cameraSelected = '53-0-0'
             dronePara.videoSelected = 'zoom-0'
@@ -181,7 +113,10 @@ const onRefresh = async () => {
 onMounted(() => {
   getAgoraToken()
   onRefresh()
-  agoraClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' })
+  agoraClient = AgoraRTC.createClient({
+    mode: 'live',
+    codec: 'vp8'
+  })
   // Subscribe when a remote user publishes a stream
   agoraClient.on('user-joined', async (user: IAgoraRTCRemoteUser) => {
     message.info('user[' + user.uid + '] join')
@@ -201,6 +136,24 @@ onMounted(() => {
   agoraClient.on('user-unpublished', async (user: any) => {
     console.log('unpublish live:', user)
     message.info('unpublish live')
+  })
+})
+
+// TODO 1 check if correct
+onUnmounted(() => {
+  // Subscribe when a remote user publishes a stream
+  agoraClient.on('user-left', async (user: IAgoraRTCRemoteUser) => {
+    message.info('user[' + user.uid + '] join')
+  })
+  agoraClient.on('user-left', async (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
+    await agoraClient.unsubscribe(user, mediaType)
+    if (mediaType === 'video') {
+      console.log('subscribe success')
+      // Get `RemoteVideoTrack` in the `user` object.
+      const remoteVideoTrack = user.videoTrack!
+      // remotePlayerContainer.id = agoraPara.uid
+      remoteVideoTrack.stop()
+    }
   })
 })
 
@@ -224,9 +177,9 @@ const onStart = async () => {
   const liveTimestamp = timestamp
   if (
     dronePara.droneSelected == null ||
-    dronePara.cameraSelected == null ||
-    dronePara.videoSelected == null ||
-    dronePara.claritySelected == null
+      dronePara.cameraSelected == null ||
+      dronePara.videoSelected == null ||
+      dronePara.claritySelected == null
   ) {
     message.warn('waring: not select live para!!!')
     return
@@ -237,23 +190,23 @@ const onStart = async () => {
       .join(agoraPara.appid, agoraPara.channel, agoraPara.token)
   }
   livePara.videoId =
-    dronePara.droneSelected +
-    '/' +
-    dronePara.cameraSelected +
-    '/' +
-    dronePara.videoSelected
+      dronePara.droneSelected +
+      '/' +
+      dronePara.cameraSelected +
+      '/' +
+      dronePara.videoSelected
   console.log(agoraPara)
   agoraPara.token = encodeURIComponent(agoraPara.token)
 
   livePara.url =
-    'channel=' +
-    agoraPara.channel +
-    '&sn=' +
-    dronePara.droneSelected +
-    '&token=' +
-    agoraPara.token +
-    '&uid=' +
-    agoraPara.uid
+      'channel=' +
+      agoraPara.channel +
+      '&sn=' +
+      dronePara.droneSelected +
+      '&token=' +
+      agoraPara.token +
+      '&uid=' +
+      agoraPara.uid
 
   startLivestream({
     url: livePara.url,
@@ -270,11 +223,11 @@ const onStart = async () => {
 }
 const onStop = async () => {
   livePara.videoId =
-    dronePara.droneSelected +
-    '/' +
-    dronePara.cameraSelected +
-    '/' +
-    dronePara.videoSelected
+      dronePara.droneSelected +
+      '/' +
+      dronePara.cameraSelected +
+      '/' +
+      dronePara.videoSelected
   stopLivestream({
     video_id: livePara.videoId
   }).then(res => {
@@ -296,7 +249,10 @@ const onDroneSelect = (val: any) => {
       if (drone.cameras_list && drone.sn === dronePara.droneSelected) {
         const cameraListTemp = drone.cameras_list
         cameraListTemp.forEach((ele: any) => {
-          dronePara.cameraList.push({ label: ele.name, value: ele.index })
+          dronePara.cameraList.push({
+            label: ele.name,
+            value: ele.index
+          })
         })
       }
     })
@@ -317,7 +273,10 @@ const onCameraSelect = (val: any) => {
             const videoListTemp = camera.videos_list
             dronePara.videoList = []
             videoListTemp.forEach((ele: any) => {
-              dronePara.videoList.push({ label: ele.type, value: ele.index })
+              dronePara.videoList.push({
+                label: ele.type,
+                value: ele.index
+              })
             })
             dronePara.videoSelected = dronePara.videoList[0]?.value
           }
@@ -350,27 +309,59 @@ const onUpdateQuality = () => {
 async function getAgoraToken () {
   fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/835958/?expiry=300', {
     method: 'GET'
+  }).then(function (response) {
+    return response.json()
+  }).then(function (json) {
+    console.log(json.rtcToken)
+    agoraPara.token = json.rtcToken
   })
-    .then(function (response) { return response.json() })
-    .then(function (json) {
-      console.log(json.rtcToken)
-      agoraPara.token = json.rtcToken
-    })
+}
+
+function manageFullscreen () {
+  if (fullscreen.value) {
+    // todo switch to not smaller size
+    fullscreen.value = false
+  } else if (!fullscreen.value) {
+    // todo switch to fullscreen
+    fullscreen.value = true
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
+
 $width-player: 90vw;
+$height-player: calc(90vh - (var(--bar-height)));
 
 #player {
   margin: 0 auto;
   //width: 720px;
   width: $width-player;
   //height: 420px;
-  height: calc(($width-player/3)*2); // 3:2
+  height: calc(($width-player / 3) * 2); // 3:2
   border: 1px solid;
+}
+
+#player.fullscreen {
+  position: fixed;
+  top: 0 - var(--bar-height);
+
+  width: 100vw;
+  height: calc((100vw / 3) * 2); // 3:2
+}
+
+@media screen and (orientation: landscape) {
+  #player {
+    width: calc(($height-player / 2) * 3);
+    height: $height-player;
+  }
+  #player.fullscreen {
+    width: calc((100vh / 2) * 3);
+    height: 100vh;
+  }
+
 }
 
 </style>

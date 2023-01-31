@@ -54,7 +54,7 @@ const logout = () => {
 
 p, span {
   font-family: $bambi-font-fredoka;
-  font-size: large;
+  font-size: var(--font-size-bar);
 }
 
 span {
@@ -67,7 +67,7 @@ span {
 }
 
 .topbar {
-  height: var(--bottom-bar-height);
+  height: var(--bar-height);
   width: 100%;
   background-color: $bambi-nat-ultralight;
 
