@@ -14,14 +14,14 @@
             <p v-else-if="testing" class="num">359°</p>
             <p v-else class="num">{{ data.heading }}°</p>
           </div>
-          <h5>Nordung</h5>
+          <h5>Compass</h5>
         </div>
 
         <div class="gps">
           <div>
-            <p v-if="!connected" class="num">--<span class="unit">RKT</span></p>
+            <p v-if="!connected" class="num">--<span class="unit">Satellites</span></p>
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
-            <p v-else class="num">{{ data.gps_number }}<span class="unit">Satelliten</span></p>
+            <p v-else class="num">{{ data.gps_number }}<span class="unit">Satellites</span></p>
           </div>
           <h5>RKT State</h5>
         </div>
@@ -35,7 +35,7 @@
             <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
             <p v-else class="num">{{ data.battery_percent }}<span class="unit">%</span></p>
           </div>
-          <h5>Batterie</h5>
+          <h5>Battery</h5>
         </div>
 
         <div class="storage">
@@ -70,7 +70,7 @@
             <p v-else-if="testing" class="num">100<span class="unit">m</span></p>
             <p v-else class="num">{{ data.elevation }}<span class="unit">m</span></p>
           </div>
-          <h5>Höhen</h5>
+          <h5>Height</h5>
         </div>
 
         <div class="coordinates">
@@ -101,7 +101,7 @@
           </div>
 
           <div class="wind-speed">
-            <h6>Speed</h6>
+            <h6>speed</h6>
             <p v-if="!connected" class="num">--<span class="unit">m/s</span></p>
             <p v-else-if="testing" class="num">2.3<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.wind_speed }}<span class="unit">m/s</span></p>
@@ -148,10 +148,6 @@
         </div>
       </div>
       <br>
-      <!--
-      <button @click="changeDir">change</button>
-      <button @click="changeDirDrone">changeDrone</button>
-      -->
     </div>
   </div>
 </template>
@@ -368,10 +364,10 @@ function getLocation () {
     return latLong
   } else {
     let latLong: [number, number]
-    if (fakeLocation[index][1] === 14.3) {
+    if (fakeLocation[index][1] === 14.356456) {
       latLong = [fakeLocation[index][0], fakeLocation[index][1]]
       index = 1
-    } else if (fakeLocation[index][1] === 14.35) {
+    } else if (fakeLocation[index][1] === 14.358786) {
       latLong = [fakeLocation[index][0], fakeLocation[index][1]]
       index = 2
     } else {
@@ -443,14 +439,12 @@ function prepData () {
     data.rtk_number = 23
     data.is_fixed = 0
     data.storage = Math.floor(100 - 121610000 / 7378000)
-    data.gimbal_yaw = -17.3
-    data.gimbal_pitch = -90
-    data.start_time = new Date()
-    data.time = new Date()
-    data.minutes = '--'
-    data.second = '--'
-    data.time_string = '--:--'
   }
+  data.start_time = new Date()
+  data.time = new Date()
+  data.minutes = '--'
+  data.second = '--'
+  data.time_string = '--:--'
 }
 
 function updateData () {
@@ -474,7 +468,8 @@ function updateData () {
     data.heading = Math.round((data.heading - 4) * 10) / 10
     data.height += 1
     data.elevation += 1
-    if (data.wind_direction === 9) {
+
+    if (data.wind_direction === 7) {
       data.wind_direction = 0
     } else {
       data.wind_direction += 1
@@ -485,7 +480,7 @@ function updateData () {
     data.horizontal_speed = Math.round((data.horizontal_speed - 0.1) * 100) / 100
     data.rtk_number += 1
     data.gps_number += 1
-    data.is_fixed = 2
+    data.is_fixed = 0
     data.storage = Math.round(100 - 121610000 / 7378000 * data.vertical_speed)
     data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
     data.gimbal_pitch += 1
@@ -500,10 +495,13 @@ function updateData () {
   data.minutes = addZero(data.minutes)
 
   droneDir.value = data.heading
-  // direction.value = closestAngle(direction.value, dires[data.wind_direction])
   changeDir()
 
-  if (connected.value && !testing.value) {
+  if (data.heading < 0) {
+    data.heading = 360 + data.heading
+  }
+
+  if (connected.value) {
     if (document.getElementsByClassName('north').item(0)) {
       if (data.heading < -3 || data.heading > 3) {
         document.getElementsByClassName('north').item(0).classList.add('content-warning')
@@ -512,7 +510,6 @@ function updateData () {
       }
 
       if (data.is_fixed < 2) {
-        console.log(data.is_fixed)
         document.getElementsByClassName('gps').item(0).classList.add('content-warning')
       } else {
         document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
@@ -557,15 +554,15 @@ const dires = [
 
 function changeDir () {
   direction.value = closestAngle(direction.value, dires[data.wind_direction])
-  connected.value = true // TODO ? must be true for testing
+  connected.value = true // TODO remove after testing
 }
 
-// todo 5 implement this method in wind_direction to get closest target for animation
 function closestAngle (from: number, to: number) {
   // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
   return from + ((((to - from) % 360) + 540) % 360) - 180
 }
 
+// todo 5 implement this method in wind_direction to get closest target for animation
 function chooseDeg (direction: number, deg: number) {
   switch (data.wind_direction) {
     case 0:
@@ -577,19 +574,19 @@ function chooseDeg (direction: number, deg: number) {
     case 2:
       direction = closestAngle(direction, 90)
       break
-    case 'Southeast': // todo 5 change
+    case 3:
       direction = closestAngle(direction, 135)
       break
-    case 'South':
+    case 4:
       direction = closestAngle(direction, 180)
       break
-    case 'Southwest':
+    case 5:
       direction = closestAngle(direction, 225)
       break
-    case 'West':
+    case 6:
       direction = closestAngle(direction, 270)
       break
-    case 'Northwest':
+    case 7:
       direction = closestAngle(direction, 315)
       break
   }
@@ -602,6 +599,8 @@ function chooseDeg (direction: number, deg: number) {
 }
 
 // endregion
+
+// todo 2 add little animation for warning and alert
 
 // todo 2 https://open-meteo.com/ search for good api for temperature and fetch data or maybe drone has data
 </script>

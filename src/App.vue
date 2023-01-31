@@ -14,7 +14,6 @@ import GMap from '/@/components/GMap.vue'
 
 export default defineComponent({
   name: 'App',
-  components: { GMap },
 
   setup () {
     const store = useMyStore()
