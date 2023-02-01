@@ -137,10 +137,12 @@ onMounted(() => {
     console.log('unpublish live:', user)
     message.info('unpublish live')
   })
+  onStart()
 })
-
+/*
 // TODO 1 check if correct
 onUnmounted(() => {
+  onStop()
   // Subscribe when a remote user publishes a stream
   agoraClient.on('user-left', async (user: IAgoraRTCRemoteUser) => {
     message.info('user[' + user.uid + '] join')
@@ -156,7 +158,7 @@ onUnmounted(() => {
     }
   })
 })
-
+*/
 const handleError = (err: any) => {
   console.error(err)
 }
@@ -307,13 +309,13 @@ const onUpdateQuality = () => {
 }
 
 async function getAgoraToken () {
-  fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/835958/?expiry=300', {
+  fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/123456', {
     method: 'GET'
   }).then(function (response) {
     return response.json()
   }).then(function (json) {
     console.log(json.rtcToken)
-    agoraPara.token = json.rtcToken
+    // agoraPara.token = json.rtcToken
   })
 }
 
@@ -335,12 +337,16 @@ function manageFullscreen () {
 $width-player: 90vw;
 $height-player: calc(90vh - (var(--bar-height)));
 
+#player:nth-child(1n+2){
+  display: none;
+}
+
 #player {
   margin: 0 auto;
   //width: 720px;
   width: $width-player;
   //height: 420px;
-  height: calc(($width-player / 3) * 2); // 3:2
+  height: calc(($width-player / 16) * 9); // 16:9
   border: 1px solid;
 }
 
@@ -349,19 +355,18 @@ $height-player: calc(90vh - (var(--bar-height)));
   top: 0 - var(--bar-height);
 
   width: 100vw;
-  height: calc((100vw / 3) * 2); // 3:2
+  height: calc((100vw / 16) * 9); // 16:9
 }
 
 @media screen and (orientation: landscape) {
   #player {
-    width: calc(($height-player / 2) * 3);
+    width: calc(($height-player / 9) * 16);
     height: $height-player;
   }
   #player.fullscreen {
-    width: calc((100vh / 2) * 3);
+    width: calc((100vh / 9) * 16);
     height: 100vh;
   }
-
 }
 
 </style>
