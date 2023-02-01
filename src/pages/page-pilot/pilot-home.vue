@@ -118,6 +118,9 @@
       </div>
     </a-layout-content>
   </a-layout>
+  <pilot-liveshare class="liveshare-display">
+
+  </pilot-liveshare>
 </template>
 <script lang="ts" setup>
 import { message, Popconfirm } from 'ant-design-vue'
@@ -132,6 +135,7 @@ import { RightOutlined, CloudOutlined, CloudSyncOutlined, SyncOutlined } from '@
 import { useMyStore } from '/@/store'
 import { DeviceStatus } from '/@/types/device'
 import { useConnectWebSocket } from '/@/hooks/use-connect-websocket'
+import PilotLiveshare from '/@/pages/page-pilot/pilot-liveshare.vue'
 
 const root = getRoot()
 const gatewayState = ref<boolean>(localStorage.getItem(ELocalStorageKey.GatewayOnline) === 'true')
@@ -532,6 +536,9 @@ function getDeviceInfo () {
   bottom: 13vh;
   left: 15vw;
   line-height: 10vh;
+}
+.liveshare-display{
+  display: none;
 }
 
 </style>

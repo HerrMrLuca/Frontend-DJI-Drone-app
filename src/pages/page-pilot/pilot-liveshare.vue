@@ -202,6 +202,7 @@ onMounted(() => {
   window.liveStatusCallback = arg => {
     liveStatusCallback(arg)
   }
+  onPlay()
 })
 
 const liveStatusCallback = async (arg: LiveStreamStatus) => {
@@ -253,6 +254,8 @@ const onPublishModeSelect = (val: string) => {
   apiPilot.setVideoPublishType(publishModeSelected.value)
 }
 const onPlay = () => {
+  publishModeSelected.value = EVideoPublishType.VideoDemandAuxManual
+  apiPilot.setVideoPublishType(publishModeSelected.value)
   if (!publishModeSelected.value) {
     message.warn('Please select publish mode!')
     return

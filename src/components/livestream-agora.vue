@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, onBeforeUnmount } from 'vue'
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng'
 import { message } from 'ant-design-vue'
 
@@ -138,10 +138,11 @@ onMounted(() => {
     message.info('unpublish live')
   })
   onStart()
+  console.log(dronePara)
 })
-/*
+
 // TODO 1 check if correct
-onUnmounted(() => {
+onBeforeUnmount(() => {
   onStop()
   // Subscribe when a remote user publishes a stream
   agoraClient.on('user-left', async (user: IAgoraRTCRemoteUser) => {
@@ -158,7 +159,7 @@ onUnmounted(() => {
     }
   })
 })
-*/
+
 const handleError = (err: any) => {
   console.error(err)
 }
