@@ -7,8 +7,8 @@
         <div class="north">
           <div class="content-container">
             <div class="icon-container north">
-              <img :src="compass" alt="icon of compass" class="home-icon compass"
-                   :style="{rotate: data.heading + 'deg'}">
+              <img :src="compass" :style="{rotate: data.heading + 'deg'}" alt="icon of compass"
+                   class="home-icon compass">
             </div>
             <p v-if="!connected" class="num">--°</p>
             <p v-else-if="testing" class="num">359°</p>
@@ -29,7 +29,7 @@
         <div class="battery">
           <div class="content-container">
             <div class="icon-container">
-              <img :src="battery" class="home-icon" alt="icon of battery">
+              <img :src="battery" alt="icon of battery" class="home-icon">
             </div>
             <p v-if="!connected" class="num">--<span class="unit">%</span></p>
             <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
@@ -41,7 +41,7 @@
         <div class="storage">
           <div class="content-container">
             <div class="icon-container">
-              <img :src="storage" class="home-icon" alt="icon of storage">
+              <img :src="storage" alt="icon of storage" class="home-icon">
             </div>
             <p v-if="!connected" class="num">--<span class="unit">%</span></p>
             <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
@@ -95,8 +95,8 @@
           {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
             <!--          <h6>Direction</h6>-->
             <div class="compass">
-              <img class="cardinal-points" :src="cardinalPoints">
-              <img class="needle" :class="direction" :src="needle" :style="{rotate: direction + 'deg'}">
+              <img :src="cardinalPoints" class="cardinal-points">
+              <img :class="direction" :src="needle" :style="{rotate: direction + 'deg'}" class="needle">
             </div>
           </div>
 
@@ -161,7 +161,7 @@ import needle from '/@/assets/icons/icons_homeview/needle.png'
 import loading from '/@/assets/icons/loading.webp'
 // leaflet
 import 'leaflet/dist/leaflet.css'
-import L, { LatLng, LayerGroup } from 'leaflet'
+import L from 'leaflet'
 
 // region ---------------------------- tsa copy code ----------------------------
 import { computed, onMounted, reactive, ref, watch } from 'vue'
@@ -169,8 +169,6 @@ import { useMyStore } from '/@/store'
 import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
-import { getWaylineFiles, getWaylineJobs } from '/@/api/wayline'
-import request from '/@/api/http/request'
 
 const connected = ref(false)
 const testing = ref(false)
@@ -434,7 +432,7 @@ function prepData () {
     data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
-    data.storage = Math.floor(100 - (100 / (deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)))
+    data.storage = percentage(deviceInfo.value[onlineDevices.data[0].sn].storage.used, deviceInfo.value[onlineDevices.data[0].sn].storage.total)
   } else {
     data.battery_percent = 100
     data.remain_flight_time = 1733
@@ -447,7 +445,7 @@ function prepData () {
     data.horizontal_speed = 1.1
     data.rtk_number = 23
     data.is_fixed = 0
-    data.storage = Math.floor(100 - (100 / (121610000 / 7378000)))
+    data.storage = percentage(50, 200)
   }
   data.start_time = new Date()
   data.time = new Date()
@@ -470,7 +468,7 @@ function updateData () {
     data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
-    data.storage = Math.floor(100 - (100 / (deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)))
+    data.storage = percentage(deviceInfo.value[onlineDevices.data[0].sn].storage.used, deviceInfo.value[onlineDevices.data[0].sn].storage.total)
   } else {
     data.battery_percent -= 1
     data.remain_flight_time -= 3
@@ -490,7 +488,7 @@ function updateData () {
     data.rtk_number += 1
     data.gps_number += 1
     data.is_fixed = 0
-    data.storage = Math.round(100 - (100 / (121610000 / 7378000 * data.vertical_speed)))
+    data.storage = percentage(50, 200)
     data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
     data.gimbal_pitch += 1
   }
@@ -511,24 +509,64 @@ function updateData () {
   }
 
   if (connected.value) {
-    if (document.getElementsByClassName('north').item(0)) {
-      if (data.heading < -3 || data.heading > 3) {
-        document.getElementsByClassName('north').item(0).classList.add('content-warning')
-      } else {
-        document.getElementsByClassName('north').item(0).classList.remove('content-warning')
-      }
+    const north = document.getElementsByClassName('north').item(0).classList
+    if (data.heading < -4 || data.heading > 4) {
+      north.remove('content-warning')
+      north.add('content-alert')
+    } else if (data.heading < -2 || data.heading > 2) {
+      north.remove('content-alert')
+      north.add('content-warning')
+    } else {
+      north.remove('content-alert')
+      north.remove('content-warning')
+    }
 
-      if (data.is_fixed < 2) {
-        document.getElementsByClassName('gps').item(0).classList.add('content-warning')
-      } else {
-        document.getElementsByClassName('gps').item(0).classList.remove('content-warning')
-      }
+    const gps = document.getElementsByClassName('gps').item(0).classList
+    if (data.is_fixed < 1) {
+      gps.remove('content-warning')
+      gps.add('content-alert')
+    } else if (data.is_fixed < 2) {
+      gps.remove('content-alert')
+      gps.add('content-warning')
+    } else {
+      gps.remove('content-alert')
+      gps.remove('content-warning')
+    }
 
-      if (data.battery_percent < 60) {
-        document.getElementsByClassName('battery').item(0).classList.add('content-warning')
-      } else {
-        document.getElementsByClassName('battery').item(0).classList.remove('content-warning')
-      }
+    const battery = document.getElementsByClassName('battery').item(0).classList
+    if (data.battery_percent < 30) {
+      battery.remove('content-warning')
+      battery.add('content-alert')
+    } else if (data.battery_percent < 50) {
+      battery.remove('content-alert')
+      battery.add('content-warning')
+    } else {
+      battery.remove('content-alert')
+      battery.remove('content-warning')
+    }
+
+    const storage = document.getElementsByClassName('storage').item(0).classList
+    if (data.storage < 20) {
+      storage.remove('content-warning')
+      storage.add('content-alert')
+    } else if (data.storage < 30) {
+      storage.remove('content-alert')
+      storage.add('content-warning')
+    } else {
+      storage.remove('content-alert')
+      storage.remove('content-warning')
+    }
+
+    const wind = document.getElementsByClassName('wind').item(0).classList
+    if (data.wind_speed < 7) {
+      wind.remove('content-warning')
+      wind.add('content-alert')
+    } else if (data.wind_speed < 12) {
+      wind.remove('content-alert')
+      wind.add('content-warning')
+    } else {
+      wind.remove('content-alert')
+      wind.remove('content-warning')
     }
   }
 }
@@ -538,6 +576,10 @@ function addZero (i: number) {
     i = '0' + i
   }
   return i
+}
+
+function percentage (partial: number, total: number) {
+  return Math.floor(100 * (1 - partial / total))
 }
 
 async function getWeather () {
@@ -1018,6 +1060,7 @@ img {
     }
   }
 }
+
 @media screen and (min-width: 700px) and (orientation: portrait) {
   h5 {
     font-size: 1.2rem;
@@ -1025,10 +1068,10 @@ img {
   h6 {
     font-size: 0.9rem;
   }
-  .num{
+  .num {
     font-size: 1.3rem;
   }
-  .unit{
+  .unit {
     font-size: 0.7rem;
   }
   .home-view {
@@ -1045,10 +1088,10 @@ img {
   h6 {
     font-size: 0.9rem;
   }
-  .num{
+  .num {
     font-size: 1.3rem;
   }
-  .unit{
+  .unit {
     font-size: 0.7rem;
   }
   .home-view {
@@ -1065,10 +1108,10 @@ img {
   h6 {
     font-size: 1rem;
   }
-  .num{
+  .num {
     font-size: 1.4rem;
   }
-  .unit{
+  .unit {
     font-size: 0.8rem;
   }
   .home-view {
@@ -1088,10 +1131,10 @@ img {
   h6 {
     font-size: 1.2rem;
   }
-  .num{
+  .num {
     font-size: 1.6rem;
   }
-  .unit{
+  .unit {
     font-size: 1rem;
   }
   .home-view {

@@ -3,21 +3,19 @@
     <!--    <img src="src/assets/icons/bottombar/home.svg">-->
     <div class="fz16 height-100 items">
       <router-link
-          v-for="item in options"
-          :key="item.key"
-          :to="item.path"
-          :class="{
+        v-for="item in options"
+        :key="item.key"
+        :class="{
             'menu-item': true,
             selected: selectedRoute(item)
           }"
+        :to="item.path"
       > <!--TODO 4 check click behavior-->
         <span @click="selectedRoute(item)">
-          <img :src="item.icon"
-               alt="Icon for page ${{item.label}}"
+          <img :alt="`Icon for page ${item.label}`"
+               :src="item.icon"
                class="icons">
-          <!--todo 1 get itemlable to fill text-->
-          <p class="label"> {{ item.label }}
-          </p>
+          <p class="label"> {{ item.label }}</p>
         </span>
       </router-link>
     </div>
@@ -31,7 +29,6 @@ import { ERouterName } from '/@/types'
 import homeIcon from '/@/assets/icons/bottombar/home_colored.png'
 import videoIcon from '/@/assets/icons/bottombar/video-colored.png'
 import settingsIcon from '/@/assets/icons/bottombar/profile-colored.png'
-import gallery from '/@/assets/icons/bottombar/gallery-colored.png'
 
 const icons = {
   homeIcon,
@@ -44,8 +41,8 @@ interface IOptions {
   key: number
   label: string
   path:
-      | string
-      | {
+    | string
+    | {
     path: string
     query?: any
   }
