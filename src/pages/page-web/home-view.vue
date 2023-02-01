@@ -434,7 +434,7 @@ function prepData () {
     data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
-    data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
+    data.storage = Math.floor(100 - (100 / (deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)))
   } else {
     data.battery_percent = 100
     data.remain_flight_time = 1733
@@ -447,7 +447,7 @@ function prepData () {
     data.horizontal_speed = 1.1
     data.rtk_number = 23
     data.is_fixed = 0
-    data.storage = Math.floor(100 - 121610000 / 7378000)
+    data.storage = Math.floor(100 - (100 / (121610000 / 7378000)))
   }
   data.start_time = new Date()
   data.time = new Date()
@@ -470,7 +470,7 @@ function updateData () {
     data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
-    data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
+    data.storage = Math.floor(100 - (100 / (deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)))
   } else {
     data.battery_percent -= 1
     data.remain_flight_time -= 3
@@ -490,7 +490,7 @@ function updateData () {
     data.rtk_number += 1
     data.gps_number += 1
     data.is_fixed = 0
-    data.storage = Math.round(100 - 121610000 / 7378000 * data.vertical_speed)
+    data.storage = Math.round(100 - (100 / (121610000 / 7378000 * data.vertical_speed)))
     data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
     data.gimbal_pitch += 1
   }
