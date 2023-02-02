@@ -169,11 +169,12 @@ import { useMyStore } from '/@/store'
 import { getDeviceTopo, getUnreadDeviceHms } from '/@/api/manage'
 import { EModeCode, OSDVisible } from '/@/types/device'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
+import { getWaylineFiles, getWaylineJobs } from '/@/api/wayline'
+import request from '/@/api/http/request'
 
 const connected = ref(false)
 const testing = ref(false)
-
-const store = useMyStore()
+let store = useMyStore()
 const username = ref(localStorage.getItem(ELocalStorageKey.Username))
 const workspaceId = ref(localStorage.getItem(ELocalStorageKey.WorkspaceId)!)
 const osdVisible = ref({} as OSDVisible)
@@ -214,29 +215,37 @@ const hmsInfo = computed({
 onMounted(() => {
   getOnlineTopo()
   setTimeout(() => {
-    watch(() => store.state.deviceStatusEvent,
-      data => {
-        getOnlineTopo()
-        if (data.deviceOnline.sn) {
-          getUnreadHms(data.deviceOnline.sn)
-        }
-      },
-      {
-        deep: true
-      }
-    )
-    getOnlineDeviceHms()
-    prepMap() // prep necessary map data
-    prepData()
-    getWeather()
-    if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
-      connected.value = true
+    let maxCall = 0
+    while (!store && maxCall < 500) {
+      console.log(maxCall)
+      store = useMyStore()
+      maxCall++
     }
-    setInterval(() => { // interval that regularly updates the various data
-      updateMap()
-      updateData()
-      // printData()
-    }, 3000)
+    if (store) {
+      watch(() => store.state.deviceStatusEvent,
+        data => {
+          getOnlineTopo()
+          if (data.deviceOnline.sn) {
+            getUnreadHms(data.deviceOnline.sn)
+          }
+        },
+        {
+          deep: true
+        }
+      )
+      getOnlineDeviceHms()
+      prepMap() // prep necessary map data
+      prepData()
+      getWeather()
+      if (onlineDevices.data[0] && deviceInfo.value[onlineDevices.data[0].sn]) {
+        connected.value = true
+      }
+      setInterval(() => { // interval that regularly updates the various data
+        updateMap()
+        updateData()
+        // printData()
+      }, 3000)
+    }
   }, 3000)
 })
 
@@ -335,7 +344,7 @@ const mapData = reactive({
 
 function prepMap () {
   mapData.currentLocation = getLocation()
-  mapData.map = L.map('map').setView(mapData.currentLocation, 13)
+  mapData.map = L.map('map').setView(mapData.currentLocation, 9)
   L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     maxZoom: 20,
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
@@ -425,7 +434,7 @@ function prepData () {
     data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
-    data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
+    data.storage = Math.floor(100 - (100 / (deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)))
   } else {
     data.battery_percent = 100
     data.remain_flight_time = 1733
@@ -438,7 +447,7 @@ function prepData () {
     data.horizontal_speed = 1.1
     data.rtk_number = 23
     data.is_fixed = 0
-    data.storage = Math.floor(100 - 121610000 / 7378000)
+    data.storage = Math.floor(100 - (100 / (121610000 / 7378000)))
   }
   data.start_time = new Date()
   data.time = new Date()
@@ -461,7 +470,7 @@ function updateData () {
     data.rtk_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.rtk_number
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
-    data.storage = Math.floor(100 - deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)
+    data.storage = Math.floor(100 - (100 / (deviceInfo.value[onlineDevices.data[0].sn].storage.total / deviceInfo.value[onlineDevices.data[0].sn].storage.used)))
   } else {
     data.battery_percent -= 1
     data.remain_flight_time -= 3
@@ -481,7 +490,7 @@ function updateData () {
     data.rtk_number += 1
     data.gps_number += 1
     data.is_fixed = 0
-    data.storage = Math.round(100 - 121610000 / 7378000 * data.vertical_speed)
+    data.storage = Math.round(100 - (100 / (121610000 / 7378000 * data.vertical_speed)))
     data.gimbal_yaw = Math.round((data.gimbal_yaw + 0.1) * 100) / 100
     data.gimbal_pitch += 1
   }
