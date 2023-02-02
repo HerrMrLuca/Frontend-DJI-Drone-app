@@ -1059,6 +1059,7 @@ img {
       //endregion
     }
   }
+
 }
 
 @media screen and (min-width: 700px) and (orientation: portrait) {

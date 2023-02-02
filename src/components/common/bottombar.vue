@@ -1,6 +1,5 @@
 <template>
   <div class="width-100 flex-row all">
-    <!--    <img src="src/assets/icons/bottombar/home.svg">-->
     <div class="fz16 height-100 items">
       <router-link
         v-for="item in options"
@@ -94,7 +93,6 @@ export default defineComponent({
   }
 })
 
-// TODO 1 change img colors to delete line "filter: invert(100%);"
 </script>
 
 <style lang="scss" scoped>
@@ -103,22 +101,19 @@ export default defineComponent({
 
 p {
   font-family: $bambi-font-open-sans;
+  font-size: var(--font-size-bar);
+  padding-left: calc(var(--font-size-bar) / 4);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.fontBold {
-  font-weight: 500;
-  font-size: 18px;
-}
-
 .all {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: $bottom-bar-height;
+  height: var(--bar-height);
   background-color: white;
 
   .items {
@@ -172,9 +167,20 @@ p {
   }
 }
 
+@media screen and (orientation: landscape) and (min-width: 801px) {
+  .all {
+    .items {
+      .label {
+        display: block;
+      }
+    }
+  }
+}
+
 @media screen and (orientation: landscape) {
   .all {
     background-color: $bambi-nat-ultralight;
+    justify-content: flex-end;
 
     .items {
       max-width: 500px;
@@ -188,20 +194,10 @@ p {
       }
 
       .label {
-        //font-family: ;
-
         margin-left: 0.5rem;
         margin-bottom: 0;
-        display: block;
       }
     }
   }
 }
-
-@media screen and (orientation: landscape) and (min-width: 1500px) {
-  .all {
-    height: 80px;
-  }
-}
-
 </style>
