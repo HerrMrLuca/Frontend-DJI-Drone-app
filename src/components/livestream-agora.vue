@@ -338,12 +338,13 @@ function manageFullscreen () {
 $width-player: 90vw;
 $height-player: calc(90vh - (var(--bar-height)));
 
-img{
+img {
   display: block;
   height: 20px;
   width: 20px;
 }
-button{
+
+button {
   position: absolute;
   bottom: 3px;
   right: 3px;
@@ -352,10 +353,11 @@ button{
   padding: 0;
 }
 
+
 #livestream {
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-content: center;
 }
 
 #player:nth-child(1n+2) {
@@ -364,6 +366,7 @@ button{
 
 #player {
   position: relative;
+  align-self: center;
   margin: 0 auto;
   //width: 720px;
   width: $width-player;

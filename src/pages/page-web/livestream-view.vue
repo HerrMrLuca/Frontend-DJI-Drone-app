@@ -63,7 +63,9 @@ onMounted(() => {
     flex: 1;
   }
 }
-
+.livestream-wrapper{
+  height: 100%;
+}
 .live {
   position: absolute;
   z-index: 1;

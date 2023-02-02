@@ -30,21 +30,24 @@ const store = useMyStore()
 
 const fullscreen = ref(false)
 let buttonLivestream: any = null
-let difPage: any = null // to determine if diff page was loaded
+let wrapperCheck: any = null // to determine if diff page was loaded
 
 function checkButton () {
-  difPage = document.getElementsByName('outer-div')
-  if (!buttonLivestream) { // not found yet
-    buttonLivestream = document.getElementById('playerButton') // try get
-    if (buttonLivestream) { // if not null
-      difPage = null
-      buttonLivestream.addEventListener('click', () => {
-        fullscreen.value = !fullscreen.value
-        console.log('fullscreen.value =' + fullscreen.value)
-      })
-    } else {
-      fullscreen.value = false
+  wrapperCheck = document.getElementsByClassName('livestream-wrapper')
+  console.log(wrapperCheck)
+  if (wrapperCheck.length !== 0) {
+    if (!buttonLivestream) { // not found yet
+      buttonLivestream = document.getElementById('playerButton') // try get
+      if (buttonLivestream) { // if not null
+        buttonLivestream.addEventListener('click', () => {
+          fullscreen.value = !fullscreen.value
+          console.log('fullscreen.value =' + fullscreen.value)
+        })
+      }
     }
+  } else {
+    buttonLivestream = null
+    fullscreen.value = false
   }
   console.log('end of function ' + fullscreen.value + '  ' + buttonLivestream)
 }
