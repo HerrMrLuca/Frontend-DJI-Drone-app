@@ -1,14 +1,12 @@
 <template>
-  <div class="mt20" id="livestream" >
+  <div id="livestream">
     <div id="player" :class="{fullscreen: fullscreen}">
-      <button @click="manageFullscreen"><img></button>
+      <button id="playerButton" @click="manageFullscreen"><img :src="expand"></button>
     </div>
-    <div class="mt20 flex-row flex-justify-center flex-align-center" style="margin-top: 5px !important;">
-      <!--
-      <a-button type="primary" large @click="onStart">Play</a-button>
-      <a-button class="ml20" type="primary" large @click="onStop">Stop</a-button>
-      -->
-    </div>
+    <!--
+    <a-button type="primary" large @click="onStart">Play</a-button>
+    <a-button class="ml20" type="primary" large @click="onStop">Stop</a-button>
+    -->
   </div>
 </template>
 
@@ -21,6 +19,7 @@ import { CURRENT_CONFIG as config } from '/@/api/http/config'
 import { getLiveCapacity, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
 import request from '/@/api/http/request'
+import expand from '/@/assets/icons/expand.png'
 
 const root = getRoot()
 const fullscreen = ref(false)
@@ -310,8 +309,8 @@ const onUpdateQuality = () => {
 }
 
 async function getAgoraToken () {
-  fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/123456', {
-  //fetch(`https://agora-token-service-production-154d.up.railway.app/rtc/${agoraPara.channel}/2/uid/${agoraPara.uid}`, {
+  // fetch('https://agora-token-service-production-154d.up.railway.app/rtc/bambidrone/1/uid/123456', {
+  fetch(`https://agora-token-service-production-154d.up.railway.app/rtc/${agoraPara.channel}/2/uid/${agoraPara.uid}`, {
     method: 'GET'
   }).then(function (response) {
     return response.json()
@@ -339,11 +338,32 @@ function manageFullscreen () {
 $width-player: 90vw;
 $height-player: calc(90vh - (var(--bar-height)));
 
-#player:nth-child(1n+2){
+img{
+  display: block;
+  height: 20px;
+  width: 20px;
+}
+button{
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+#livestream {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+#player:nth-child(1n+2) {
   display: none;
 }
 
 #player {
+  position: relative;
   margin: 0 auto;
   //width: 720px;
   width: $width-player;
@@ -353,8 +373,9 @@ $height-player: calc(90vh - (var(--bar-height)));
 }
 
 #player.fullscreen {
-  position: fixed;
-  top: 0 - var(--bar-height);
+  margin: 0;
+  //position: fixed;
+  //top: 0 - var(--bar-height);
 
   width: 100vw;
   height: calc((100vw / 16) * 9); // 16:9
@@ -366,8 +387,8 @@ $height-player: calc(90vh - (var(--bar-height)));
     height: $height-player;
   }
   #player.fullscreen {
-    width: calc((100vh / 9) * 16);
     height: 100vh;
+    width: calc((100vh / 9) * 16);
   }
 }
 

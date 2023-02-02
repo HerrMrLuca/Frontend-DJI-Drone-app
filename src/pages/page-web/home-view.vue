@@ -1017,7 +1017,9 @@ img {
       //endregion
     }
   }
+
 }
+
 @media screen and (min-width: 700px) and (orientation: portrait) {
   h5 {
     font-size: 1.2rem;
@@ -1025,10 +1027,10 @@ img {
   h6 {
     font-size: 0.9rem;
   }
-  .num{
+  .num {
     font-size: 1.3rem;
   }
-  .unit{
+  .unit {
     font-size: 0.7rem;
   }
   .home-view {
@@ -1045,10 +1047,10 @@ img {
   h6 {
     font-size: 0.9rem;
   }
-  .num{
+  .num {
     font-size: 1.3rem;
   }
-  .unit{
+  .unit {
     font-size: 0.7rem;
   }
   .home-view {
@@ -1065,10 +1067,10 @@ img {
   h6 {
     font-size: 1rem;
   }
-  .num{
+  .num {
     font-size: 1.4rem;
   }
-  .unit{
+  .unit {
     font-size: 0.8rem;
   }
   .home-view {
@@ -1088,10 +1090,10 @@ img {
   h6 {
     font-size: 1.2rem;
   }
-  .num{
+  .num {
     font-size: 1.6rem;
   }
-  .unit{
+  .unit {
     font-size: 1rem;
   }
   .home-view {
