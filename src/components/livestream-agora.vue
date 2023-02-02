@@ -353,7 +353,6 @@ button {
   padding: 0;
 }
 
-
 #livestream {
   height: 100%;
   display: flex;

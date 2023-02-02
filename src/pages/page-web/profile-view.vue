@@ -1,148 +1,36 @@
 <template>
   <div class="profile-wrapper">
-    <img :src="drohnePic">
+    <img :src="drohnePic" alt="image of a drone">
 
     <div>
       <h2>Model</h2>
       <p>{{ data.model }}</p>
+      <!--Note: might wanna use the one below, but gotta test if it works-->
+      <!--<p>{{ data.device[0].device_name }}</p>-->
     </div>
 
     <div>
       <h2>Firmware</h2>
-      <p>{{ data.firmware }}</p>
+      <p>{{ data.device[0].firmware_version }}</p>
     </div>
 
     <div>
       <h2>SN</h2>
       <p>{{ data.sn }}</p>
+      <!--Note: might wanna use the one below, but gotta test if it works-->
+      <!--<p>{{ data.device[0].device_sn }}</p>-->
     </div>
   </div>
 
-  <!--
-  <div class="device-table-wrap table flex-display flex-column">
-    <a-table :columns="columns" :data-source="data.device" :pagination="paginationProp" @change="refreshData" row-key="device_sn" :expandedRowKeys="expandRows"
-             :row-selection="rowSelection" :rowClassName="rowClassName" :scroll="{ x: '100%', y: 600 }"
-             :expandIcon="expandIcon" :loading="loading">
-      <template v-for="col in ['nickname']" #[col]="{ text, record }" :key="col">
-        <div>
-          <a-input
-              v-if="editableData[record.device_sn]"
-              v-model:value="editableData[record.device_sn][col]"
-              style="margin: -5px 0"
-          />
-          <template v-else>
-            {{ text }}
-          </template>
-        </div>
-      </template>
-      <template v-for="col in ['sn', 'workspace']" #[col]="{ text }" :key="col">
-        <a-tooltip :title="text">
-          <span>{{ text }}</span>
-        </a-tooltip>
-      </template>
-
-      <template #firmware_version="{ record }">
-        <span v-if="judgeCurrentType(EDeviceTypeName.Dock)">
-          <DeviceFirmwareUpgrade :device="record"
-                                 class="table-flex-col"
-                                 @device-upgrade="onDeviceUpgrade"
-          />
-        </span>
-        <span v-else>
-          {{ record.firmware_version }}
-        </span>
-      </template>
-
-      <template #status="{ text }">
-        <span v-if="text" class="flex-row flex-align-center">
-            <span class="mr5" style="width: 12px; height: 12px; border-radius: 50%; background-color: green;" />
-            <span>Online</span>
-        </span>
-        <span class="flex-row flex-align-center" v-else>
-            <span class="mr5" style="width: 12px; height: 12px; border-radius: 50%; background-color: red;" />
-            <span>Offline</span>
-        </span>
-      </template>
-
-      <template #action="{ record }">
-        <div class="editable-row-operations">
-
-          <div v-if="editableData[record.device_sn]">
-            <a-tooltip title="Confirm changes">
-              <span @click="save(record)" style="color: #28d445;"><CheckOutlined /></span>
-            </a-tooltip>
-            <a-tooltip title="Modification canceled">
-              <span @click="() => delete editableData[record.device_sn]" style="color: #e70102;"><CloseOutlined /></span>
-            </a-tooltip>
-          </div>
-
-          <div v-else class="flex-align-center flex-row" style="color: #2d8cf0">
-            <a-tooltip v-if="current.indexOf(EDeviceTypeName.Dock) !== -1" title="设备日志">
-              <CloudServerOutlined @click="showDeviceLogUploadRecord(record)"/>
-            </a-tooltip>
-            <a-tooltip v-if="current.indexOf(EDeviceTypeName.Dock) !== -1" title="Hms Info">
-              <FileSearchOutlined @click="showHms(record)"/>
-            </a-tooltip>
-            <a-tooltip title="Edit">
-              <EditOutlined @click="edit(record)"/>
-            </a-tooltip>
-            <a-tooltip title="Delete">
-              <DeleteOutlined @click="() => { deleteTip = true, deleteSn = record.device_sn }"/>
-            </a-tooltip>
-          </div>
-        </div>
-      </template>
-
-    </a-table>
-    <a-modal v-model:visible="deleteTip" width="450px" :closable="false" centered :okButtonProps="{ danger: true }" @ok="unbind">
-      <p class="pt10 pl20" style="height: 50px;">Delete device from workspace?</p>
-      <template #title>
-        <div class="flex-row flex-justify-center">
-          <span>Delete devices</span>
-        </div>
-      </template>
-    </a-modal>
-
-    <DeviceFirmwareUpgradeModal title="设备升级"
-                                v-model:visible="deviceFirmwareUpgradeModalVisible"
-                                :device="selectedDevice"
-                                @ok="onUpgradeDeviceOk"
-    ></DeviceFirmwareUpgradeModal>
-
-    <DeviceLogUploadRecordDrawer
-        v-model:visible="deviceLogUploadRecordVisible"
-        :device="currentDevice"
-    ></DeviceLogUploadRecordDrawer>
-
-    <DeviceHmsDrawer
-        v-model:visible="hmsVisible"
-        :device="currentDevice">
-    </DeviceHmsDrawer>
-  </div>
-  -->
 </template>
 <script lang="ts" setup>
-import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
-import { h, onMounted, reactive, ref, UnwrapRef } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { IPage } from '/@/api/http/type'
-import { BindBody, bindDevice, getBindingDevices, unbindDevice, updateDevice } from '/@/api/manage'
+import { getBindingDevices } from '/@/api/manage'
 import { EDeviceTypeName, ELocalStorageKey } from '/@/types'
-import {
-  EditOutlined,
-  CheckOutlined,
-  CloseOutlined,
-  DeleteOutlined,
-  FileSearchOutlined,
-  CloudServerOutlined
-} from '@ant-design/icons-vue'
 import { Device, DeviceFirmwareStatusEnum } from '/@/types/device'
-import DeviceFirmwareUpgrade from '/@/components/devices/device-upgrade/DeviceFirmwareUpgrade.vue'
-import DeviceFirmwareUpgradeModal from '/@/components/devices/device-upgrade/DeviceFirmwareUpgradeModal.vue'
-import { useDeviceFirmwareUpgrade } from '/@/components/devices/device-upgrade/use-device-upgrade'
 import { useDeviceUpgradeEvent } from '/@/components/devices/device-upgrade/use-device-upgrade-event'
 import { DeviceCmdExecuteInfo, DeviceCmdExecuteStatus } from '/@/types/device-cmd'
-import DeviceLogUploadRecordDrawer from '/@/components/devices/device-log/DeviceLogUploadRecordDrawer.vue'
-import DeviceHmsDrawer from '/@/components/devices/device-hms/DeviceHmsDrawer.vue'
 import { message } from 'ant-design-vue'
 
 import drohnePic from '/@/assets/icons/m30.png'
@@ -152,113 +40,6 @@ interface DeviceData {
 }
 
 const loading = ref(true)
-const deleteTip = ref<boolean>(false)
-const deleteSn = ref<string>()
-const columns: ColumnProps[] = [
-  {
-    title: 'Model',
-    dataIndex: 'device_name',
-    width: 100,
-    className: 'titleStyle'
-  },
-  {
-    title: 'SN',
-    dataIndex: 'device_sn',
-    width: 100,
-    className: 'titleStyle',
-    ellipsis: true,
-    slots: { customRender: 'sn' }
-  },
-  {
-    title: 'Name',
-    dataIndex: 'nickname',
-    width: 100,
-    sorter: (a: Device, b: Device) => a.nickname.localeCompare(b.nickname),
-    className: 'titleStyle',
-    ellipsis: true,
-    slots: { customRender: 'nickname' }
-  },
-  {
-    title: 'Firmware Version',
-    dataIndex: 'firmware_version',
-    width: 150,
-    className: 'titleStyle',
-    slots: { customRender: 'firmware_version' }
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    width: 100,
-    className: 'titleStyle',
-    slots: { customRender: 'status' }
-  },
-  {
-    title: 'Workspace',
-    dataIndex: 'workspace_name',
-    width: 100,
-    className: 'titleStyle',
-    ellipsis: true,
-    slots: { customRender: 'workspace' },
-    customRender: ({
-      text,
-      record,
-      index
-    }) => {
-      const obj = {
-        children: text,
-        props: {} as any,
-      }
-      if (current.value.indexOf(EDeviceTypeName.Dock) !== -1) {
-        if (record.domain === EDeviceTypeName.Aircraft) {
-          obj.children = ''
-        }
-      }
-      return obj
-    }
-  },
-  {
-    title: 'Joined',
-    dataIndex: 'bound_time',
-    width: 150,
-    sorter: (a: Device, b: Device) => a.bound_time.localeCompare(b.bound_time),
-    className: 'titleStyle'
-  },
-  {
-    title: 'Last Online',
-    dataIndex: 'login_time',
-    width: 150,
-    sorter: (a: Device, b: Device) => a.login_time.localeCompare(b.login_time),
-    className: 'titleStyle'
-  },
-  {
-    title: 'Actions',
-    dataIndex: 'actions',
-    width: 100,
-    className: 'titleStyle',
-    slots: { customRender: 'action' }
-  },
-]
-
-const expandIcon = (props: any) => {
-  if (judgeCurrentType(EDeviceTypeName.Dock) && !props.expanded) {
-    return h('div',
-      {
-        style: 'border-left: 2px solid rgb(200,200,200); border-bottom: 2px solid rgb(200,200,200); height: 16px; width: 16px; float: left;',
-        class: 'mt-5 ml0',
-      })
-  }
-}
-
-const rowClassName = (record: any, index: number) => {
-  const className = []
-  if ((index & 1) === 0) {
-    className.push('table-striped')
-  }
-  if (record.domain !== EDeviceTypeName.Dock) {
-    className.push('child-row')
-  }
-  return className.toString().replaceAll(',', ' ')
-}
 
 const expandRows = ref<string[]>([])
 const data = reactive<DeviceData>({
@@ -282,38 +63,12 @@ function getPaginationBody () {
   } as IPage
 }
 
-const rowSelection = {
-  onChange: (selectedRowKeys: (string | number)[], selectedRows: []) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
-  },
-  onSelect: (record: any, selected: boolean, selectedRows: []) => {
-    console.log(record, selected, selectedRows)
-  },
-  onSelectAll: (selected: boolean, selectedRows: [], changeRows: []) => {
-    console.log(selected, selectedRows, changeRows)
-  },
-  getCheckboxProps: (record: any) => ({
-    disabled: judgeCurrentType(EDeviceTypeName.Dock) && record.domain !== EDeviceTypeName.Dock,
-    style: judgeCurrentType(EDeviceTypeName.Dock) && record.domain !== EDeviceTypeName.Dock ? 'display: none' : ''
-  }),
-}
-type Pagination = TableState['pagination']
-
 const workspaceId: string = localStorage.getItem(ELocalStorageKey.WorkspaceId) || ''
-const editableData: UnwrapRef<Record<string, Device>> = reactive({})
 const current = ref([EDeviceTypeName.Aircraft])
 
 function judgeCurrentType (type: EDeviceTypeName): boolean {
   return current.value.indexOf(type) !== -1
 }
-
-// 设备升级
-const {
-  deviceFirmwareUpgradeModalVisible,
-  selectedDevice,
-  onDeviceUpgrade,
-  onUpgradeDeviceOk
-} = useDeviceFirmwareUpgrade(workspaceId)
 
 function onDeviceUpgradeWs (payload: DeviceCmdExecuteInfo) {
   updateDevicesByWs(data.device, payload)
@@ -377,58 +132,9 @@ function getDevices (domain: string, closeLoading?: boolean) {
   })
 }
 
-function refreshData (page: Pagination) {
-  paginationProp.current = page?.current!
-  paginationProp.pageSize = page?.pageSize!
-  getDevices(current.value[0])
-}
-
-// 编辑
-function edit (record: Device) {
-  editableData[record.device_sn] = record
-}
-
-// 保存
-function save (record: Device) {
-  delete editableData[record.device_sn]
-  updateDevice({ nickname: record.nickname }, workspaceId, record.device_sn)
-}
-
-// 删除
-function showDeleteTip (sn: any) {
-  deleteTip.value = true
-}
-
-// 解绑
-function unbind () {
-  deleteTip.value = false
-  unbindDevice(deleteSn.value?.toString()!).then(res => {
-    if (res.code !== 0) {
-      return
-    }
-    getDevices(current.value[0])
-  })
-}
-
 // 选择设备
 function select (item: any) {
   getDevices(item.key)
-}
-
-const currentDevice = ref({} as Device)
-// 设备日志
-const deviceLogUploadRecordVisible = ref(false)
-
-function showDeviceLogUploadRecord (dock: Device) {
-  deviceLogUploadRecordVisible.value = true
-  currentDevice.value = dock
-}
-
-const hmsVisible = ref<boolean>(false)
-
-function showHms (dock: Device) {
-  hmsVisible.value = true
-  currentDevice.value = dock
 }
 
 onMounted(() => {
