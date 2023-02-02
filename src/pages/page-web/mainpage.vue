@@ -190,6 +190,7 @@ p {
 .content {
   height: 100%;
   grid-row: 2/3;
+  overflow-y: auto;
 }
 
 .bottom-bar {
