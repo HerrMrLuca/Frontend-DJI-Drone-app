@@ -7,7 +7,7 @@
         <div class="north">
           <div class="content-container">
             <div class="icon-container north">
-              <img :src="compass" :style="{rotate: data.heading + 'deg'}" alt="icon of compass"
+              <img :src="compass" :style="{rotate: droneDir + 'deg'}" alt="icon of compass"
                    class="home-icon compass">
             </div>
             <p v-if="!connected" class="num">--°</p>
@@ -472,7 +472,7 @@ function updateData () {
   } else {
     data.battery_percent -= 1
     data.remain_flight_time -= 3
-    data.heading = Math.round((data.heading - 4) * 10) / 10
+    data.heading = Math.round((data.heading - 100) * 10) / 10
     data.height += 1
     data.elevation += 1
 
@@ -501,12 +501,8 @@ function updateData () {
   data.second = addZero(data.second)
   data.minutes = addZero(data.minutes)
 
-  droneDir.value = data.heading
   changeDir()
-
-  if (data.heading < 0) {
-    data.heading = 360 + data.heading
-  }
+  changeDirWind()
 
   if (connected.value) {
     const north = document.getElementsByClassName('north').item(0).classList
@@ -558,16 +554,20 @@ function updateData () {
     }
 
     const wind = document.getElementsByClassName('wind').item(0).classList
-    if (data.wind_speed < 7) {
+    if (data.wind_speed > 12) {
       wind.remove('content-warning')
       wind.add('content-alert')
-    } else if (data.wind_speed < 12) {
+    } else if (data.wind_speed > 7) {
       wind.remove('content-alert')
       wind.add('content-warning')
     } else {
       wind.remove('content-alert')
       wind.remove('content-warning')
     }
+  }
+
+  if (data.heading < 0) {
+    data.heading = 360 + data.heading
   }
 }
 
@@ -603,9 +603,13 @@ const dires = [
   0, 45, 90, 135, 180, 225, 270, 315
 ]
 
-function changeDir () {
+function changeDirWind () {
   direction.value = closestAngle(direction.value, dires[data.wind_direction])
   connected.value = true // TODO remove after testing
+}
+
+function changeDir () {
+  droneDir.value = closestAngle(droneDir.value, data.heading)
 }
 
 function closestAngle (from: number, to: number) {
