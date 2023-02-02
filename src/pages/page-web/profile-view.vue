@@ -11,7 +11,9 @@
 
     <div>
       <h2>Firmware</h2>
-      <p>{{ data.device[0].firmware_version }}</p>
+      <p>05.01.0000</p>
+      <!--Note: might wanna use the one below, but gotta test if it works-->
+      <!--<p>{{ data.device[0].firmware_version }}</p>-->
     </div>
 
     <div>
