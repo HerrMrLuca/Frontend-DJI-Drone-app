@@ -118,9 +118,9 @@
       </div>
     </a-layout-content>
   </a-layout>
-  <pilot-liveshare class="liveshare-display">
+<!--  <pilot-liveshare class="liveshare-display">-->
 
-  </pilot-liveshare>
+<!--  </pilot-liveshare>-->
 </template>
 <script lang="ts" setup>
 import { message, Popconfirm } from 'ant-design-vue'

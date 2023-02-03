@@ -11,7 +11,6 @@
                    class="home-icon compass">
             </div>
             <p v-if="!connected" class="num">--°</p>
-            <p v-else-if="testing" class="num">359°</p>
             <p v-else class="num">{{ data.heading }}°</p>
           </div>
           <h5>Compass</h5>
@@ -32,7 +31,6 @@
               <img :src="battery" alt="icon of battery" class="home-icon">
             </div>
             <p v-if="!connected" class="num">--<span class="unit">%</span></p>
-            <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
             <p v-else class="num">{{ data.battery_percent }}<span class="unit">%</span></p>
           </div>
           <h5>Battery</h5>
@@ -44,7 +42,6 @@
               <img :src="storage" alt="icon of storage" class="home-icon">
             </div>
             <p v-if="!connected" class="num">--<span class="unit">%</span></p>
-            <p v-else-if="testing" class="num">100<span class="unit">%</span></p>
             <p v-else class="num">{{ data.storage }}<span class="unit">%</span></p>
           </div>
           <h5>Storage</h5>
@@ -60,14 +57,12 @@
           <div>
             <h6>height</h6>
             <p v-if="!connected" class="num">---,-<span class="unit">m</span></p>
-            <p v-else-if="testing" class="num">350<span class="unit">m</span></p>
             <p v-else class="num">{{ data.height }}<span class="unit">m</span></p>
           </div>
 
           <div>
             <h6>elevation</h6>
             <p v-if="!connected" class="num">---,-<span class="unit">m</span></p>
-            <p v-else-if="testing" class="num">100<span class="unit">m</span></p>
             <p v-else class="num">{{ data.elevation }}<span class="unit">m</span></p>
           </div>
           <h5>Height</h5>
@@ -77,14 +72,12 @@
           <div class="latitude">
             <h6>latitude</h6>
             <p v-if="!connected" class="num">--,------</p>
-            <p v-else-if="testing" class="num">-11,111118</p>
             <p v-else class="num">{{ mapData.currentLocation[0] }}</p>
           </div>
 
           <div class="longitude">
             <h6>longitude</h6>
             <p v-if="!connected" class="num">--,------</p>
-            <p v-else-if="testing" class="num">-23,423239</p>
             <p v-else class="num">{{ mapData.currentLocation[1] }}</p>
           </div>
           <h5>Coordinates</h5>
@@ -103,7 +96,6 @@
           <div class="wind-speed">
             <h6>speed</h6>
             <p v-if="!connected" class="num">--<span class="unit">m/s</span></p>
-            <p v-else-if="testing" class="num">2.3<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.wind_speed }}<span class="unit">m/s</span></p>
           </div>
           <h5>Wind</h5>
@@ -113,13 +105,11 @@
           <div class="speed-horizontal">
             <h6>horizontal</h6>
             <p v-if="!connected" class="num">--<span class="unit">m/s</span></p>
-            <p v-else-if="testing" class="num">2.5<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.horizontal_speed }}<span class="unit">m/s</span></p>
           </div>
           <div class="speed-vertical">
             <h6>vertical</h6>
             <p v-if="!connected" class="num">--<span class="unit">m/s</span></p>
-            <p v-else-if="testing" class="num">2.35<span class="unit">m/s</span></p>
             <p v-else class="num">{{ data.vertical_speed }}<span class="unit">m/s</span></p>
           </div>
           <h5>Drone Speed</h5>
@@ -128,13 +118,11 @@
         <div class="flight-time">
           <div class="since-start">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else-if="testing" class="num">20:06</p>
             <p v-else class="num">{{ data.time_string }}</p>
             <h6>since start</h6>
           </div>
           <div class="remaining-flight-time">
             <p v-if="!connected" class="num">--:--</p>
-            <p v-else-if="testing" class="num">08:06</p>
             <p v-else class="num">{{ data.minutes }}:{{ data.second }}</p>
             <h6>remaining (battery)</h6>
           </div>
@@ -142,12 +130,14 @@
         </div>
         <div class="temperature">
           <p v-if="!connected" class="num">--<span class="unit">°C</span></p>
-          <p v-else-if="testing" class="num">20<span class="unit">°C</span></p>
           <p v-else class="num">{{ data.temperature }}<span class="unit">°C</span></p>
           <h5>Weather</h5>
         </div>
       </div>
       <br>
+    </div>
+    <div>
+      <button @click="testingValue"></button>
     </div>
   </div>
 </template>
@@ -363,7 +353,7 @@ let index = 0
 // TODO 2 add something until map is loaded
 function getLocation () {
   // TODO Change fake to real
-  if (connected.value && onlineDevices.data[0]) {
+  if (connected.value && onlineDevices.data[0] && testing.value === false) {
     const latLong: [number, number] = [
       deviceInfo.value[onlineDevices.data[0].sn].latitude,
       deviceInfo.value[onlineDevices.data[0].sn].longitude
@@ -419,7 +409,7 @@ const data = reactive({
 })
 
 function prepData () {
-  if (connected.value) {
+  if (connected.value && testing.value === false) {
     data.battery_percent = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
     data.remain_flight_time = deviceInfo.value[onlineDevices.data[0].sn].battery.remain_flight_time
     data.heading = deviceInfo.value[onlineDevices.data[0].sn].attitude_head
@@ -433,7 +423,7 @@ function prepData () {
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = percentage(deviceInfo.value[onlineDevices.data[0].sn].storage.used, deviceInfo.value[onlineDevices.data[0].sn].storage.total)
-  } else {
+  } else if (testing.value || connected.value === false) {
     data.battery_percent = 100
     data.remain_flight_time = 1733
     data.heading = 0
@@ -455,7 +445,7 @@ function prepData () {
 }
 
 function updateData () {
-  if (connected.value && onlineDevices.data[0]) {
+  if (connected.value && onlineDevices.data[0] && testing.value === false) {
     data.battery_percent = deviceInfo.value[onlineDevices.data[0].sn].battery.capacity_percent
     data.remain_flight_time = deviceInfo.value[onlineDevices.data[0].sn].battery.remain_flight_time
     data.heading = Math.round(deviceInfo.value[onlineDevices.data[0].sn].attitude_head)
@@ -469,10 +459,10 @@ function updateData () {
     data.gps_number = deviceInfo.value[onlineDevices.data[0].sn].position_state.gps_number
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = percentage(deviceInfo.value[onlineDevices.data[0].sn].storage.used, deviceInfo.value[onlineDevices.data[0].sn].storage.total)
-  } else {
+  } else if (testing.value || connected.value === false) {
     data.battery_percent -= 1
     data.remain_flight_time -= 3
-    data.heading = Math.round((data.heading - 100) * 10) / 10
+    data.heading = Math.round((data.heading - 12) * 10) / 10
     data.height += 1
     data.elevation += 1
 
@@ -504,7 +494,7 @@ function updateData () {
   changeDir()
   changeDirWind()
 
-  if (connected.value) {
+  if (connected.value || testing.value) {
     const north = document.getElementsByClassName('north').item(0).classList
     if (data.heading < -4 || data.heading > 4) {
       north.remove('content-warning')
@@ -651,6 +641,27 @@ function chooseDeg (direction: number, deg: number) {
   }
   */
   return direction // direction in degrees for the animiation
+}
+
+function testingValue () {
+  if (testing.value) {
+    testing.value = false
+  } else {
+    testing.value = true
+    data.battery_percent = 100
+    data.remain_flight_time = 1733
+    data.heading = 0
+    data.height = 500
+    data.elevation = 100
+    data.wind_direction = 0
+    data.wind_speed = 66 / 10
+    data.vertical_speed = 0.4
+    data.horizontal_speed = 1.1
+    data.rtk_number = 23
+    data.is_fixed = 1
+    data.storage = percentage(50, 200)
+  }
+  console.log(testing.value)
 }
 
 // endregion
