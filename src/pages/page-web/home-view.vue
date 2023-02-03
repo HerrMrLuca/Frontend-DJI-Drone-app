@@ -22,7 +22,7 @@
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
             <p v-else class="num">{{ data.gps_number }}<span class="unit">Satellites</span></p>
           </div>
-          <h5>RKT State</h5>
+          <h5>RTK State</h5>
         </div>
 
         <div class="battery">

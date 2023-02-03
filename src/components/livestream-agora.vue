@@ -1,12 +1,50 @@
+<!--<template>-->
+<!--  <div id="livestream">-->
+<!--    <div id="player" :class="{fullscreen: fullscreen}">-->
+<!--      <button id="playerButton" @click="manageFullscreen"><img :src="expand"></button>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;-->
+<!--    <a-button type="primary" large @click="onStart">Play</a-button>-->
+<!--    <a-button class="ml20" type="primary" large @click="onStop">Stop</a-button>-->
+<!--    &ndash;&gt;-->
+<!--  </div>-->
+<!--</template>-->
+
 <template>
-  <div id="livestream">
+  <div  id="livestream">
     <div id="player" :class="{fullscreen: fullscreen}">
       <button id="playerButton" @click="manageFullscreen"><img :src="expand"></button>
     </div>
-    <!--
-    <a-button type="primary" large @click="onStart">Play</a-button>
-    <a-button class="ml20" type="primary" large @click="onStop">Stop</a-button>
-    -->
+    <div class="flex-row">
+      <a-select
+          style="width:150px"
+          placeholder="Select Drone"
+          @select="onDroneSelect"
+      >
+        <a-select-option
+            v-for="item in dronePara.droneList"
+            :key="item.value"
+            :value="item.value"
+        >{{ item.label }}</a-select-option
+        >
+      </a-select>
+      <a-select
+          class="ml10"
+          style="width:150px"
+          placeholder="Select Camera"
+          @select="onCameraSelect"
+      >
+        <a-select-option
+            v-for="item in dronePara.cameraList"
+            :key="item.value"
+            :value="item.value"
+        >{{ item.label }}</a-select-option
+        >
+      </a-select>
+    </div>
+    <div>
+      <button type="primary" large @click="onStart">Play</button>
+    </div>
   </div>
 </template>
 
@@ -359,7 +397,7 @@ button {
   justify-content: center;
 }
 
-#player:nth-child(1n+2) {
+#player:nth-child(1n+1) {
   display: none;
 }
 
