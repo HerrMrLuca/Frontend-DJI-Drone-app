@@ -416,23 +416,7 @@ function prepData () {
 function updateData () {
   showData.value = connected.value || testing.value
 
-  if (!testing.value && connected.value && onlineDevices.data[0]) {
-    const drone = deviceInfo.value[onlineDevices.data[0].sn]
-    data.battery_percent = drone.battery.capacity_percent
-    data.remain_flight_time = drone.battery.remain_flight_time
-    data.heading = Math.round(drone.attitude_head)
-    data.height = Math.floor(drone.height * 100) * 0.01
-    data.elevation = Math.floor(drone.elevation * 100) * 0.01
-    data.wind_direction = drone.wind_direction
-    data.wind_speed = drone.wind_speed * 0.1
-    data.vertical_speed = drone.vertical_speed
-    data.horizontal_speed = drone.horizontal_speed
-    data.rtk_number = drone.position_state.rtk_number
-    data.gps_number = drone.position_state.gps_number
-    data.is_fixed = drone.position_state.is_fixed
-    data.storage = percentage(drone.storage.used, drone.storage.total)
-    changeWindDirection()
-  } else if (testing.value) {
+  if (testing.value) {
     --data.battery_percent
     data.remain_flight_time -= 3
     data.heading = Math.floor((data.heading - 12) * 10) * 0.1
@@ -455,6 +439,22 @@ function updateData () {
     data.gimbal_yaw = Math.floor((data.gimbal_yaw + 0.1) * 100) * 0.01
     ++data.gimbal_pitch
     changeWindDirectionTest()
+  } else if (connected.value && onlineDevices.data[0]) {
+    const drone = deviceInfo.value[onlineDevices.data[0].sn]
+    data.battery_percent = drone.battery.capacity_percent
+    data.remain_flight_time = drone.battery.remain_flight_time
+    data.heading = Math.round(drone.attitude_head)
+    data.height = Math.floor(drone.height * 100) * 0.01
+    data.elevation = Math.floor(drone.elevation * 100) * 0.01
+    data.wind_direction = drone.wind_direction
+    data.wind_speed = drone.wind_speed * 0.1
+    data.vertical_speed = drone.vertical_speed
+    data.horizontal_speed = drone.horizontal_speed
+    data.rtk_number = drone.position_state.rtk_number
+    data.gps_number = drone.position_state.gps_number
+    data.is_fixed = drone.position_state.is_fixed
+    data.storage = percentage(drone.storage.used, drone.storage.total)
+    changeWindDirection()
   }
 
   data.time.setTime(new Date() - data.start_time)
@@ -573,7 +573,7 @@ function toggleTestingValue () {
   data.height = 500
   data.elevation = 100
   data.wind_direction = 0
-  data.wind_speed = 66 / 10
+  data.wind_speed = 6.6
   data.vertical_speed = 0.4
   data.horizontal_speed = 1.1
   data.rtk_number = 23
