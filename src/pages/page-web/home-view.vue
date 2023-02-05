@@ -17,7 +17,11 @@
         </div>
 
         <div class="gps">
-          <div>
+          <div class="content-container">
+            <div class="icon-container">
+              <img :src="satellite" alt="icon of satellite"
+                   class="home-icon satellite">
+            </div>
             <p v-if="!connected" class="num">--<span class="unit">Satellites</span></p>
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
             <p v-else class="num">{{ data.gps_number }}<span class="unit">Satellites</span></p>
@@ -28,7 +32,10 @@
         <div class="battery">
           <div class="content-container">
             <div class="icon-container">
-              <img :src="battery" alt="icon of battery" class="home-icon">
+              <img v-if="data.battery_percent <= 25" :src="battery25" alt="icon of battery 25%" class="home-icon">
+              <img v-else-if="data.battery_percent <= 50" :src="battery50" alt="icon of battery 50%" class="home-icon">
+              <img v-else-if="data.battery_percent <= 75" :src="battery75" alt="icon of battery 75%" class="home-icon">
+              <img v-else :src="battery100" alt="icon of battery 100%" class="home-icon">
             </div>
             <p v-if="!connected" class="num">--<span class="unit">%</span></p>
             <p v-else class="num">{{ data.battery_percent }}<span class="unit">%</span></p>
@@ -144,11 +151,17 @@
 
 <script lang="ts" setup>
 import battery from '/@/assets/icons/icons_homeview/battery.png'
+import battery25 from '/@/assets/icons/icons_homeview/battery25.png'
+import battery50 from '/@/assets/icons/icons_homeview/battery50.png'
+import battery75 from '/@/assets/icons/icons_homeview/battery75.png'
+import battery100 from '/@/assets/icons/icons_homeview/battery100.png'
 import compass from '/@/assets/icons/icons_homeview/compass 1.png'
 import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
 import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
 import needle from '/@/assets/icons/icons_homeview/needle.png'
+import satellite from '/@/assets/icons/icons_homeview/satelliteV2.png'
 import loading from '/@/assets/icons/loading.webp'
+
 // leaflet
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
