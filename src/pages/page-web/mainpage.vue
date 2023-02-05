@@ -184,7 +184,7 @@ p {
   width: 100%;
   grid-row: 1/2;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
-  clip-path: inset(-5px 0px -5px -5px);
+  clip-path: inset(-10px 0px -10px -10px);
 }
 
 .content {
@@ -208,8 +208,8 @@ p {
 
     .bottom-bar {
       grid-row: 1/2;
-      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
-      clip-path: inset(-5px -5px -5px 0px);
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+      clip-path: inset(-10px -10px -10px 0px);
     }
   }
 
