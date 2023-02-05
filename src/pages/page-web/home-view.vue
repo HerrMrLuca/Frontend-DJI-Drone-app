@@ -6,7 +6,7 @@
         <div class="north">
           <div class="content-container">
             <div class="icon-container north">
-              <img :src="compass" :style="{rotate: droneDir + 'deg'}" alt="icon of compass"
+              <img :src="compass" :style="{transform: 'rotate('+ droneDir + 'deg)'}" alt="icon of compass"
                    class="home-icon compass">
             </div>
             <p v-if="!connected" class="num">--°</p>
@@ -95,7 +95,7 @@
             <!--          <h6>Direction</h6>-->
             <div class="compass">
               <img :src="cardinalPoints" class="cardinal-points">
-              <img :class="direction" :src="needle" :style="{rotate: direction + 'deg'}" class="needle">
+              <img :class="direction" :src="needle" :style="{transform: 'rotate(' + direction + 'deg)'}" class="needle">
             </div>
           </div>
 
@@ -850,7 +850,7 @@ img {
         display: grid;
         width: 100%;
         grid-template-columns: 30% 60%;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         gap: 0.1em;
 
@@ -869,9 +869,7 @@ img {
     .north {
       .compass {
         transform-origin: center;
-        transition: rotate 0.5s ease-in-out;
-        height: 100%;
-        width: auto;
+        transition: transform 0.5s ease-in-out;
       }
 
       p {
@@ -899,7 +897,7 @@ img {
 
           .needle {
             position: absolute;
-            transition: rotate 0.5s ease-in-out;
+            transition: transform 0.5s ease-in-out;
             width: 30%;
           }
         }
