@@ -2,25 +2,30 @@
   <div class="profile-wrapper">
     <img :src="drohnePic" alt="image of a drone">
 
-    <div>
-      <h2>Model</h2>
-      <p>{{ data.model }}</p>
-      <!--Note: might wanna use the one below, but gotta test if it works-->
-      <!--<p>{{ data.device[0].device_name }}</p>-->
-    </div>
+    <div class="info-container">
+      <div>
+        <h2>Model</h2>
+        <p v-if="!connected">--</p>
+        <p v-else>{{ data.model }}</p>
+        <!--Note: might wanna use the one below, but gotta test if it works-->
+        <!--<p>{{ data.device[0].device_name }}</p>-->
+      </div>
 
-    <div>
-      <h2>Firmware</h2>
-      <p>05.01.0000</p>
-      <!--Note: might wanna use the one below, but gotta test if it works-->
-      <!--<p>{{ data.device[0].firmware_version }}</p>-->
-    </div>
+      <div>
+        <h2>Firmware</h2>
+        <p v-if="!connected">--</p>
+        <p v-else>{{ data.device[0].firmware_version }}</p>
+        <!--Note: might wanna use the one below, but gotta test if it works-->
+        <!--<p>{{ data.device[0].firmware_version }}</p>-->
+      </div>
 
-    <div>
-      <h2>SN</h2>
-      <p>{{ data.sn }}</p>
-      <!--Note: might wanna use the one below, but gotta test if it works-->
-      <!--<p>{{ data.device[0].device_sn }}</p>-->
+      <div>
+        <h2>SN</h2>
+        <p v-if="!connected">--</p>
+        <p v-else>{{ data.sn }}</p>
+        <!--Note: might wanna use the one below, but gotta test if it works-->
+        <!--<p>{{ data.device[0].device_sn }}</p>-->
+      </div>
     </div>
   </div>
 
@@ -42,6 +47,7 @@ interface DeviceData {
 }
 
 const loading = ref(true)
+const connected = ref(false)
 
 const expandRows = ref<string[]>([])
 const data = reactive<DeviceData>({
@@ -146,79 +152,19 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.device-table-wrap {
-  .editable-row-operations {
-    div > span {
-      margin-right: 10px;
-    }
-  }
-}
-</style>
 
-<style lang="scss">
-.table {
-  background-color: white;
-  margin: 20px;
-  padding: 20px;
-  height: 88vh;
-}
-
-.table-striped {
-  background-color: #f7f9fa;
-}
-
-.ant-table {
-  border-top: 1px solid rgb(0, 0, 0, 0.06);
-  border-bottom: 1px solid rgb(0, 0, 0, 0.06);
-}
-
-.ant-table-tbody tr td {
-  border: 0;
-}
-
-.ant-table td {
-  white-space: nowrap;
-}
-
-.ant-table-thead tr th {
-  background: white !important;
-  border: 0;
-}
-
-th.ant-table-selection-column {
-  background-color: white !important;
-}
-
-.ant-table-header {
-  background-color: white !important;
-}
-
-.child-row {
-  height: 70px;
-}
-
-.notice {
-  background: $success;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.caution {
-  background: orange;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.warn {
-  background: red;
-  cursor: pointer;
-  overflow: hidden;
+h2 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 //
 img {
   display: block;
-  width: 300px;
+  max-width: 300px;
+  width: 50%;
   height: auto;
 }
 
@@ -231,13 +177,30 @@ p {
 }
 
 .profile-wrapper {
+  background-color: #FAFAFA;
+
   width: 100%;
   height: 100%;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 0.5em;
+
   overflow-y: auto;
 }
 
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5em;
+}
+
+@media screen and (orientation: landscape){
+  .profile-wrapper{
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+}
 </style>
