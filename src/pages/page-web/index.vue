@@ -48,7 +48,6 @@
 </template>
 
 <script lang="ts" setup>
-import djiLogo from '/@/assets/icons/dji_logo.png'
 import bambiLogo from '/@/assets/icons/BAMBI_notext.png'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
@@ -56,7 +55,6 @@ import { reactive, computed, UnwrapRef } from 'vue'
 import { login, LoginBody } from '/@/api/manage'
 import { getRoot } from '/@/root'
 import { ELocalStorageKey, ERouterName, EUserType } from '/@/types'
-import router from '/@/router'
 
 // TODO 2 postpone displaying until the picture is done loading
 
@@ -103,7 +101,7 @@ const onSubmit = async (e: any) => {
   img {
     width: 50vw;
     height: auto;
-    max-width: 200px;
+    max-width: 180px;
   }
 
   .title {
@@ -141,15 +139,25 @@ const onSubmit = async (e: any) => {
 
 @media screen and (orientation: landscape) {
   .login {
-    flex-direction: row;
+    // flex-direction: row;
     justify-content: space-evenly;
     align-content: center;
 
-    .title{
+    .title {
       margin-bottom: 0;
     }
-  }
 
+    form {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      max-width: 200px;
+
+      .login-button {
+
+        margin: 0; //reset button margin except top
+      }
+    }
+  }
 }
 
 </style>
