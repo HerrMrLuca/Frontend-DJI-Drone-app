@@ -1,21 +1,21 @@
 <template>
-<a-modal :visible="sVisible"
-         :title="title"
-         :closable="false"
-         centered
-         @update:visible="onVisibleChange"
-         @cancel="onCancel"
-         @ok="onConfirm">
-         <div>
-          升级固件版本: {{ deviceUpgradeInfo?.product_version }}
-         </div>
-</a-modal>
+  <a-modal :closable="false"
+           :title="title"
+           :visible="sVisible"
+           centered
+           @cancel="onCancel"
+           @ok="onConfirm"
+           @update:visible="onVisibleChange">
+    <div>
+      升级固件版本: {{ deviceUpgradeInfo?.product_version }}
+    </div>
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, Ref, watchEffect } from 'vue'
-import { Device, DeviceFirmwareStatusEnum, DeviceFirmwareStatus, DeviceFirmwareTypeEnum } from '/@/types/device'
-import { getDeviceUpgradeInfo, GetDeviceUpgradeInfoRsp, DeviceUpgradeBody } from '/@/api/device-upgrade'
+import { defineEmits, defineProps, ref, Ref, watchEffect } from 'vue'
+import { Device, DeviceFirmwareStatusEnum, DeviceFirmwareTypeEnum } from '/@/types/device'
+import { DeviceUpgradeBody, getDeviceUpgradeInfo, GetDeviceUpgradeInfoRsp } from '/@/api/device-upgrade'
 
 const props = defineProps<{
   visible: boolean,
@@ -25,7 +25,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:visible', 'ok', 'cancel'])
 
-const deviceUpgradeInfo:Ref<GetDeviceUpgradeInfoRsp> = ref({} as GetDeviceUpgradeInfoRsp)
+const deviceUpgradeInfo: Ref<GetDeviceUpgradeInfoRsp> = ref({} as GetDeviceUpgradeInfoRsp)
 const sVisible = ref(false)
 
 watchEffect(() => {

@@ -1,10 +1,10 @@
 <template>
   <a-drawer
-    title="设备日志上传记录"
-    placement="right"
     v-model:visible="sVisible"
-    @update:visible="onVisibleChange"
-    :width="800">
+    :width="800"
+    placement="right"
+    title="设备日志上传记录"
+    @update:visible="onVisibleChange">
     <!-- 设备日志上传记录 -->
     <div class="device-log-upload-record-wrap">
       <div class="page-action-row">
@@ -12,17 +12,23 @@
       </div>
       <div class="device-log-upload-list">
         <a-table :columns="deviceLogUploadListColumns"
-                  :scroll="{ x: '100%', y: 600 }"
-                  :data-source="deviceUploadLogState.uploadLogList"
-                  :loading="deviceUploadLogState.loading"
-                  :pagination="deviceUploadLogState.paginationProp"
-                  @change="onDeviceUploadLogTableChange"
-                  rowKey="logs_id">
-         <!-- 设备类型 -->
+                 :data-source="deviceUploadLogState.uploadLogList"
+                 :loading="deviceUploadLogState.loading"
+                 :pagination="deviceUploadLogState.paginationProp"
+                 :scroll="{ x: '100%', y: 600 }"
+                 rowKey="logs_id"
+                 @change="onDeviceUploadLogTableChange">
+          <!-- 设备类型 -->
           <template #device_type="{ record }">
             <div>
-              <div v-if="getDeviceInfo(record).parents && getDeviceInfo(record).parents.length > 0">{{ DEVICE_NAME[getDeviceInfo(record).parents[0].device_model.key]}}</div>
-              <div v-if="getDeviceInfo(record).hosts && getDeviceInfo(record).hosts.length > 0">{{ DEVICE_NAME[getDeviceInfo(record).hosts[0].device_model.key]}}</div>
+              <div v-if="getDeviceInfo(record).parents && getDeviceInfo(record).parents.length > 0">{{
+                  DEVICE_NAME[getDeviceInfo(record).parents[0].device_model.key]
+                }}
+              </div>
+              <div v-if="getDeviceInfo(record).hosts && getDeviceInfo(record).hosts.length > 0">{{
+                  DEVICE_NAME[getDeviceInfo(record).hosts[0].device_model.key]
+                }}
+              </div>
             </div>
           </template>
           <!-- 设备sn -->
@@ -36,11 +42,11 @@
           <template #status="{ record }">
             <div>
               <div>
-                <span class="circle-icon" :style="{backgroundColor: getDeviceLogUploadStatus(record).color}"></span>
+                <span :style="{backgroundColor: getDeviceLogUploadStatus(record).color}" class="circle-icon"></span>
                 {{ getDeviceLogUploadStatus(record).text }}
               </div>
               <div v-if="record.status === DeviceLogUploadStatusEnum.Uploading">
-                <a-progress :percent="getLogProgress(record)" />
+                <a-progress :percent="getLogProgress(record)"/>
               </div>
             </div>
           </template>
@@ -48,7 +54,7 @@
           <template #action="{ record }">
             <div class="row-action">
               <a-tooltip title="查看详情">
-                  <FileTextOutlined  @click="showDeviceLogDetail(record)"/>
+                <FileTextOutlined @click="showDeviceLogDetail(record)"/>
               </a-tooltip>
               <span v-if="record.status === DeviceLogUploadStatusEnum.Uploading">
                 <a-tooltip title="取消">
@@ -68,28 +74,34 @@
   </a-drawer>
   <!-- 设备日志上传弹框 -->
   <DeviceLogUploadModal
-     v-model:visible="deviceLogUploadModalVisible"
-     :device="props.device"
-     @upload-log-ok="onUploadLogOk"
+    v-model:visible="deviceLogUploadModalVisible"
+    :device="props.device"
+    @upload-log-ok="onUploadLogOk"
   ></DeviceLogUploadModal>
 
   <!-- 设备日志上传详情弹框 -->
   <DeviceLogDetailModal
-     v-model:visible="deviceLogDetailModalVisible"
-     :deviceLog="currentDeviceLog"
+    v-model:visible="deviceLogDetailModalVisible"
+    :deviceLog="currentDeviceLog"
   ></DeviceLogDetailModal>
 </template>
 
 <script lang="ts" setup>
-import { watchEffect, reactive, ref, defineProps, defineEmits } from 'vue'
+import { defineEmits, defineProps, reactive, ref, watchEffect } from 'vue'
 import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
-import { IPage } from '/@/api/http/type'
-import { Device, DOMAIN, DEVICE_NAME } from '/@/types/device'
+import { Device, DEVICE_NAME, DOMAIN } from '/@/types/device'
 import DeviceLogUploadModal from './DeviceLogUploadModal.vue'
 import DeviceLogDetailModal from './DeviceLogDetailModal.vue'
-import { getDeviceUploadLogList, GetDeviceUploadLogListRsp, cancelDeviceLogUpload, deleteDeviceLogUpload } from '/@/api/device-log'
-import { StopOutlined, DeleteOutlined, FileTextOutlined } from '@ant-design/icons-vue'
-import { DeviceLogUploadStatusEnum, DeviceLogUploadStatusMap, DeviceLogUploadStatusColor, DeviceLogUploadInfo, DeviceLogUploadWsStatusMap, DeviceLogProgressInfo } from '/@/types/device-log'
+import { cancelDeviceLogUpload, deleteDeviceLogUpload, getDeviceUploadLogList, GetDeviceUploadLogListRsp } from '/@/api/device-log'
+import { DeleteOutlined, FileTextOutlined, StopOutlined } from '@ant-design/icons-vue'
+import {
+  DeviceLogProgressInfo,
+  DeviceLogUploadInfo,
+  DeviceLogUploadStatusColor,
+  DeviceLogUploadStatusEnum,
+  DeviceLogUploadStatusMap,
+  DeviceLogUploadWsStatusMap
+} from '/@/types/device-log'
 import { useDeviceLogUploadProgressEvent } from './use-device-log-upload-progress-event'
 import { Modal } from 'ant-design-vue'
 
@@ -160,6 +172,7 @@ async function getDeviceUploadLogInfo () {
     deviceUploadLogState.loading = false
   }
 }
+
 type Pagination = TableState['pagination']
 
 // 获取设备信息
@@ -294,14 +307,14 @@ function onUploadLogOk () {
 </script>
 
 <style lang="scss" scoped>
-.device-log-upload-record-wrap{
-  .page-action-row{
+.device-log-upload-record-wrap {
+  .page-action-row {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
 
-  .device-log-upload-list{
+  .device-log-upload-list {
     padding: 20px 0 10px;
   }
 
@@ -315,10 +328,10 @@ function onUploadLogOk () {
     flex-shrink: 0;
   }
 
-  .row-action{
+  .row-action {
     color: #2d8cf0;
 
-    & > span{
+    & > span {
       margin-right: 10px;
     }
   }

@@ -9,7 +9,7 @@
             selected: selectedRoute(item)
           }"
         :to="item.path"
-      > <!--TODO 4 check click behavior-->
+      >
         <span @click="selectedRoute(item)">
           <img :alt="`Icon for page ${item.label}`"
                :src="item.icon"
@@ -59,7 +59,6 @@ export default defineComponent({
   name: 'Bottom-bar',
   setup () {
     const root = getRoot()
-    // TODO 4 change Routes and names
     const options = [
       {
         key: 0,

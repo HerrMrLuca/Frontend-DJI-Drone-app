@@ -1,23 +1,23 @@
 <template>
   <a-drawer
-    title="Hms Info"
-    placement="right"
     v-model:visible="sVisible"
-    @update:visible="onVisibleChange"
     :destroyOnClose="true"
-    :width="800">
+    :width="800"
+    placement="right"
+    title="Hms Info"
+    @update:visible="onVisibleChange">
     <div class="flex-row flex-align-center">
       <div style="width: 240px;">
         <a-range-picker
           v-model:value="time"
-          format="YYYY-MM-DD"
           :placeholder="['Start Time', 'End Time']"
+          format="YYYY-MM-DD"
           @change="onTimeChange"/>
       </div>
       <div class="ml5">
         <a-select
-          style="width: 150px"
           v-model:value="param.level"
+          style="width: 150px"
           @select="onLevelSelect">
           <a-select-option
             v-for="item in levels"
@@ -52,22 +52,25 @@
       </div>
     </div>
     <div>
-      <a-table :columns="hmsColumns"  :scroll="{ x: '100%', y: 600 }" :data-source="hmsData.data" :pagination="hmsPaginationProp" @change="refreshHmsData" row-key="hms_id"
-        :rowClassName="rowClassName" :loading="loading">
+      <a-table :columns="hmsColumns" :data-source="hmsData.data" :loading="loading" :pagination="hmsPaginationProp" :rowClassName="rowClassName"
+               :scroll="{ x: '100%', y: 600 }"
+               row-key="hms_id" @change="refreshHmsData">
         <template #time="{ record }">
           <div>{{ record.create_time }}</div>
           <div :style="record.update_time ? '' : record.level === EHmsLevel.CAUTION ? 'color: orange;' :
-            record.level === EHmsLevel.WARN ? 'color: red;' : 'color: #28d445;'">{{ record.update_time ?? 'It is happening...' }}</div>
+            record.level === EHmsLevel.WARN ? 'color: red;' : 'color: #28d445;'">{{ record.update_time ?? 'It is happening...' }}
+          </div>
         </template>
         <template #level="{ text }">
           <div class="flex-row flex-align-center">
-            <div :class="text === EHmsLevel.CAUTION ? 'caution' : text === EHmsLevel.WARN ? 'warn' : 'notice'" style="width: 10px; height: 10px; border-radius: 50%;"></div>
+            <div :class="text === EHmsLevel.CAUTION ? 'caution' : text === EHmsLevel.WARN ? 'warn' : 'notice'"
+                 style="width: 10px; height: 10px; border-radius: 50%;"></div>
             <div style="margin-left: 3px;">{{ EHmsLevel[text] }}</div>
           </div>
         </template>
-        <template v-for="col in ['code', 'message']" #[col]="{ text }" :key="col">
+        <template v-for="col in ['code', 'message']" :key="col" #[col]="{ text }">
           <a-tooltip :title="text">
-              <span>{{ text }}</span>
+            <span>{{ text }}</span>
           </a-tooltip>
         </template>
       </a-table>
@@ -77,7 +80,7 @@
 
 <!-- 暂时只抽取该组件 -->
 <script lang="ts" setup>
-import { watchEffect, reactive, ref, defineProps, defineEmits } from 'vue'
+import { defineEmits, defineProps, reactive, ref, watchEffect } from 'vue'
 import { getDeviceHms, HmsQueryBody } from '/@/api/manage'
 import moment, { Moment } from 'moment'
 import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
@@ -232,7 +235,8 @@ function getHms () {
         hms.domain = hms.sn === param.children_sn ? EDeviceTypeName.Aircraft : EDeviceTypeName.Dock
       })
       loading.value = false
-    }).catch(_err => {
+    })
+    .catch(_err => {
       loading.value = false
     })
 }

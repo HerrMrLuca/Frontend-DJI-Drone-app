@@ -1,17 +1,17 @@
 <template>
   <span>
     <a-tree
-      draggable
       :defaultExpandAll="true"
       class="device-map-layers"
-      @drop="onDrop"
+      draggable
       v-bind="$attrs"
+      @drop="onDrop"
     >
       <a-tree-node
-        :title="layer.name"
-        :id="layer.id"
         v-for="layer in getTreeData"
+        :id="layer.id"
         :key="layer.id"
+        :title="layer.name"
       >
         <!-- <template #title>
                 {{layer.name}}
@@ -37,6 +37,7 @@ import { computed, defineProps, PropType, reactive } from 'vue'
 import { useMyStore } from '/@/store'
 import { DropEvent, mapLayer } from '/@/types/mapLayer'
 import { getLayerTreeKey } from '/@/utils/layer-tree'
+
 const store = useMyStore()
 const props = defineProps({
   layerData: Array as PropType<mapLayer[]>
@@ -55,6 +56,7 @@ const shareId = computed(() => {
 const defaultId = computed(() => {
   return store.state.layerBaseInfo.default
 })
+
 async function onDrop ({ node, dragNode, dropPosition, dropToGap }: DropEvent) {
   let _treeData = props.layerData || []
   let dragKey = dragNode.eventKey
@@ -103,7 +105,7 @@ $antPrefix: 'ant';
   color: #fff;
 
   .#{$antPrefix}-tree-checkbox:not(.#{$antPrefix}-tree-checkbox-checked)
-    .#{$antPrefix}-tree-checkbox-inner {
+  .#{$antPrefix}-tree-checkbox-inner {
     background-color: unset;
   }
 
@@ -129,12 +131,14 @@ $antPrefix: 'ant';
     }
 
     &.#{$antPrefix}-tree-treenode-disabled
-      > .#{$antPrefix}-tree-node-content-wrapper {
+    > .#{$antPrefix}-tree-node-content-wrapper {
       height: 20px;
+
       span {
         color: #fff;
       }
     }
+
     > ul {
       width: 100%;
     }
@@ -149,9 +153,10 @@ $antPrefix: 'ant';
     .#{$antPrefix}-tree-checkbox {
       z-index: 1;
     }
+
     .#{$antPrefix}-tree-checkbox:hover::after,
     .#{$antPrefix}-tree-checkbox-wrapper:hover
-      .#{$antPrefix}-tree-checkbox::after {
+    .#{$antPrefix}-tree-checkbox::after {
       visibility: collapse;
     }
 
@@ -197,6 +202,7 @@ $antPrefix: 'ant';
       &.#{$antPrefix}-tree-node-selected {
         background-color: transparent;
         color: #2d8cf0;
+
         > span {
           &::before {
             background-color: #4f4f4f;
@@ -205,12 +211,14 @@ $antPrefix: 'ant';
       }
     }
   }
+
   span.#{$antPrefix}-tree-switcher.#{$antPrefix}-tree-switcher_open
-    .#{$antPrefix}-tree-switcher-icon {
+  .#{$antPrefix}-tree-switcher-icon {
     transform: rotate(0deg) !important;
   }
+
   span.#{$antPrefix}-tree-switcher.#{$antPrefix}-tree-switcher_close
-    .#{$antPrefix}-tree-switcher-icon {
+  .#{$antPrefix}-tree-switcher-icon {
     transform: rotate(0deg) !important;
   }
 }

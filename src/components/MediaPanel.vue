@@ -1,13 +1,13 @@
 <template>
   <div class="header">Media Files</div>
-  <a-spin :spinning="loading" :delay="1000" tip="downloading" size="large">
+  <a-spin :delay="1000" :spinning="loading" size="large" tip="downloading">
     <div class="media-panel-wrapper">
-      <a-table class="media-table" :columns="columns" :data-source="mediaData.data" row-key="fingerprint"
-        :pagination="paginationProp" :scroll="{ x: '100%', y: 600 }" @change="refreshData">
-        <template v-for="col in ['name', 'path']" #[col]="{ text }" :key="col">
+      <a-table :columns="columns" :data-source="mediaData.data" :pagination="paginationProp" :scroll="{ x: '100%', y: 600 }"
+               class="media-table" row-key="fingerprint" @change="refreshData">
+        <template v-for="col in ['name', 'path']" :key="col" #[col]="{ text }">
           <a-tooltip :title="text">
-              <a v-if="col === 'name'">{{ text }}</a>
-              <span v-else>{{ text }}</span>
+            <a v-if="col === 'name'">{{ text }}</a>
+            <span v-else>{{ text }}</span>
           </a-tooltip>
         </template>
         <template #original="{ text }">
@@ -15,7 +15,9 @@
         </template>
         <template #action="{ record }">
           <a-tooltip title="download">
-            <a class="fz18" @click="downloadMedia(record)"><DownloadOutlined /></a>
+            <a class="fz18" @click="downloadMedia(record)">
+              <DownloadOutlined/>
+            </a>
           </a-tooltip>
         </template>
       </a-table>
@@ -23,17 +25,16 @@
   </a-spin>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from '@vue/reactivity'
 import { TableState } from 'ant-design-vue/lib/table/interface'
 import { onMounted, reactive } from 'vue'
 import { IPage } from '../api/http/type'
-import { ELocalStorageKey } from '../types/enums'
+import { ELocalStorageKey } from '/@/types'
 import { downloadFile } from '../utils/common'
 import { downloadMediaFile, getMediaFiles } from '/@/api/media'
 import { DownloadOutlined } from '@ant-design/icons-vue'
-import { message, Pagination } from 'ant-design-vue'
-import { load } from '@amap/amap-jsapi-loader'
+import { Pagination } from 'ant-design-vue'
 
 const workspaceId = localStorage.getItem(ELocalStorageKey.WorkspaceId)!
 const loading = ref(false)
@@ -51,10 +52,6 @@ const columns = [
     ellipsis: true,
     slots: { customRender: 'path' }
   },
-  // {
-  //   title: 'FileSize',
-  //   dataIndex: 'size',
-  // },
   {
     title: 'Drone',
     dataIndex: 'drone'
@@ -147,15 +144,18 @@ function downloadMedia (media: MediaFile) {
 .media-panel-wrapper {
   width: 100%;
   padding: 16px;
+
   .media-table {
     background: #fff;
     margin-top: 10px;
   }
+
   .action-area {
     color: $primary;
     cursor: pointer;
   }
 }
+
 .header {
   width: 100%;
   height: 60px;

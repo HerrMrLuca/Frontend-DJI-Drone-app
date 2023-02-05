@@ -1,39 +1,39 @@
 <template>
   <div class="login flex-column flex-justify-center flex-align-center m0 b0">
     <a-image
-      style="width: 17vw; height: 10vw; margin-bottom: 50px"
       :src="djiLogo"
+      style="width: 17vw; height: 10vw; margin-bottom: 50px"
     />
     <p class="logo fz35 pb50">Pilot Cloud API Demo</p>
     <a-form
-      layout="inline"
       :model="formState"
       class="flex-row flex-justify-center flex-align-center"
+      layout="inline"
     >
       <a-form-item>
         <a-input v-model:value="formState.username" placeholder="Username">
-          <template #prefix
-            ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          <template #prefix>
+            <UserOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+          </template>
         </a-input>
       </a-form-item>
       <a-form-item>
         <a-input
           v-model:value="formState.password"
-          type="password"
           placeholder="Password"
+          type="password"
         >
-          <template #prefix
-            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          <template #prefix>
+            <LockOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+          </template>
         </a-input>
       </a-form-item>
       <a-form-item>
         <a-button
-          class="m0"
-          type="primary"
-          html-type="submit"
           :disabled="formState.user === '' || formState.password === ''"
+          class="m0"
+          html-type="submit"
+          type="primary"
           @click="onSubmit"
         >
           Login
@@ -50,9 +50,8 @@ import { CURRENT_CONFIG } from '/@/api/http/config'
 import { login, LoginBody, refreshToken } from '/@/api/manage'
 import apiPilot from '/@/api/pilot-bridge'
 import { getRoot } from '/@/root'
-import router from '/@/router'
 import { EComponentName, ELocalStorageKey, ERouterName, EUserType } from '/@/types'
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import djiLogo from '/@/assets/icons/dji_logo.png'
 
 const root = getRoot()
@@ -139,10 +138,12 @@ function verifyLicense () {
 
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';
+
 .login {
   // background-color: $dark-highlight;
   height: 100vh;
 }
+
 .logo {
   color: $primary;
 }

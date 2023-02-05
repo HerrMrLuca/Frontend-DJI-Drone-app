@@ -1,17 +1,17 @@
 <template>
   <div class="flex-column flex-justify-start flex-align-center mt20">
     <video
-      :style="{ width: '720px', height: '480px' }"
       id="video-webrtc"
       ref="videowebrtc"
-      controls
+      :style="{ width: '720px', height: '480px' }"
       class="mt20"
+      controls
     ></video>
     <p class="fz24">Live streaming source selection</p>
     <div class="flex-row flex-justify-center flex-align-center mt10">
       <a-select
-        style="width: 150px"
         placeholder="Select Live Type"
+        style="width: 150px"
         @select="onLiveTypeSelect"
       >
         <a-select-option
@@ -24,88 +24,90 @@
       </a-select>
       <a-select
         class="ml10"
-        style="width:150px"
         placeholder="Select Drone"
+        style="width:150px"
         @select="onDroneSelect"
       >
         <a-select-option
           v-for="item in droneList"
           :key="item.value"
           :value="item.value"
-          >{{ item.label }}</a-select-option
+        >{{ item.label }}
+        </a-select-option
         >
       </a-select>
       <a-select
         class="ml10"
-        style="width:150px"
         placeholder="Select Camera"
+        style="width:150px"
         @select="onCameraSelect"
       >
         <a-select-option
           v-for="item in cameraList"
           :key="item.value"
           :value="item.value"
-          >{{ item.label }}</a-select-option
+        >{{ item.label }}
+        </a-select-option
         >
       </a-select>
-      <!-- <a-select
+      <!--<a-select
         class="ml10"
-        style="width:150px"
         placeholder="Select Lens"
+        style="width:150px"
         @select="onVideoSelect"
       >
         <a-select-option
-          class="ml10"
           v-for="item in videoList"
           :key="item.value"
           :value="item.value"
-          >{{ item.label }}</a-select-option
-        >
-      </a-select> -->
+          class="ml10"
+        >{{ item.label }}
+        </a-select-option>
+      </a-select>-->
       <a-select
         class="ml10"
-        style="width:150px"
         placeholder="Select Clarity"
+        style="width:150px"
         @select="onClaritySelect"
       >
         <a-select-option
           v-for="item in clarityList"
           :key="item.value"
           :value="item.value"
-          >{{ item.label }}</a-select-option
-        >
+        >{{ item.label }}
+        </a-select-option>
       </a-select>
     </div>
     <div class="mt20">
-      <p class="fz10" v-if="livetypeSelected == 2">
+      <p v-if="livetypeSelected == 2" class="fz10">
         Please use VLC media player to play the RTSP livestream !!!
       </p>
-      <p class="fz10" v-if="livetypeSelected == 2">
+      <p v-if="livetypeSelected == 2" class="fz10">
         RTSP Parameter:{{ rtspData }}
       </p>
     </div>
     <div class="mt10 flex-row flex-justify-center flex-align-center">
-      <a-button type="primary" large @click="onStart">Play</a-button>
-      <a-button class="ml20" type="primary" large @click="onStop"
-        >Stop</a-button
-      >
-      <a-button class="ml20" type="primary" large @click="onUpdateQuality"
-        >Update Clarity</a-button
-      >
-      <a-button class="ml20" type="primary" large @click="onRefresh"
-        >Refresh Live Capacity</a-button
-      >
+      <a-button large type="primary" @click="onStart">Play</a-button>
+      <a-button class="ml20" large type="primary" @click="onStop"
+      >Stop
+      </a-button>
+      <a-button class="ml20" large type="primary" @click="onUpdateQuality"
+      >Update Clarity
+      </a-button>
+      <a-button class="ml20" large type="primary" @click="onRefresh"
+      >Refresh Live Capacity
+      </a-button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { message } from 'ant-design-vue'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { CURRENT_CONFIG as config } from '/@/api/http/config'
 import { getLiveCapacity, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
-import jswebrtc from '/@/vendors/jswebrtc.min.js'
+
 const root = getRoot()
 
 const liveTypeList = [
@@ -171,7 +173,7 @@ const onRefresh = async () => {
       console.log(res)
       if (res.code === 0) {
         if (res.data === null) {
-          console.warn('warning: get live capacity is null!!!')
+          console.warn('warning: get live capacity is null!')
           return
         }
         const resData: Array<[]> = res.data
@@ -181,7 +183,7 @@ const onRefresh = async () => {
         const temp: Array<{}> = []
         if (livestreamSource.value) {
           livestreamSource.value.forEach((ele: any) => {
-            temp.push({ label: ele.name + '-' + ele.sn, value: ele.sn })
+            temp.push({ label: `${ele.name}-${ele.sn}`, value: ele.sn })
           })
           droneList.value = temp
         }
@@ -212,11 +214,10 @@ const onStart = async () => {
     videoSeleted.value == null ||
     claritySeleted.value == null
   ) {
-    message.warn('waring: not select live para!!!')
+    message.warn('waring: not select live para!')
     return
   }
-  videoId.value =
-    droneSelected.value + '/' + cameraSelected.value + '/' + videoSeleted.value
+  videoId.value = `${droneSelected.value}/${cameraSelected.value}/${videoSeleted.value}`
   let liveURL = ''
   switch (livetypeSelected.value) {
     case 1: {
@@ -234,7 +235,7 @@ const onStart = async () => {
       break
     }
     default:
-      console.warn('warning: live type is not correct!!!')
+      console.warn('warning: live type is not correct!')
       break
   }
   await startLivestream({
@@ -245,45 +246,23 @@ const onStart = async () => {
   })
     .then(res => {
       if (livetypeSelected.value === 3) {
-        const url = res.data.url
-        const videoElement = videowebrtc.value
         // gb28181,it will fail if not wait.
         message.loading({
-          content: 'Loding...',
+          content: 'Loading...',
           duration: 4,
           onClose () {
-            const player = new jswebrtc.Player(url, {
-              video: videoElement,
-              autoplay: true,
-              onPlay: (obj: any) => {
-                console.log('start play livestream')
-              }
-            })
             liveState.value = true
           }
         })
       } else if (livetypeSelected.value === 2) {
         console.log(res)
         rtspData.value =
-          'url:' +
-          res.data.url +
-          '&username:' +
-          res.data.username +
-          '&password:' +
-          res.data.password
+          `url:${res.data.url}&username:${res.data.username}&password:${res.data.password}`
       } else if (livetypeSelected.value === 1) {
         const url = res.data.url
         const videoElement = videowebrtc.value
         console.log('start live:', url)
         console.log(videoElement)
-        const player = new jswebrtc.Player(url, {
-          video: videoElement,
-          autoplay: true,
-          onPlay: (obj: any) => {
-            console.log('start play livestream')
-            liveState.value = true
-          }
-        })
       }
     })
     .catch(err => {
@@ -291,8 +270,7 @@ const onStart = async () => {
     })
 }
 const onStop = () => {
-  videoId.value =
-    droneSelected.value + '/' + cameraSelected.value + '/' + videoSeleted.value
+  videoId.value = `${droneSelected.value}/${cameraSelected.value}/${videoSeleted.value}`
   stopLivestream({
     video_id: videoId.value
   }).then(res => {

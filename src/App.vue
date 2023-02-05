@@ -1,22 +1,16 @@
 <template>
   <div id="demo-app" class="demo-app">
-    <router-view />
-    <!-- <div class="map-wrapper">
-      <GMap/>
-    </div> -->
+    <router-view/>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import { useMyStore } from './store'
-import GMap from '/@/components/GMap.vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'App',
 
   setup () {
-    const store = useMyStore()
     return {}
   }
 })
@@ -25,6 +19,7 @@ export default defineComponent({
 .demo-app {
   width: 100%;
   height: 100%;
+
   .map-wrapper {
     height: 100%;
     width: 100%;

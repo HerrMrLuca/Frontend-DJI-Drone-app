@@ -1,40 +1,38 @@
 <template>
-<div class="dock-control-panel">
-  <!-- title -->
-  <div class="dock-control-panel-header fz16 pl5 pr5 flex-align-center flex-row flex-justify-between">
-    <span>远程调试 {{ props.sn}}</span>
-    <span @click="closeControlPanel">
-    <CloseOutlined />
+  <div class="dock-control-panel">
+    <!-- title -->
+    <div class="dock-control-panel-header fz16 pl5 pr5 flex-align-center flex-row flex-justify-between">
+      <span>远程调试 {{ props.sn }}</span>
+      <span @click="closeControlPanel">
+    <CloseOutlined/>
     </span>
+    </div>
+    <!-- cmd -->
+    <div class="control-cmd-wrapper">
+      <div v-for="(cmdItem, index) in cmdList" :key="cmdItem.cmdKey" class="control-cmd-item">
+        <div class="control-cmd-item-left">
+          <div class="item-label">{{ cmdItem.label }}</div>
+          <div class="item-status">{{ cmdItem.status }}</div>
+        </div>
+        <div class="control-cmd-item-right">
+          <a-button :loading="cmdItem.loading" size="small" type="primary" @click="sendControlCmd(cmdItem, index)">
+            {{ cmdItem.operateText }}
+          </a-button>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- cmd -->
-  <div class="control-cmd-wrapper">
-    <div v-for="(cmdItem, index) in cmdList" :key="cmdItem.cmdKey" class="control-cmd-item">
-     <div class="control-cmd-item-left">
-        <div class="item-label">{{ cmdItem.label }}</div>
-        <div class="item-status">{{ cmdItem.status }}</div>
-     </div>
-     <div class="control-cmd-item-right">
-        <a-button :loading="cmdItem.loading" size="small" type="primary" @click="sendControlCmd(cmdItem, index)">
-        {{ cmdItem.operateText }}
-        </a-button>
-     </div>
-   </div>
- </div>
-</div>
 
 </template>
 
-<script setup lang="ts">
-import { defineProps, defineEmits, ref, watch } from 'vue'
-import {
-  CloseOutlined
-} from '@ant-design/icons-vue'
+<script lang="ts" setup>
+import { defineEmits, defineProps, ref, watch } from 'vue'
+import { CloseOutlined } from '@ant-design/icons-vue'
 import { useDockControl } from './useDockControl'
 import { DeviceInfoType } from '/@/types/device'
 import { cmdList as baseCmdList, DeviceCmdItem } from '/@/types/device-cmd'
 import { useMyStore } from '/@/store'
-import { updateDeviceCmdInfoByOsd, updateDeviceCmdInfoByExecuteInfo } from '/@/utils/device-cmd'
+import { updateDeviceCmdInfoByExecuteInfo, updateDeviceCmdInfoByOsd } from '/@/utils/device-cmd'
 
 const props = defineProps<{
   sn: string,
@@ -88,7 +86,7 @@ async function sendControlCmd (cmdItem: DeviceCmdItem, index: number) {
 </script>
 
 <style lang='scss' scoped>
-.dock-control-panel{
+.dock-control-panel {
   position: absolute;
   left: calc(100% + 10px);
   top: 0px;
@@ -98,16 +96,17 @@ async function sendControlCmd (cmdItem: DeviceCmdItem, index: number) {
   color: #fff;
   border-radius: 2px;
 
-  .dock-control-panel-header{
+  .dock-control-panel-header {
     border-bottom: 1px solid #515151;
   }
 
-  .control-cmd-wrapper{
+  .control-cmd-wrapper {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 4px 10px;
-    .control-cmd-item{
+
+    .control-cmd-item {
       width: 220px;
       height: 58px;
       display: flex;
@@ -117,11 +116,11 @@ async function sendControlCmd (cmdItem: DeviceCmdItem, index: number) {
       margin: 4px 0;
       padding: 0 8px;
 
-      .control-cmd-item-left{
+      .control-cmd-item-left {
         display: flex;
         flex-direction: column;
 
-        .item-label{
+        .item-label {
           font-weight: 700;
         }
       }

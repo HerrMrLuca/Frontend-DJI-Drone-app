@@ -1,19 +1,20 @@
 <template>
-  <svg :class="svgClass" :aria-hidden="true" :style="{color: color, width:computedWidth, height:computedWidth}">
-    <use :xlink:href="iconName" :fill="color"/>
+  <svg :aria-hidden="true" :class="svgClass" :style="{color: color, width:computedWidth, height:computedWidth}">
+    <use :fill="color" :xlink:href="iconName"/>
   </svg>
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { computed, defineProps } from 'vue'
+
 const props = defineProps({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   color: {
     type: String,
-    default: ''
+    default: '',
   },
   size: {
     type: Number,

@@ -1,45 +1,47 @@
 <template>
   <a-modal
-    title="日志上传详情"
     v-model:visible="sVisible"
-    width="900px"
     :footer="null"
+    title="日志上传详情"
+    width="900px"
     @update:visible="onVisibleChange">
     <div class="device-log-detail-wrap">
       <div class="device-log-list">
         <div class="log-list-item">
-          <a-button type="primary" class="download-btn" :disabled="!airportTableLogState.logList?.file_id"  size="small" @click="onDownloadLog(airportTableLogState.logList.file_id)">
-             下载机场日志
+          <a-button :disabled="!airportTableLogState.logList?.file_id" class="download-btn" size="small" type="primary"
+                    @click="onDownloadLog(airportTableLogState.logList.file_id)">
+            下载机场日志
           </a-button>
-          <a-table  :columns="airportLogColumns"
-                    :scroll="{ x: '100%', y: 600 }"
-                    :data-source="airportTableLogState.logList?.list"
-                    rowKey="boot_index"
-                    :pagination = "false"
-                    >
+          <a-table :columns="airportLogColumns"
+                   :data-source="airportTableLogState.logList?.list"
+                   :pagination="false"
+                   :scroll="{ x: '100%', y: 600 }"
+                   rowKey="boot_index"
+          >
             <template #log_time="{record}">
-              <div>{{getLogTime(record)}}</div>
+              <div>{{ getLogTime(record) }}</div>
             </template>
             <template #size="{record}">
-              <div>{{getLogSize(record.size)}}</div>
+              <div>{{ getLogSize(record.size) }}</div>
             </template>
           </a-table>
         </div>
         <div class="log-list-item">
-          <a-button type="primary"  class="download-btn" :disabled="!droneTableLogState.logList?.file_id" size="small" @click="onDownloadLog(droneTableLogState.logList.file_id)">
-             下载飞行器日志
+          <a-button :disabled="!droneTableLogState.logList?.file_id" class="download-btn" size="small" type="primary"
+                    @click="onDownloadLog(droneTableLogState.logList.file_id)">
+            下载飞行器日志
           </a-button>
-          <a-table  :columns="droneLogColumns"
-                    :scroll="{ x: '100%', y: 600 }"
-                    :data-source="droneTableLogState.logList?.list"
-                    rowKey="boot_index"
-                    :pagination = "false"
+          <a-table :columns="droneLogColumns"
+                   :data-source="droneTableLogState.logList?.list"
+                   :pagination="false"
+                   :scroll="{ x: '100%', y: 600 }"
+                   rowKey="boot_index"
           >
             <template #log_time="{record}">
-              <div>{{getLogTime(record)}}</div>
+              <div>{{ getLogTime(record) }}</div>
             </template>
             <template #size="{record}">
-              <div>{{getLogSize(record.size)}}</div>
+              <div>{{ getLogSize(record.size) }}</div>
             </template>
           </a-table>
         </div>
@@ -49,9 +51,8 @@
 </template>
 
 <script lang="ts" setup>
-import { watchEffect, reactive, ref, defineProps, defineEmits } from 'vue'
-import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
-import { IPage } from '/@/api/http/type'
+import { defineEmits, defineProps, reactive, ref, watchEffect } from 'vue'
+import { ColumnProps } from 'ant-design-vue/lib/table/interface'
 import { DOMAIN } from '/@/types/device'
 import { DeviceLogFileInfo, GetDeviceUploadLogListRsp, getUploadDeviceLogUrl } from '/@/api/device-log'
 import { useDeviceLogUploadDetail } from './use-device-log-upload-detail'
@@ -124,23 +125,24 @@ async function onDownloadLog (fileId: string) {
   })
   if (data) {
     download(data)
-  // download('https:/github.com/dji-sdk/Mobile-SDK-Android-V5/archive/refs/heads/dev-sdk-main.zip')
+    // download('https:/github.com/dji-sdk/Mobile-SDK-Android-V5/archive/refs/heads/dev-sdk-main.zip')
   }
 }
 
 </script>
 
 <style lang="scss" scoped>
-.device-log-detail-wrap{
+.device-log-detail-wrap {
 
-  .device-log-list{
+  .device-log-list {
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
-    .log-list-item{
+
+    .log-list-item {
       width: 420px;
 
-      .download-btn{
+      .download-btn {
         margin-bottom: 10px;
       }
     }

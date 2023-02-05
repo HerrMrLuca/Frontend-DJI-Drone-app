@@ -1,53 +1,53 @@
 <template>
   <a-layout class="page">
-    <a-layout-sider class="left" width="40%" style="border-radius: 4px;">
+    <a-layout-sider class="left" style="border-radius: 4px;" width="40%">
       <div style="width:90%; height: 90%; margin: 4vh">
         <a-layout style="height: 20%; margin-top: 3vh; background-color: white; ">
-          <a-layout-sider width="25%" theme="light" align="center">
+          <a-layout-sider align="center" theme="light" width="25%">
             <a-avatar :size="60" :src="cloudapi">
             </a-avatar>
           </a-layout-sider>
           <a-layout-content style="margin-left: 1vw;" @click="showStatus">
             <div style="height: 50%;">
               <span style="font-size: 16px; font-weight: bolder">{{ workspaceName }}</span>
-              <RightOutlined style="float: right; margin-top: 5px; color: #8894a0" />
+              <RightOutlined style="float: right; margin-top: 5px; color: #8894a0"/>
             </div>
             <div style="height: 50%;">
-              <CloudSyncOutlined v-if="state === EStatusValue.CONNECTED" style="color: #75c5f6" />
-              <SyncOutlined spin v-else/>
+              <CloudSyncOutlined v-if="state === EStatusValue.CONNECTED" style="color: #75c5f6"/>
+              <SyncOutlined v-else spin/>
               <span style="color: #737373; margin-left: 3px;">{{ state }}</span>
             </div>
-            <a-drawer  placement="right" v-model:visible="drawerVisible" width="340px">
+            <a-drawer v-model:visible="drawerVisible" placement="right" width="340px">
               <div class="mb10 flex-row flex-justify-center flex-align-center">
                 <p class="fz14" style="font-weight: 100;">Module State</p>
               </div>
-              <div class= "width-100 mb10 flex-align-start" v-for="m in modules" :key="m.name" style="height: 30px;">
+              <div v-for="m in modules" :key="m.name" class="width-100 mb10 flex-align-start" style="height: 30px;">
 
-                <div class="ml5" style="float: left; color: #000000;">{{m.name}}：</div>
+                <div class="ml5" style="float: left; color: #000000;">{{ m.name }}：</div>
                 <div class="ml10" style="float: right; margin-bottom: 8px;">
                   <span :key="m.state" :class="m.state.value === EStatusValue.CONNECTED ? 'green' : 'red'">{{ m.state.value }}&nbsp;</span>
-                  <a-button-group >
-                  <a-button class="ml5" type="primary" size="small" @click.stop="moduleInstall(m)">install</a-button>
-                  <a-button class="ml5 mr5" type="danger" size="small" @click.stop="moduleUninstall(m)">uninstall</a-button>
+                  <a-button-group>
+                    <a-button class="ml5" size="small" type="primary" @click.stop="moduleInstall(m)">install</a-button>
+                    <a-button class="ml5 mr5" size="small" type="danger" @click.stop="moduleUninstall(m)">uninstall</a-button>
                   </a-button-group>
                 </div>
-                <a-divider />
+                <a-divider/>
 
               </div>
             </a-drawer>
           </a-layout-content>
 
         </a-layout>
-        <a-divider  style="height: 2px; background-color: #f5f5f5; margin-top: 3vh;" />
+        <a-divider style="height: 2px; background-color: #f5f5f5; margin-top: 3vh;"/>
 
-        <a-button id="exitBtn" class="fz18" @click="confirmAgain"
-        style="width: 10vw; height: 10vh; position: fixed; bottom: 13vh; left: 15vw; background-color: #e6e6e6; color: red; border: 0;"
-        type="primary">Exit
+        <a-button id="exitBtn" class="fz18" style="width: 10vw; height: 10vh; position: fixed; bottom: 13vh; left: 15vw; background-color: #e6e6e6; color: red; border: 0;"
+                  type="primary"
+                  @click="confirmAgain">Exit
         </a-button>
-        <a-modal v-model:visible="exitVisible" width="300px" :closable="false">
+        <a-modal v-model:visible="exitVisible" :closable="false" width="300px">
           <template #footer>
-            <a-button type="text" style="width: 48%; float: left;" @click="onBack">Cancel</a-button>
-            <a-button type="text" style="width: 48%;" @click="onExit">Exit</a-button>
+            <a-button style="width: 48%; float: left;" type="text" @click="onBack">Cancel</a-button>
+            <a-button style="width: 48%;" type="text" @click="onExit">Exit</a-button>
           </template>
           <p>Data will not be synchronized between DJI Pilot and this server after exiting.</p>
         </a-modal>
@@ -58,19 +58,19 @@
         <span class="ml5" style="color: #939393;">Serial Number</span>
       </div>
       <div class="fz16" style="background-color: white; border-radius: 4px;">
-        <a-row style="border-bottom: 1px solid #f4f8f9; height: 45px;" align="middle">
+        <a-row align="middle" style="border-bottom: 1px solid #f4f8f9; height: 45px;">
           <a-col :span="1"></a-col>
-            <a-col :span="9">
+          <a-col :span="9">
             Remote Control Sn
-            </a-col>
+          </a-col>
           <a-col :span="13" class="flex-align-end flex-column">
             <span style="color: #737373">{{ device.data.gateway_sn }}</span>
           </a-col>
         </a-row>
-        <a-row style="border-bottom: 1px solid #f4f8f9; height: 45px;" align="middle" v-if="device.data.online_status">
+        <a-row v-if="device.data.online_status" align="middle" style="border-bottom: 1px solid #f4f8f9; height: 45px;">
           <a-col :span="1"></a-col>
           <a-col :span="9">Aircraft Sn</a-col>
-          <a-col :span="13" class="flex-align-end flex-column" >
+          <a-col :span="13" class="flex-align-end flex-column">
             <span style="color: #737373">{{ device.data.sn }}</span>
           </a-col>
         </a-row>
@@ -79,7 +79,7 @@
         <span class="ml5" style="color: #939393;">Settings</span>
       </div>
       <div class="fz16" style="background-color: white; border-radius: 4px;">
-        <a-row v-if="device.data.online_status" style="border-bottom: 1px solid #f4f8f9; height: 45px;" align="middle" @click="bindingDevice">
+        <a-row v-if="device.data.online_status" align="middle" style="border-bottom: 1px solid #f4f8f9; height: 45px;" @click="bindingDevice">
           <a-col :span="1"></a-col>
           <a-col :span="11">
             Device Binding
@@ -88,54 +88,52 @@
             <span v-if="device.data.bound_status" style="color: #737373">Aircraft bound</span>
             <span v-else style="color: #737373">Aircraft not bound</span>
           </a-col>
-          <a-col :span="2" class="flex-align-center flex-column" >
-            <RightOutlined style="color: #8894a0; font-size: 20px;" />
+          <a-col :span="2" class="flex-align-center flex-column">
+            <RightOutlined style="color: #8894a0; font-size: 20px;"/>
           </a-col>
         </a-row>
-        <a-row style="border-bottom: 1px solid #f4f8f9; height: 45px;" align="middle" @click="onMediaSetting">
+        <a-row align="middle" style="border-bottom: 1px solid #f4f8f9; height: 45px;" @click="onMediaSetting">
           <a-col :span="1"></a-col>
           <a-col :span="21">
             Media File Upload
           </a-col>
-          <a-col :span="2" class="flex-align-center flex-column" >
-            <RightOutlined style="color: #8894a0; font-size: 20px;" />
+          <a-col :span="2" class="flex-align-center flex-column">
+            <RightOutlined style="color: #8894a0; font-size: 20px;"/>
           </a-col>
         </a-row>
-        <a-row style="border-bottom: 1px solid #f4f8f9; height: 45px;" align="middle" @click="onLiveshareSetting">
+        <a-row align="middle" style="border-bottom: 1px solid #f4f8f9; height: 45px;" @click="onLiveshareSetting">
           <a-col :span="1"></a-col>
           <a-col :span="21">Livestream Manually</a-col>
           <a-col :span="2" class="flex-align-center flex-column">
-            <RightOutlined style="color: #8894a0; font-size: 20px;" />
+            <RightOutlined style="color: #8894a0; font-size: 20px;"/>
           </a-col>
         </a-row>
-        <a-row style="border-bottom: 1px solid #f4f8f9; height: 45px;" align="middle" @click="onOpen3rdApp">
+        <a-row align="middle" style="border-bottom: 1px solid #f4f8f9; height: 45px;" @click="onOpen3rdApp">
           <a-col :span="1"></a-col>
           <a-col :span="21">Open 3rd Party APP</a-col>
           <a-col :span="2" class="flex-align-center flex-column">
-            <RightOutlined style="color: #8894a0; font-size: 20px;" />
+            <RightOutlined style="color: #8894a0; font-size: 20px;"/>
           </a-col>
         </a-row>
       </div>
     </a-layout-content>
   </a-layout>
-<!--  <pilot-liveshare class="liveshare-display">-->
+  <!--  <pilot-liveshare class="liveshare-display">-->
 
-<!--  </pilot-liveshare>-->
+  <!--  </pilot-liveshare>-->
 </template>
 <script lang="ts" setup>
-import { message, Popconfirm } from 'ant-design-vue'
-import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-import { CURRENT_CONFIG } from '/@/api/http/config'
+import { message } from 'ant-design-vue'
+import { onMounted, reactive, ref } from 'vue'
 import { BindBody, bindDevice, getDeviceBySn, getPlatformInfo, getUserInfo } from '/@/api/manage'
 import apiPilot, { ApiParam, MapParam, ThingParam, WsParam } from '/@/api/pilot-bridge'
 import { getRoot } from '/@/root'
 import { EBizCode, EComponentName, EDownloadOwner, ELocalStorageKey, ERouterName, EStatusValue } from '/@/types'
 import cloudapi from '/@/assets/icons/cloudapi.png'
-import { RightOutlined, CloudOutlined, CloudSyncOutlined, SyncOutlined } from '@ant-design/icons-vue'
+import { CloudSyncOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons-vue'
 import { useMyStore } from '/@/store'
 import { DeviceStatus } from '/@/types/device'
 import { useConnectWebSocket } from '/@/hooks/use-connect-websocket'
-import PilotLiveshare from '/@/pages/page-pilot/pilot-liveshare.vue'
 
 const root = getRoot()
 const gatewayState = ref<boolean>(localStorage.getItem(ELocalStorageKey.GatewayOnline) === 'true')
@@ -159,6 +157,7 @@ let minitor = -1
 interface DeviceInfoData {
   data: DeviceStatus
 }
+
 const device = reactive<DeviceInfoData>({
   data: {
     sn: EStatusValue.DISCONNECT,
@@ -503,18 +502,21 @@ function getDeviceInfo () {
 
 <style lang="scss" scoped>
 @import '/@/styles/index.scss';
+
 .page {
   display: flex;
   position: absolute;
   transition: width 0.2s ease;
   height: 100%;
   width: 100%;
+
   .left {
     height: 90%;
     background-color: white;
     margin-top: 6vh;
     margin-left: 2vh;
   }
+
   .right {
     height: 90%;
     margin-top: 6vh;
@@ -522,12 +524,15 @@ function getDeviceInfo () {
     margin-right: 5vh;
   }
 }
+
 .green {
   color: green
 }
+
 .red {
   color: red;
 }
+
 #exitBtn:hover :active {
   background-color: rgb(77, 75, 75);
   width: 10vw;
@@ -537,7 +542,8 @@ function getDeviceInfo () {
   left: 15vw;
   line-height: 10vh;
 }
-.liveshare-display{
+
+.liveshare-display {
   display: none;
 }
 

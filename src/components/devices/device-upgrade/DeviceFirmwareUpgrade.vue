@@ -1,26 +1,26 @@
 <template>
-<div class="firmware_upgrade_wrap">
-  <!-- 版本 -->
-  <span class="version"> {{ device.firmware_version }}</span>
-  <!-- tag -->
-  <span v-if="getTagStatus(device)"
-        class="status-tag pointer">
-    <a-tag class="pointer"
-           :color="getFirmwareTag(device.firmware_status).color"
+  <div class="firmware_upgrade_wrap">
+    <!-- 版本 -->
+    <span class="version"> {{ device.firmware_version }}</span>
+    <!-- tag -->
+    <span v-if="getTagStatus(device)"
+          class="status-tag pointer">
+    <a-tag :color="getFirmwareTag(device.firmware_status).color"
+           class="pointer"
            @click="deviceUpgrade(device)">
       {{ getFirmwareTag(device.firmware_status).text }}
     </a-tag>
   </span>
-  <!-- 进度 -->
-  <span v-if="device.firmware_status === DeviceFirmwareStatusEnum.DuringUpgrade">
-  {{ `${device.firmware_progress}%`}}
+    <!-- 进度 -->
+    <span v-if="device.firmware_status === DeviceFirmwareStatusEnum.DuringUpgrade">
+  {{ `${device.firmware_progress}%` }}
   </span>
-</div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
-import { Device, DeviceFirmwareStatusEnum, DeviceFirmwareStatus, DeviceFirmwareStatusColor } from '/@/types/device'
+import { computed, defineEmits, defineProps } from 'vue'
+import { Device, DeviceFirmwareStatus, DeviceFirmwareStatusColor, DeviceFirmwareStatusEnum } from '/@/types/device'
 
 const props = defineProps<{
   device: Device,
@@ -29,7 +29,7 @@ const props = defineProps<{
 const emit = defineEmits(['device-upgrade'])
 const needUpgrade = computed(() => {
   return props.device.firmware_status === DeviceFirmwareStatusEnum.ConsistencyUpgrade ||
-         props.device.firmware_status === DeviceFirmwareStatusEnum.ToUpgraded
+    props.device.firmware_status === DeviceFirmwareStatusEnum.ToUpgraded
 })
 
 function getTagStatus (record: Device) {
@@ -51,9 +51,9 @@ function deviceUpgrade (record: Device) {
 </script>
 
 <style lang="scss" scoped>
-.firmware_upgrade_wrap{
+.firmware_upgrade_wrap {
 
-  .status-tag{
+  .status-tag {
     margin-left: 10px;
   }
 

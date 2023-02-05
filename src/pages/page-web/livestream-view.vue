@@ -1,8 +1,6 @@
 <template>
   <div class="livestream-wrapper">
-    <agora>
-
-    </agora>
+    <agora/>
   </div>
 </template>
 
@@ -13,35 +11,22 @@ import { ERouterName } from '/@/types'
 import Agora from '/@/components/livestream-agora.vue'
 
 const root = getRoot()
-const routeName = ref<string>()
 const showLive = ref<boolean>(false)
 
-const options = [
-  {
-    key: 0,
-    label: 'Agora Live',
-    path: '/' + ERouterName.LIVESTREAM + '/' + ERouterName.LIVING,
-    routeName: 'LiveAgora'
-  }
-]
-
-const selectLivestream = (route: string) => {
-  routeName.value = route
-}
-
 onMounted(() => {
-  watch(() => root.$route.name, data => {
-    showLive.value = data === ERouterName.LIVING
-  },
-  {
-    deep: true
-  })
+  watch(() => root.$route.name,
+    data => {
+      showLive.value = data === ERouterName.LIVING
+    },
+    {
+      deep: true
+    })
 })
 </script>
 
 <style lang="scss" scoped>
 
-.livestream-wrapper:nth-child(1n + 2){
+.livestream-wrapper:nth-child(1n + 2) {
   display: none;
 }
 
@@ -63,9 +48,11 @@ onMounted(() => {
     flex: 1;
   }
 }
-.livestream-wrapper{
+
+.livestream-wrapper {
   height: 100%;
 }
+
 .live {
   position: absolute;
   z-index: 1;

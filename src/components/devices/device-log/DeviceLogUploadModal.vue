@@ -1,44 +1,44 @@
 <template>
   <a-modal
-    title="设备日志上传"
     v-model:visible="sVisible"
-    width="900px"
     :footer="null"
+    title="设备日志上传"
+    width="900px"
     @update:visible="onVisibleChange">
     <div class="device-log-upload-wrap">
       <div class="page-action-row">
-        <a-button type="primary" :disabled="deviceLogUploadBtnDisabled" @click="uploadDeviceLog">上传日志</a-button>
+        <a-button :disabled="deviceLogUploadBtnDisabled" type="primary" @click="uploadDeviceLog">上传日志</a-button>
       </div>
       <div class="device-log-list">
         <div class="log-list-item">
-          <a-table  :columns="airportLogColumns"
-                    :scroll="{ x: '100%', y: 600 }"
-                    :data-source="airportTableLogState.logList?.list"
-                    :loading="airportTableLogState.tableLoading"
-                    :row-selection="airportTableLogState.rowSelection"
-                    rowKey="boot_index"
-                    :pagination = "false">
+          <a-table :columns="airportLogColumns"
+                   :data-source="airportTableLogState.logList?.list"
+                   :loading="airportTableLogState.tableLoading"
+                   :pagination="false"
+                   :row-selection="airportTableLogState.rowSelection"
+                   :scroll="{ x: '100%', y: 600 }"
+                   rowKey="boot_index">
             <template #log_time="{record}">
-              <div>{{getLogTime(record)}}</div>
+              <div>{{ getLogTime(record) }}</div>
             </template>
             <template #size="{record}">
-              <div>{{getLogSize(record.size)}}</div>
+              <div>{{ getLogSize(record.size) }}</div>
             </template>
           </a-table>
         </div>
         <div class="log-list-item">
-          <a-table  :columns="droneLogColumns"
-                    :scroll="{ x: '100%', y: 600 }"
-                    :data-source="droneTableLogState.logList?.list"
-                    :loading="droneTableLogState.tableLoading"
-                    :row-selection="droneTableLogState.rowSelection"
-                    rowKey="boot_index"
-                    :pagination = "false">
+          <a-table :columns="droneLogColumns"
+                   :data-source="droneTableLogState.logList?.list"
+                   :loading="droneTableLogState.tableLoading"
+                   :pagination="false"
+                   :row-selection="droneTableLogState.rowSelection"
+                   :scroll="{ x: '100%', y: 600 }"
+                   rowKey="boot_index">
             <template #log_time="{record}">
-              <div>{{getLogTime(record)}}</div>
+              <div>{{ getLogTime(record) }}</div>
             </template>
             <template #size="{record}">
-              <div>{{getLogSize(record.size)}}</div>
+              <div>{{ getLogSize(record.size) }}</div>
             </template>
           </a-table>
         </div>
@@ -48,11 +48,10 @@
 </template>
 
 <script lang="ts" setup>
-import { watchEffect, reactive, ref, computed, defineProps, defineEmits } from 'vue'
-import { ColumnProps, TableState } from 'ant-design-vue/lib/table/interface'
-import { IPage } from '/@/api/http/type'
+import { computed, defineEmits, defineProps, reactive, ref, watchEffect } from 'vue'
+import { ColumnProps } from 'ant-design-vue/lib/table/interface'
 import { Device, DOMAIN } from '/@/types/device'
-import { getDeviceLogList, postDeviceUpgrade, DeviceLogFileInfo, UploadDeviceLogBody, DeviceLogItem } from '/@/api/device-log'
+import { DeviceLogFileInfo, getDeviceLogList, postDeviceUpgrade, UploadDeviceLogBody } from '/@/api/device-log'
 import { message } from 'ant-design-vue'
 import { useDeviceLogUploadDetail } from './use-device-log-upload-detail'
 
@@ -102,7 +101,7 @@ const airportTableLogState = reactive({
   rowSelection: {
     columnWidth: 15,
     selectedRowKeys: [] as number[],
-    onChange: (selectedRowKeys:number[], selectedRows: []) => {
+    onChange: (selectedRowKeys: number[], selectedRows: []) => {
       airportTableLogState.rowSelection.selectedRowKeys = selectedRowKeys
       airportTableLogState.selectRow = selectedRows
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
@@ -133,7 +132,7 @@ const droneTableLogState = reactive({
 
 const deviceLogUploadBtnDisabled = computed(() => {
   return (airportTableLogState.rowSelection.selectedRowKeys && airportTableLogState.rowSelection.selectedRowKeys.length <= 0) &&
-  (droneTableLogState.rowSelection.selectedRowKeys && droneTableLogState.rowSelection.selectedRowKeys.length <= 0)
+    (droneTableLogState.rowSelection.selectedRowKeys && droneTableLogState.rowSelection.selectedRowKeys.length <= 0)
 })
 
 // 获取设备内日志
@@ -196,13 +195,14 @@ const { getLogTime, getLogSize } = useDeviceLogUploadDetail()
 </script>
 
 <style lang="scss" scoped>
-.device-log-upload-wrap{
+.device-log-upload-wrap {
 
-  .device-log-list{
+  .device-log-list {
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
-    .log-list-item{
+
+    .log-list-item {
       width: 420px;
     }
   }

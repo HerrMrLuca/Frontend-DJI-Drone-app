@@ -1,12 +1,10 @@
 <template>
-  <div id="main-page" class="width-100" :class="{fullscreen: fullscreen}">
+  <div id="main-page" :class="{fullscreen: fullscreen}" class="width-100">
     <div class="top-bar">
       <MyTopbar/>
     </div>
     <div class="content">
-      <router-view>
-
-      </router-view>
+      <router-view/>
     </div>
     <div class="bottom-bar">
       <BottomBar/>

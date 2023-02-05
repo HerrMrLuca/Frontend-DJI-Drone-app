@@ -1,27 +1,21 @@
 <template>
   <a-layout class="width-100 flex-display" style="height: 100vh">
     <a-layout-header class="header">
-      <Topbar />
+      <Topbar/>
     </a-layout-header>
     <a-layout-content>
-      <router-view />
+      <router-view/>
     </a-layout-content>
-
   </a-layout>
 </template>
 
 <script lang="ts" setup>
 import Topbar from '/@/components/common/topbar.vue'
-import { onMounted, reactive, ref, UnwrapRef, watch } from 'vue'
+import { onMounted } from 'vue'
 import { getRoot } from '/@/root'
 import { EBizCode, ELocalStorageKey, ERouterName } from '/@/types'
 import { useConnectWebSocket } from '/@/hooks/use-connect-websocket'
 import EventBus from '/@/event-bus'
-
-interface FormState {
-  user: string
-  password: string
-}
 
 const root = getRoot()
 
