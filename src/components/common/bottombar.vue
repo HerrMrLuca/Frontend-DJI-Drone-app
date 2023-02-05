@@ -33,7 +33,7 @@ const icons = {
   homeIcon,
   videoIcon,
   settingsIcon,
-  // note add icon here
+  // TODO add icon here when adding new routes
 }
 
 interface IOptions {
@@ -59,7 +59,7 @@ export default defineComponent({
   name: 'Bottom-bar',
   setup () {
     const root = getRoot()
-    // TODO 4 change Routes and names
+    // TODO add routes and names for new pages
     const options = [
       {
         key: 0,
