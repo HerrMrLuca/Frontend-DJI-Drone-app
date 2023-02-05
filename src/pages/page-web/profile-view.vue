@@ -231,10 +231,13 @@ p {
 }
 
 .profile-wrapper {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
 }
 
 </style>

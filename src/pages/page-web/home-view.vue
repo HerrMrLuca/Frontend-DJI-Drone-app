@@ -747,7 +747,7 @@ img {
   background-color: $bambi-white;
   padding: 2vw;
 
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .loading {
