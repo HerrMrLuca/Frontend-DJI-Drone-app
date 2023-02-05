@@ -2,7 +2,6 @@
 <template>
   <div class="outer-div">
     <div class="home-view">
-      <h1>Home</h1>
       <div class="content">
         <div class="north">
           <div class="content-container">
@@ -20,7 +19,7 @@
           <div class="content-container">
             <div class="icon-container">
               <img :src="satellite" alt="icon of satellite"
-                   class="home-icon satellite">
+                   class="satellite">
             </div>
             <p v-if="!connected" class="num">--<span class="unit">Satellites</span></p>
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
@@ -715,13 +714,6 @@ h5 {
   text-align: center;
 }
 
-h1 {
-  font-family: 'Fredoka', sans-serif;
-  color: $bambi-main;
-  display: none;
-  margin-bottom: 0;
-}
-
 img {
   max-width: 100%;
   max-height: auto;
@@ -1011,11 +1003,6 @@ img {
 }
 
 @media screen and (orientation: landscape) {
-  h1 {
-    //display: block;
-    font-size: 2rem;
-  }
-
   .home-view {
     .content {
       max-width: 700px;
