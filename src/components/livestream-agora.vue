@@ -3,8 +3,10 @@
 <!--    <div id="player" :class="{fullscreen: fullscreen}">-->
 <!--      <button id="playerButton" @click="manageFullscreen"><img :src="expand"></button>-->
 <!--    </div>-->
-<!--    <a-button large type="primary" @click="onStart">Play</a-button>-->
-<!--    <a-button class="ml20" large type="primary" @click="onStop">Stop</a-button>-->
+<!--    &lt;!&ndash;-->
+<!--    <a-button type="primary" large @click="onStart">Play</a-button>-->
+<!--    <a-button class="ml20" type="primary" large @click="onStop">Stop</a-button>-->
+<!--    &ndash;&gt;-->
 <!--  </div>-->
 <!--</template>-->
 
@@ -18,48 +20,75 @@
     </div>
     <div class="selection">
       <a-select
-        placeholder="Select Drone"
-        @select="onDroneSelect"
+          placeholder="Select Drone"
+          @select="onDroneSelect"
       >
         <a-select-option
-          v-for="item in dronePara.droneList"
-          :key="item.value"
-          :value="item.value"
+            v-for="item in dronePara.droneList"
+            :key="item.value"
+            :value="item.value"
         >{{ item.label }}
-        </a-select-option>
+        </a-select-option
+        >
       </a-select>
       <a-select
-        placeholder="Select Camera"
-        @select="onCameraSelect"
+          placeholder="Select Camera"
+          @select="onCameraSelect"
       >
         <a-select-option
-          v-for="item in dronePara.cameraList"
-          :key="item.value"
-          :value="item.value"
+            v-for="item in dronePara.cameraList"
+            :key="item.value"
+            :value="item.value"
         >{{ item.label }}
-        </a-select-option>
+        </a-select-option
+        >
       </a-select>
       <div class="buttons">
         <button @click="onStart">Play</button>
         <button @click="onStop">Stop</button>
       </div>
     </div>
+
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, onBeforeUnmount } from 'vue'
 import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng'
 import { message } from 'ant-design-vue'
 
 import { CURRENT_CONFIG as config } from '/@/api/http/config'
-import { getLiveCapacity, startLivestream, stopLivestream } from '/@/api/manage'
+import { getLiveCapacity, setLivestreamQuality, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
-import expand from '/@/assets/icons/expand.png'
+import request from '/@/api/http/request'
+import expand from '/@/assets/icons/expand_g.png'
 import shrink from '/@/assets/icons/shrink_g.png'
 
 const root = getRoot()
 const fullscreen = ref(false)
+
+const clarityList = [
+  {
+    value: 0,
+    label: 'Adaptive'
+  },
+  {
+    value: 1,
+    label: 'Smooth'
+  },
+  {
+    value: 2,
+    label: 'Standard'
+  },
+  {
+    value: 3,
+    label: 'HD'
+  },
+  {
+    value: 4,
+    label: 'Super Clear'
+  }
+]
 
 let agoraClient = {} as IAgoraRTCClient
 const agoraPara = reactive({
@@ -173,7 +202,15 @@ onBeforeUnmount(() => {
   })
 })
 
+const handleError = (err: any) => {
+  console.error(err)
+}
+const handleJoinChannel = (uid: any) => {
+  agoraPara.uid = uid
+}
+
 const onStart = async () => {
+  const that = this
   console.log(
     'drone parameter：',
     dronePara.droneSelected,
@@ -181,6 +218,8 @@ const onStart = async () => {
     dronePara.videoSelected,
     dronePara.claritySelected
   )
+  const timestamp = new Date().getTime().toString()
+  const liveTimestamp = timestamp
   if (
     dronePara.droneSelected == null ||
     dronePara.cameraSelected == null ||
@@ -271,6 +310,26 @@ const onCameraSelect = (val: any) => {
       }
     })
   }
+}
+const onVideoSelect = (val: any) => {
+  dronePara.videoSelected = val
+}
+const onClaritySelect = (val: any) => {
+  dronePara.claritySelected = val
+}
+const onUpdateQuality = () => {
+  if (!livePara.liveState) {
+    message.info('Please turn on the livestream first.')
+    return
+  }
+  setLivestreamQuality({
+    video_id: livePara.videoId,
+    video_quality: dronePara.claritySelected
+  }).then(res => {
+    if (res.code === 0) {
+      message.success('Set the clarity to ' + clarityList[dronePara.claritySelected].label)
+    }
+  })
 }
 
 async function getAgoraToken () {

@@ -141,14 +141,15 @@
       <br>
     </div>
     <!-- TODO uncomment for testing
-    -->
     <div style="text-align: center">
       <button class="test-button" @click="toggleTestingValue">Dummy Test</button>
     </div>
+    -->
   </div>
 </template>
 
 <script lang="ts" setup>
+import battery from '/@/assets/icons/icons_homeview/battery.png'
 import battery25 from '/@/assets/icons/icons_homeview/battery25.png'
 import battery50 from '/@/assets/icons/icons_homeview/battery50.png'
 import battery75 from '/@/assets/icons/icons_homeview/battery75.png'
@@ -200,8 +201,12 @@ interface OnlineDevice {
 const onlineDevices = reactive({
   data: [] as OnlineDevice[]
 })
+const onlineDocks = reactive({
+  data: [] as OnlineDevice[]
+})
 
 const deviceInfo = computed(() => store.state.deviceState.deviceInfo)
+const dockInfo = computed(() => store.state.deviceState.dockInfo)
 const hmsInfo = computed({
   get: () => store.state.hmsInfo,
   set: (val) => {
@@ -251,6 +256,7 @@ function getOnlineTopo () {
       return
     }
     onlineDevices.data = []
+    onlineDocks.data = []
     res.data.forEach((val: any) => {
       const gateway = val.gateways_list.pop()
       const device: OnlineDevice = {
@@ -274,6 +280,7 @@ function getOnlineTopo () {
       if (gateway && EDeviceTypeName.Dock === gateway.domain) {
         hmsVisible.set(device.sn, false)
         hmsVisible.set(device.gateway.sn, false)
+        onlineDocks.data.push(device)
       }
       if (val.status && EDeviceTypeName.Gateway === gateway.domain) {
         onlineDevices.data.push(device)
@@ -294,6 +301,13 @@ function getUnreadHms (sn: string) {
 }
 
 function getOnlineDeviceHms () {
+  const snList = Object.keys(dockInfo.value)
+  if (snList.length === 0) {
+    return
+  }
+  snList.forEach(sn => {
+    getUnreadHms(sn)
+  })
   const deviceSnList = Object.keys(deviceInfo.value)
   if (deviceSnList.length === 0) {
     return
@@ -558,7 +572,6 @@ async function updateWeather () {
       data.temperature = json.hourly.temperature_2m[10]
     })
 }
-
 // endregion
 
 // region ---------------------------- compass logic  ----------------------------
@@ -574,25 +587,13 @@ function changeWindDirection () {
   droneDir.value = closestAngle(droneDir.value, data.heading)
 }
 
+// implement this method in wind_direction to get closest target for animation
 function closestAngle (from: number, to: number) {
   // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
   return from + ((((to - from) % 360) + 540) % 360) - 180
 }
 
 function toggleTestingValue () {
-  data.battery_percent = 100
-  data.remain_flight_time = 1733
-  data.heading = 0
-  data.height = 500
-  data.elevation = 100
-  data.wind_direction = 0
-  data.wind_speed = 6.6
-  data.vertical_speed = 0.4
-  data.horizontal_speed = 1.1
-  data.rtk_number = 23
-  data.is_fixed = 0
-  data.storage = percentage(50, 200)
-
   const north = document.getElementsByClassName('north').item(0).classList
   north.remove('content-alert')
   north.remove('content-warning')
@@ -615,6 +616,19 @@ function toggleTestingValue () {
 
   testing.value = !testing.value
   console.log(testing.value)
+
+  data.battery_percent = 100
+  data.remain_flight_time = 1733
+  data.heading = 0
+  data.height = 500
+  data.elevation = 100
+  data.wind_direction = 0
+  data.wind_speed = 6.6
+  data.vertical_speed = 0.4
+  data.horizontal_speed = 1.1
+  data.rtk_number = 23
+  data.is_fixed = 0
+  data.storage = percentage(50, 200)
 }
 
 // endregion
