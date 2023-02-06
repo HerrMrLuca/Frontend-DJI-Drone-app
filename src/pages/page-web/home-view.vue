@@ -141,15 +141,14 @@
       <br>
     </div>
     <!-- TODO uncomment for testing
+    -->
     <div style="text-align: center">
       <button class="test-button" @click="toggleTestingValue">Dummy Test</button>
     </div>
-    -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import battery from '/@/assets/icons/icons_homeview/battery.png'
 import battery25 from '/@/assets/icons/icons_homeview/battery25.png'
 import battery50 from '/@/assets/icons/icons_homeview/battery50.png'
 import battery75 from '/@/assets/icons/icons_homeview/battery75.png'
@@ -559,6 +558,7 @@ async function updateWeather () {
       data.temperature = json.hourly.temperature_2m[10]
     })
 }
+
 // endregion
 
 // region ---------------------------- compass logic  ----------------------------

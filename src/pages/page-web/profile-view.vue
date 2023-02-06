@@ -23,20 +23,20 @@
         <!--Note: The code below might not work, please test it-->
         <p v-else>{{ data.device[0].device_sn }}</p>
       </div>
-    </div>
 
-    <div>
-      <h2>Workspace</h2>
-      <p v-if="!connected">--</p>
-      <!--Note: The code below might not work, please test it-->
-      <p v-else>{{ data.device[0].workspace_name }}</p>
-    </div>
+      <div>
+        <h2>Workspace</h2>
+        <p v-if="!connected">--</p>
+        <!--Note: The code below might not work, please test it-->
+        <p v-else>{{ data.device[0].workspace_name }}</p>
+      </div>
 
-    <div>
-      <h2>Nickname</h2>
-      <p v-if="!connected">--</p>
-      <!--Note: The code below might not work, please test it-->
-      <p v-else>{{ data.device[0].nickname }}</p>
+      <div>
+        <h2>Nickname</h2>
+        <p v-if="!connected">--</p>
+        <!--Note: The code below might not work, please test it-->
+        <p v-else>{{ data.device[0].nickname }}</p>
+      </div>
     </div>
   </div>
 

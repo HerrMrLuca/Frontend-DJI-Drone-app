@@ -40,7 +40,8 @@
         </a-layout>
         <a-divider style="height: 2px; background-color: #f5f5f5; margin-top: 3vh;"/>
 
-        <a-button id="exitBtn" class="fz18" style="width: 10vw; height: 10vh; position: fixed; bottom: 13vh; left: 15vw; background-color: #e6e6e6; color: red; border: 0;"
+        <a-button id="exitBtn" class="fz18"
+                  style="width: 10vw; height: 10vh; position: fixed; bottom: 13vh; left: 15vw; background-color: #e6e6e6; color: red; border: 0;"
                   type="primary"
                   @click="confirmAgain">Exit
         </a-button>
