@@ -4,12 +4,12 @@
       <div style="width:90%; height: 90%; margin: 4vh">
         <a-layout style="height: 20%; margin-top: 3vh; background-color: white; ">
           <a-layout-sider width="25%" theme="light" align="center">
-            <a-avatar :size="60" :src="cloudapi">
+            <a-avatar :size="60" :src="bambiLogo">
             </a-avatar>
           </a-layout-sider>
           <a-layout-content style="margin-left: 1vw;" @click="showStatus">
             <div style="height: 50%;">
-              <span style="font-size: 16px; font-weight: bolder">{{ workspaceName }}</span>
+              <span style="font-size: 16px; font-weight: bolder">Bambi Info Center</span>
               <RightOutlined style="float: right; margin-top: 5px; color: #8894a0" />
             </div>
             <div style="height: 50%;">
@@ -130,7 +130,7 @@ import { BindBody, bindDevice, getDeviceBySn, getPlatformInfo, getUserInfo } fro
 import apiPilot, { ApiParam, MapParam, ThingParam, WsParam } from '/@/api/pilot-bridge'
 import { getRoot } from '/@/root'
 import { EBizCode, EComponentName, EDownloadOwner, ELocalStorageKey, ERouterName, EStatusValue } from '/@/types'
-import cloudapi from '/@/assets/icons/cloudapi.png'
+import bambiLogo from '/@/assets/icons/BAMBI_notext.png'
 import { RightOutlined, CloudOutlined, CloudSyncOutlined, SyncOutlined } from '@ant-design/icons-vue'
 import { useMyStore } from '/@/store'
 import { DeviceStatus } from '/@/types/device'
