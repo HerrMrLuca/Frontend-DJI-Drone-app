@@ -27,7 +27,7 @@ export const CURRENT_CONFIG = {
   rtspPort: '8554',
   // Agora
   agoraAPPID: '81151cf17c8641c18bf00e453ccaede4',
-  agoraToken: '007eJxTYJiwKvPHxFs79vd6MOptFNBYeJfnufHP3+Z/JjGw/bl+Ty9LgcHC0NDUMDnN0DzZwszEMNnQIinNwCDVxNQ4OTkxNSXVxP7UneSGQEYGle5pjIwMEAjiczEkJeYmZaYU5eelMjAAAJ+VI48=',
+  agoraToken: '007eJxTYPiuyrZw58r4L5IPGd/tOpqz3rPqAEd6yRW/vqz5d+odnI8rMFgYGpoaJqcZmidbmJkYJhtaJKUZGKSamBonJyempqSahF04mtwQyMgwSXUPIyMDBIL4XAxJiblJmSlF+XmpDAwAhhAjbA==',
   agoraChannel: 'bambidrone',
 
   // map
