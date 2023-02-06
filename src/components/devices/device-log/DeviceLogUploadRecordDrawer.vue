@@ -58,7 +58,7 @@
               </a-tooltip>
               <span v-if="record.status === DeviceLogUploadStatusEnum.Uploading">
                 <a-tooltip title="取消">
-                  <StopOutlined @click="onCancelUploadDeviceLog(record)"/>
+                  <StopOutlined @click="onCancelUploadDeviceLog()"/>
                 </a-tooltip>
               </span>
               <span v-else>
@@ -95,7 +95,6 @@ import DeviceLogDetailModal from './DeviceLogDetailModal.vue'
 import { cancelDeviceLogUpload, deleteDeviceLogUpload, getDeviceUploadLogList, GetDeviceUploadLogListRsp } from '/@/api/device-log'
 import { DeleteOutlined, FileTextOutlined, StopOutlined } from '@ant-design/icons-vue'
 import {
-  DeviceLogProgressInfo,
   DeviceLogUploadInfo,
   DeviceLogUploadStatusColor,
   DeviceLogUploadStatusEnum,
@@ -132,11 +131,35 @@ function setVisible (v: boolean, e?: Event) {
 
 // 日志列表
 const deviceLogUploadListColumns: ColumnProps[] = [
-  { title: '上传时间', dataIndex: 'create_time', width: 100 },
-  { title: '设备型号', dataIndex: 'device_type', width: 80, slots: { customRender: 'device_type' } },
-  { title: '设备SN', dataIndex: 'device_sn', width: 120, slots: { customRender: 'device_sn' } },
-  { title: '上传状态', dataIndex: 'status', width: 120, slots: { customRender: 'status' } },
-  { title: '操作', dataIndex: 'actions', width: 80, slots: { customRender: 'action' } },
+  {
+    title: '上传时间',
+    dataIndex: 'create_time',
+    width: 100
+  },
+  {
+    title: '设备型号',
+    dataIndex: 'device_type',
+    width: 80,
+    slots: { customRender: 'device_type' }
+  },
+  {
+    title: '设备SN',
+    dataIndex: 'device_sn',
+    width: 120,
+    slots: { customRender: 'device_sn' }
+  },
+  {
+    title: '上传状态',
+    dataIndex: 'status',
+    width: 120,
+    slots: { customRender: 'status' }
+  },
+  {
+    title: '操作',
+    dataIndex: 'actions',
+    width: 80,
+    slots: { customRender: 'action' }
+  },
 ]
 
 const deviceUploadLogState = reactive({
@@ -156,7 +179,10 @@ const deviceUploadLogState = reactive({
 async function getDeviceUploadLogInfo () {
   deviceUploadLogState.loading = true
   try {
-    const { code, data } = await getDeviceUploadLogList({
+    const {
+      code,
+      data
+    } = await getDeviceUploadLogList({
       device_sn: props.device?.device_sn || '',
       page: deviceUploadLogState.paginationProp.current,
       page_size: deviceUploadLogState.paginationProp.pageSize
@@ -208,16 +234,23 @@ function getLogProgress (deviceLogItem: GetDeviceUploadLogListRsp) {
 
 // 设备日志上传进度更新
 function onDeviceLogUploadWs (data: DeviceLogUploadInfo) {
-  const { sn, output } = data
+  const {
+    sn,
+    output
+  } = data
   if (output) {
-    const { files, status, logs_id: logId } = output || {}
+    const {
+      files,
+      status,
+      logs_id: logId
+    } = output || {}
     const deviceLogItem = deviceUploadLogState.uploadLogList.find(log => log.logs_id === logId)
     if (!deviceLogItem) return
     if (status) {
       deviceLogItem.status = DeviceLogUploadWsStatusMap[status]
     }
     if (files && files.length > 0) {
-      const logsProgress = [] as DeviceLogProgressInfo[]
+      const logsProgress = [] as any[]
       files.forEach(file => {
         logsProgress.push({
           ...file,
@@ -249,7 +282,7 @@ function showDeviceLogDetail (deviceLogItem: GetDeviceUploadLogListRsp) {
 }
 
 // 取消上传设备日志
-async function onCancelUploadDeviceLog (deviceLogItem: GetDeviceUploadLogListRsp) {
+async function onCancelUploadDeviceLog () {
   Modal.confirm({
     title: '取消日志上传',
     content: '您确认取消设备日志上传吗？',

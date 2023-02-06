@@ -33,7 +33,6 @@ const icons = {
   homeIcon,
   videoIcon,
   settingsIcon,
-  // TODO add icon here when adding new routes
 }
 
 interface IOptions {
@@ -185,7 +184,7 @@ p {
     .items {
       max-width: 600px;
       justify-content: flex-end;
-      gap: calc(var(--font-size-bar)/3);
+      gap: calc(var(--font-size-bar) / 3);
 
       a {
         span {

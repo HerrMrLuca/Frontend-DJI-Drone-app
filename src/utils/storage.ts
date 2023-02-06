@@ -18,7 +18,7 @@ function getStorageData (key: EStorageKey, parse?: boolean): any {
 }
 
 function clearStorageData (key: EStorageKey | EStorageKey[]) {
-  let keyList: EStorageKey[] = []
+  let keyList: EStorageKey[]
   if (Array.isArray(key)) {
     keyList = key
   } else {

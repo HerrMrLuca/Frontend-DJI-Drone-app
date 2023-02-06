@@ -118,11 +118,40 @@ function setVisible (v: boolean, e?: Event) {
 const loading = ref(false)
 
 const hmsColumns: ColumnProps[] = [
-  { title: 'Alarm Begin | End Time', dataIndex: 'create_time', width: '25%', className: 'titleStyle', slots: { customRender: 'time' } },
-  { title: 'Level', dataIndex: 'level', width: '120px', className: 'titleStyle', slots: { customRender: 'level' } },
-  { title: 'Device', dataIndex: 'domain', width: '12%', className: 'titleStyle' },
-  { title: 'Error Code', dataIndex: 'key', width: '20%', className: 'titleStyle', slots: { customRender: 'code' } },
-  { title: 'Hms Message', dataIndex: 'message_en', className: 'titleStyle', ellipsis: true, slots: { customRender: 'message' } },
+  {
+    title: 'Alarm Begin | End Time',
+    dataIndex: 'create_time',
+    width: '25%',
+    className: 'titleStyle',
+    slots: { customRender: 'time' }
+  },
+  {
+    title: 'Level',
+    dataIndex: 'level',
+    width: '120px',
+    className: 'titleStyle',
+    slots: { customRender: 'level' }
+  },
+  {
+    title: 'Device',
+    dataIndex: 'domain',
+    width: '12%',
+    className: 'titleStyle'
+  },
+  {
+    title: 'Error Code',
+    dataIndex: 'key',
+    width: '20%',
+    className: 'titleStyle',
+    slots: { customRender: 'code' }
+  },
+  {
+    title: 'Hms Message',
+    dataIndex: 'message_en',
+    className: 'titleStyle',
+    ellipsis: true,
+    slots: { customRender: 'message' }
+  },
 ]
 
 interface DeviceHmsData {

@@ -11,11 +11,9 @@
 import { onMounted, ref } from 'vue'
 import { getRoot } from '/@/root'
 import { getPlatformInfo } from '/@/api/manage'
-import { ELocalStorageKey } from '/@/types'
 import bambiLogo from '/@/assets/icons/BAMBI_notext.png'
 
 const root = getRoot()
-const username = ref(localStorage.getItem(ELocalStorageKey.Username))
 const workspaceName = ref('')
 
 onMounted(() => {

@@ -84,13 +84,33 @@ function setVisible (v: boolean, e?: Event) {
 
 // 表格
 const airportLogColumns: ColumnProps[] = [
-  { title: '机场日志', dataIndex: 'time', width: '70%', slots: { customRender: 'log_time' } },
-  { title: '文件大小', dataIndex: 'size', width: '30%', slots: { customRender: 'size' } },
+  {
+    title: '机场日志',
+    dataIndex: 'time',
+    width: '70%',
+    slots: { customRender: 'log_time' }
+  },
+  {
+    title: '文件大小',
+    dataIndex: 'size',
+    width: '30%',
+    slots: { customRender: 'size' }
+  },
 ]
 
 const droneLogColumns: ColumnProps[] = [
-  { title: '飞行器日志', dataIndex: 'time', width: '70%', slots: { customRender: 'log_time' } },
-  { title: '文件大小', dataIndex: 'size', width: '30%', slots: { customRender: 'size' } },
+  {
+    title: '飞行器日志',
+    dataIndex: 'time',
+    width: '70%',
+    slots: { customRender: 'log_time' }
+  },
+  {
+    title: '文件大小',
+    dataIndex: 'size',
+    width: '30%',
+    slots: { customRender: 'size' }
+  },
 ]
 
 const airportTableLogState = reactive({
@@ -116,7 +136,10 @@ function classifyDeviceLog () {
   }
 }
 
-const { getLogTime, getLogSize } = useDeviceLogUploadDetail()
+const {
+  getLogTime,
+  getLogSize
+} = useDeviceLogUploadDetail()
 
 async function onDownloadLog (fileId: string) {
   const { data } = await getUploadDeviceLogUrl({

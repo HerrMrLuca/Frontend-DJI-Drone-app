@@ -85,13 +85,33 @@ function setVisible (v: boolean, e?: Event) {
 
 // 表格
 const airportLogColumns: ColumnProps[] = [
-  { title: '机场日志', dataIndex: 'time', width: 100, slots: { customRender: 'log_time' } },
-  { title: '文件大小', dataIndex: 'size', width: 25, slots: { customRender: 'size' } },
+  {
+    title: '机场日志',
+    dataIndex: 'time',
+    width: 100,
+    slots: { customRender: 'log_time' }
+  },
+  {
+    title: '文件大小',
+    dataIndex: 'size',
+    width: 25,
+    slots: { customRender: 'size' }
+  },
 ]
 
 const droneLogColumns: ColumnProps[] = [
-  { title: '飞行器日志', dataIndex: 'time', width: 100, slots: { customRender: 'log_time' } },
-  { title: '文件大小', dataIndex: 'size', width: 25, slots: { customRender: 'size' } },
+  {
+    title: '飞行器日志',
+    dataIndex: 'time',
+    width: 100,
+    slots: { customRender: 'log_time' }
+  },
+  {
+    title: '文件大小',
+    dataIndex: 'size',
+    width: 25,
+    slots: { customRender: 'size' }
+  },
 ]
 
 const airportTableLogState = reactive({
@@ -140,7 +160,10 @@ async function getDeviceLogInfo () {
   airportTableLogState.tableLoading = true
   droneTableLogState.tableLoading = true
   try {
-    const { code, data } = await getDeviceLogList({
+    const {
+      code,
+      data
+    } = await getDeviceLogList({
       device_sn: props.device?.device_sn || '',
       domain: [DOMAIN.DOCK, DOMAIN.DRONE]
     })
@@ -190,7 +213,10 @@ async function uploadDeviceLog () {
   }
 }
 
-const { getLogTime, getLogSize } = useDeviceLogUploadDetail()
+const {
+  getLogTime,
+  getLogSize
+} = useDeviceLogUploadDetail()
 
 </script>
 
