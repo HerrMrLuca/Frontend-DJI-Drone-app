@@ -4,23 +4,37 @@
 
     <div>
       <h2>Model</h2>
-      <!--<p>{{ data.model }}</p>-->
+      <p>model</p>
       <!--Note: The code below might not work, please test it-->
-      <p>{{ data.device[0].device_name }}</p>
+      <!--<p>{{ data.device[0].device_name }}</p>-->
     </div>
 
     <div>
       <h2>Firmware</h2>
-      <!--<p>05.01.0000</p>-->
+      <p>05.01.0000</p>
       <!--Note: The code below might not work, please test it-->
-      <p>{{ data.device[0].firmware_version }}</p>
+      <!--<p>{{ data.device[0].firmware_version }}</p>-->
     </div>
 
     <div>
       <h2>SN</h2>
-      <!--<p>{{ data.sn }}</p>-->
+      <p>sn</p>
       <!--Note: The code below might not work, please test it-->
-      <p>{{ data.device[0].device_sn }}</p>
+      <!--<p>{{ data.device[0].device_sn }}</p>-->
+    </div>
+
+    <div>
+      <h2>Workspace</h2>
+      <p>workspace</p>
+      <!--Note: The code below might not work, please test it-->
+      <!--<p>{{ data.device[0].workspace_name }}</p>-->
+    </div>
+
+    <div>
+      <h2>Nickname</h2>
+      <p>nickname</p>
+      <!--Note: The code below might not work, please test it-->
+      <!--<p>{{ data.device[0].nickname }}</p>-->
     </div>
   </div>
 
