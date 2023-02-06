@@ -1,8 +1,7 @@
-import request, { IWorkspaceResponse, IListWorkspaceResponse } from '/@/api/http/request'
+import request, { IListWorkspaceResponse, IWorkspaceResponse } from '/@/api/http/request'
 import { DeviceValue, DOMAIN } from '/@/types/device'
 import { DeviceLogUploadStatusEnum } from '/@/types/device-log'
 import { ELocalStorageKey } from '/@/types'
-import { CURRENT_CONFIG } from '/@/api/http/config'
 
 const MNG_API_PREFIX = '/manage/api/v1'
 
@@ -24,7 +23,7 @@ export interface BriefDeviceInfo {
   device_callsign: string
 }
 
-export interface DeviceLogProgressInfo{
+export interface DeviceLogProgressInfo {
   device_sn: string,
   device_model_domain: DOMAIN,
   progress: number, // 进度
@@ -59,8 +58,8 @@ export interface GetDeviceUploadLogListRsp {
   user_name: string, // 用户
   logs_information: string, // 异常描述
   create_time: string, // 上传时间
-  status:DeviceLogUploadStatusEnum, // 日志上传状态
-  device_topo:{ // 设备topo
+  status: DeviceLogUploadStatusEnum, // 日志上传状态
+  device_topo: { // 设备topo
     hosts: BriefDeviceInfo[],
     parents: BriefDeviceInfo[]
   },
@@ -80,7 +79,7 @@ export async function getDeviceUploadLogList (params: GetDeviceUploadLogListPara
   return resp.data
 }
 
-export interface GetDeviceLogListParams{
+export interface GetDeviceLogListParams {
   device_sn: string,
   domain: DOMAIN[]
 }
@@ -104,7 +103,7 @@ export interface UploadDeviceLogBody {
   device_sn: string
   happen_time: string // 发生时间
   logs_information: string // 异常描述
-  files:{
+  files: {
     list: DeviceLogItem[],
     device_sn: string,
     module: DOMAIN
@@ -152,7 +151,7 @@ export async function deleteDeviceLogUpload (body: DeleteDeviceLogUploadBody): P
   return result.data
 }
 
-export interface GetUploadDeviceLogUrlParams{
+export interface GetUploadDeviceLogUrlParams {
   logs_id: string,
   file_id: string,
 }

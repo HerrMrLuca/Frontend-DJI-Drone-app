@@ -37,6 +37,9 @@ export function createAxiosInstance (config?: AxiosRequestConfig, commonIntercep
   return instance
 }
 
-const singleAxios = createAxiosInstance({}, { request: true, response: false })
+const singleAxios = createAxiosInstance({}, {
+  request: true,
+  response: false
+})
 
 export default singleAxios

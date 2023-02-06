@@ -1,14 +1,7 @@
-import { message } from 'ant-design-vue'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-interface WebSocketOptions {
-  data: any
-  cache?: boolean | string
-  destroyCache?: string
-}
-
 export interface MessageHandler {
-  (data : {[key: string]: any}): void
+  (data: { [key: string]: any }): void
 }
 
 /**
@@ -71,10 +64,6 @@ class ConnectWebSocket {
     const data = JSON.parse(msg.data)
     this._messageHandler && this._messageHandler(data)
     // console.log('接受消息', message)
-  }
-
-  sendMessage = (message: WebSocketOptions): void => {
-    this._socket?.send(JSON.stringify(message.data))
   }
 
   close () {

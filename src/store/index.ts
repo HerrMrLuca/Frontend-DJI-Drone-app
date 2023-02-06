@@ -216,7 +216,7 @@ const actions: ActionTree<RootStateType, RootStateType> = {
     const obj:{
       [key:string]:string
     } = {}
-    layers.forEach(layer => {
+    layers.forEach((layer: any) => {
       if (layer.type === LayerType.Default) {
         obj.default = layer.id
       } else {

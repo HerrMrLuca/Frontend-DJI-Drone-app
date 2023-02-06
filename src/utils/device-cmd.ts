@@ -1,6 +1,6 @@
 import { DeviceInfoType } from '/@/types/device'
-import { DeviceCmd, DeviceCmdItem, DeviceCmdExecuteInfo, DeviceCmdStatusText, DeviceCmdExecuteStatus } from '/@/types/device-cmd'
-import { AirportStorage, CoverStateEnum, PutterStateEnum, ChargeStateEnum, SupplementLightStateEnum } from '/@/types/airport-tsa'
+import { DeviceCmd, DeviceCmdExecuteInfo, DeviceCmdExecuteStatus, DeviceCmdItem, DeviceCmdStatusText } from '/@/types/device-cmd'
+import { AirportStorage, ChargeStateEnum, CoverStateEnum, PutterStateEnum, SupplementLightStateEnum } from '/@/types/airport-tsa'
 import { getBytesObject } from './bytes'
 import { DEFAULT_PLACEHOLDER } from './constants'
 
@@ -11,7 +11,11 @@ import { DEFAULT_PLACEHOLDER } from './constants'
  * @returns
  */
 export function updateDeviceCmdInfoByOsd (cmdList: DeviceCmdItem[], deviceInfo: DeviceInfoType) {
-  const { device, dock, gateway } = deviceInfo || {}
+  const {
+    device,
+    dock,
+    gateway
+  } = deviceInfo || {}
   if (!cmdList || cmdList.length < 1) {
     return
   }
@@ -116,15 +120,13 @@ function getChargeState (cmdItem: DeviceCmdItem, airportProperties: any) {
 // 机场存储格式化
 function deviceFormat (cmdItem: DeviceCmdItem, airportProperties: any) {
   const airportStorage = airportProperties?.storage
-  const value = getAirportStorage(airportStorage)
-  cmdItem.status = value
+  cmdItem.status = getAirportStorage(airportStorage)
 }
 
 // 机场存储格式化
 function droneFormat (cmdItem: DeviceCmdItem, droneProperties: any) {
   const droneStorage = droneProperties?.storage
-  const value = getAirportStorage(droneStorage)
-  cmdItem.status = value
+  cmdItem.status = getAirportStorage(droneStorage)
 }
 
 // 获取机场存储容量
@@ -168,7 +170,7 @@ function getSupplementLightState (cmdItem: DeviceCmdItem, airportProperties: any
 
 /**
  * 交换指令
- * @param cmd
+ * @param cmdItem
  */
 function exchangeDeviceCmd (cmdItem: DeviceCmdItem) {
   if (cmdItem.oppositeCmdKey) {
@@ -178,27 +180,10 @@ function exchangeDeviceCmd (cmdItem: DeviceCmdItem) {
   }
 }
 
-// /**
-//  * 更新简单指令发送情况更新信息
-//  * @param cmd
-//  */
-// export function updateDeviceSingleCmdInfo (cmdItem: DeviceCmdItem) {
-//   // 补光灯
-//   if (cmdItem.cmdKey === DeviceCmd.SupplementLightOpen) {
-//     cmdItem.status = DeviceCmdStatusText.DeviceSupplementLightOpenNormalText
-//     cmdItem.operateText = DeviceCmdStatusText.DeviceSupplementLightOpenBtnText
-//     exchangeDeviceCmd(cmdItem)
-//   } else if (cmdItem.cmdKey === DeviceCmd.SupplementLightClose) {
-//     cmdItem.status = DeviceCmdStatusText.DeviceSupplementLightCloseNormalText
-//     cmdItem.operateText = DeviceCmdStatusText.DeviceSupplementLightCloseBtnText
-//     exchangeDeviceCmd(cmdItem)
-//   }
-// }
-
 /**
  * 根据指令执行消息更新信息
- * @param cmd
- * @param deviceCmdExecuteInfo
+ * @param cmdList
+ * @param deviceCmdExecuteInfos
  * @returns
  */
 export function updateDeviceCmdInfoByExecuteInfo (cmdList: DeviceCmdItem[], deviceCmdExecuteInfos?: DeviceCmdExecuteInfo[]) {

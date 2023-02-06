@@ -1,4 +1,5 @@
-import { createApp, ComponentCustomProperties, App as VueApp } from 'vue'
+import { App as VueApp, ComponentCustomProperties, createApp } from 'vue'
+
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $aMap: any // Map类
@@ -17,8 +18,4 @@ export function createInstance (App: any): VueApp {
 
 export function getRoot (): ComponentCustomProperties {
   return root
-}
-
-export function getApp (): VueApp {
-  return app
 }

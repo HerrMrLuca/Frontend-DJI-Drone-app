@@ -1,5 +1,6 @@
 import { message } from 'ant-design-vue'
 import request, { IPage, IWorkspaceResponse } from '/@/api/http/request'
+
 const HTTP_PREFIX = '/media/api/v1'
 
 // Get Media Files

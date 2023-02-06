@@ -1,12 +1,13 @@
 import axios from 'axios'
-import { uuidv4 } from '/@/utils/uuid'
 import { CURRENT_CONFIG } from './config'
 import { message } from 'ant-design-vue'
 import router from '/@/router'
 import { ELocalStorageKey, ERouterName, EUserType } from '/@/types/enums'
+
 export * from './type'
 
 const REQUEST_ID = 'X-Request-Id'
+
 function getAuthToken () {
   return localStorage.getItem(ELocalStorageKey.Token)
 }

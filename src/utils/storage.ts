@@ -7,8 +7,7 @@ function getStorageData (key: EStorageKey, parse?: boolean): any {
   const value = window.localStorage.getItem(key)
   if (parse && value) {
     try {
-      const result = JSON.parse(value)
-      return result
+      return JSON.parse(value)
     } catch (e) {
       consoleWarn('appStorage.get failed, err:', e)
       return null
