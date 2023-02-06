@@ -90,9 +90,7 @@
         </div>
 
         <div class="wind">
-          <div class="wind-dir"> <!--todo check with icon and rotation
-          {"1":"North","2":"Northeast","3":"East","4":"Southeast","5":"South","6":"Southwest","7":"West","8":"Northwest"} -->
-            <!--          <h6>Direction</h6>-->
+          <div class="wind-dir">
             <div class="compass">
               <img :src="cardinalPoints" class="cardinal-points">
               <img :class="direction" :src="needle" :style="{transform: 'rotate(' + direction + 'deg)'}" class="needle">
@@ -142,9 +140,12 @@
       </div>
       <br>
     </div>
+
+    <!-- todo uncomment for testing
     <div>
-      <button @click="testingValue"></button>
+         <button @click="testingValue"></button>
     </div>
+    -->
   </div>
 </template>
 
@@ -362,7 +363,6 @@ function updateMap () {
 const fakeLocation = [[48.356453, 14.356456], [48.345346, 14.358786], [48.387664, 14.456456]]
 let index = 0
 
-// TODO 2 add something until map is loaded
 function getLocation () {
   // TODO Change fake to real
   if (connected.value && onlineDevices.data[0] && testing.value === false) {
@@ -472,6 +472,8 @@ function updateData () {
     data.is_fixed = deviceInfo.value[onlineDevices.data[0].sn].position_state.is_fixed
     data.storage = percentage(deviceInfo.value[onlineDevices.data[0].sn].storage.used, deviceInfo.value[onlineDevices.data[0].sn].storage.total)
   } else if (testing.value || connected.value === false) {
+    connected.value = true // TODO remove after testing
+
     data.battery_percent -= 1
     data.remain_flight_time -= 3
     data.heading = Math.round((data.heading - 12) * 10) / 10
@@ -595,65 +597,7 @@ async function getWeather () {
       data.temperature = json.hourly.temperature_2m[10]
     })
 }
-
 // endregion
-
-// region ---------------------------- compass logic  ----------------------------
-
-// TODO delete in production
-const dires = [
-  0, 45, 90, 135, 180, 225, 270, 315
-]
-
-function changeDirWind () {
-  direction.value = closestAngle(direction.value, dires[data.wind_direction])
-  connected.value = true // TODO remove after testing
-}
-
-function changeDir () {
-  droneDir.value = closestAngle(droneDir.value, data.heading)
-}
-
-function closestAngle (from: number, to: number) {
-  // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
-  return from + ((((to - from) % 360) + 540) % 360) - 180
-}
-
-// todo 5 implement this method in wind_direction to get closest target for animation
-function chooseDeg (direction: number, deg: number) {
-  switch (data.wind_direction) {
-    case 0:
-      direction = closestAngle(dires['0'], 0)
-      break
-    case 1:
-      direction = closestAngle(direction, 45) // todo 5 change
-      break
-    case 2:
-      direction = closestAngle(direction, 90)
-      break
-    case 3:
-      direction = closestAngle(direction, 135)
-      break
-    case 4:
-      direction = closestAngle(direction, 180)
-      break
-    case 5:
-      direction = closestAngle(direction, 225)
-      break
-    case 6:
-      direction = closestAngle(direction, 270)
-      break
-    case 7:
-      direction = closestAngle(direction, 315)
-      break
-  }
-  /*
-  if (deg !== -20) {
-    direction = closestAngle(direction, deg)
-  }
-  */
-  return direction // direction in degrees for the animiation
-}
 
 function testingValue () {
   if (testing.value) {
@@ -676,11 +620,26 @@ function testingValue () {
   console.log(testing.value)
 }
 
+// region ---------------------------- compass logic  ----------------------------
+const dires = [
+  0, 45, 90, 135, 180, 225, 270, 315
+]
+
+function changeDirWind () {
+  direction.value = closestAngle(direction.value, dires[data.wind_direction])
+}
+
+function changeDir () {
+  droneDir.value = closestAngle(droneDir.value, data.heading)
+}
+
+// implement this method in wind_direction to get closest target for animation
+function closestAngle (from: number, to: number) {
+  // https://stackoverflow.com/questions/19618745/css3-rotate-transition-doesnt-take-shortest-way
+  return from + ((((to - from) % 360) + 540) % 360) - 180
+}
+
 // endregion
-
-// todo 2 add little animation for warning and alert
-
-// todo 2 https://open-meteo.com/ search for good api for temperature and fetch data or maybe drone has data
 </script>
 
 <style lang="scss" scoped>
@@ -875,7 +834,7 @@ img {
       p {
         display: block;
         flex-basis: 60%;
-        text-align: right;
+        text-align: center;
       }
     }
 
@@ -909,10 +868,6 @@ img {
         display: block;
         padding-left: 0;
       }
-    }
-
-    .gps {
-      align-items: flex-end;
     }
 
     .map {
@@ -1111,6 +1066,10 @@ img {
   .home-view {
     .content {
       max-width: 800px;
+
+      .content-alert:after {
+        top: 2.6em;
+      }
     }
   }
 }
@@ -1136,9 +1095,6 @@ img {
 }
 
 @media screen and (min-width: 1400px) {
-  p {
-
-  }
   h5 {
     font-size: 1.5rem;
   }
@@ -1146,7 +1102,7 @@ img {
     font-size: 1.2rem;
   }
   .num {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
   .unit {
     font-size: 1rem;
@@ -1154,6 +1110,35 @@ img {
   .home-view {
     .content {
       max-width: 1100px;
+
+      .content-alert:after {
+        right: 1em;
+        top: 3em;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1800px) {
+  h5 {
+    font-size: 1.8rem;
+  }
+  h6 {
+    font-size: 1.4rem;
+  }
+  .num {
+    font-size: 1.9rem;
+  }
+  .unit {
+    font-size: 1.2rem;
+  }
+  .home-view {
+    .content {
+      max-width: 1400px;
+
+      .content-alert:after {
+        top: 3.3em;
+      }
     }
   }
 }

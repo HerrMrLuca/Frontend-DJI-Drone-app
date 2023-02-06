@@ -34,14 +34,14 @@ let wrapperCheck: any = null // to determine if diff page was loaded
 
 function checkButton () {
   wrapperCheck = document.getElementsByClassName('livestream-wrapper')
-  console.log(wrapperCheck)
+  // console.log(wrapperCheck)
   if (wrapperCheck.length !== 0) {
     if (!buttonLivestream) { // not found yet
       buttonLivestream = document.getElementById('playerButton') // try get
       if (buttonLivestream) { // if not null
         buttonLivestream.addEventListener('click', () => {
           fullscreen.value = !fullscreen.value
-          console.log('fullscreen.value =' + fullscreen.value)
+          // console.log('fullscreen.value =' + fullscreen.value)
         })
       }
     }
@@ -49,7 +49,7 @@ function checkButton () {
     buttonLivestream = null
     fullscreen.value = false
   }
-  console.log('end of function ' + fullscreen.value + '  ' + buttonLivestream)
+  // console.log('end of function ' + fullscreen.value + '  ' + buttonLivestream)
 }
 
 const messageHandler = async (payload: any) => {

@@ -9,7 +9,7 @@
             selected: selectedRoute(item)
           }"
         :to="item.path"
-      > <!--TODO 4 check click behavior-->
+      >
         <span @click="selectedRoute(item)">
           <img :alt="`Icon for page ${item.label}`"
                :src="item.icon"
@@ -183,7 +183,9 @@ p {
     justify-content: flex-end;
 
     .items {
-      max-width: 500px;
+      max-width: 600px;
+      justify-content: flex-end;
+      gap: calc(var(--font-size-bar)/3);
 
       a {
         span {
