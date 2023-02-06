@@ -97,7 +97,7 @@ const onSubmit = async (e: any) => {
   img {
     width: 50vw;
     height: auto;
-    max-width: 200px;
+    max-width: 180px;
   }
 
   .title {
@@ -133,15 +133,25 @@ const onSubmit = async (e: any) => {
 
 @media screen and (orientation: landscape) {
   .login {
-    flex-direction: row;
+    // flex-direction: row;
     justify-content: space-evenly;
     align-content: center;
 
     .title {
       margin-bottom: 0;
     }
-  }
 
+    form {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      max-width: 200px;
+
+      .login-button {
+
+        margin: 0; //reset button margin except top
+      }
+    }
+  }
 }
 
 </style>

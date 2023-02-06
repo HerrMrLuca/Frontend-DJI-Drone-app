@@ -9,15 +9,17 @@
 <!--</template>-->
 
 <template>
-  <div id="livestream">
-    <div id="player" :class="{fullscreen: fullscreen}">
-      <button id="playerButton" @click="manageFullscreen"><img :src="expand"></button>
+  <div id="livestream" :class="{fullscreen: fullscreen}">
+    <div id="player">
+      <button id="playerButton" @click="manageFullscreen">
+        <img v-if="!fullscreen" :src="expand">
+        <img v-else :src="shrink">
+      </button>
     </div>
-    <div class="flex-row">
+    <div class="selection">
       <a-select
-        placeholder="Select Drone"
-        style="width:150px"
-        @select="onDroneSelect"
+          placeholder="Select Drone"
+          @select="onDroneSelect"
       >
         <a-select-option
           v-for="item in dronePara.droneList"
@@ -27,10 +29,8 @@
         </a-select-option>
       </a-select>
       <a-select
-        class="ml10"
-        placeholder="Select Camera"
-        style="width:150px"
-        @select="onCameraSelect"
+          placeholder="Select Camera"
+          @select="onCameraSelect"
       >
         <a-select-option
           v-for="item in dronePara.cameraList"
@@ -39,9 +39,10 @@
         >{{ item.label }}
         </a-select-option>
       </a-select>
-    </div>
-    <div>
-      <button large type="primary" @click="onStart">Play</button>
+      <div class="buttons">
+        <button @click="onStart">Play</button>
+        <button @click="onStop">Stop</button>
+      </div>
     </div>
   </div>
 </template>
@@ -55,6 +56,7 @@ import { CURRENT_CONFIG as config } from '/@/api/http/config'
 import { getLiveCapacity, startLivestream, stopLivestream } from '/@/api/manage'
 import { getRoot } from '/@/root'
 import expand from '/@/assets/icons/expand.png'
+import shrink from '/@/assets/icons/shrink_g.png'
 
 const root = getRoot()
 const fullscreen = ref(false)
@@ -152,6 +154,7 @@ onMounted(() => {
   console.log(dronePara)
 })
 
+// TODO 5 check if correct and works else delete
 onBeforeUnmount(() => {
   onStop()
   // Subscribe when a remote user publishes a stream
@@ -286,11 +289,11 @@ function manageFullscreen () {
 </script>
 
 <style lang="scss" scoped>
-@import '/@/styles/index.scss';
+//@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
 
 $width-player: 90vw;
-$height-player: calc(90vh - (var(--bar-height)));
+$height-player: calc(80vh - (var(--bar-height)));
 
 img {
   display: block;
@@ -298,53 +301,120 @@ img {
   width: 20px;
 }
 
-button {
+#playerButton {
   position: absolute;
   bottom: 3px;
   right: 3px;
   background-color: transparent;
   border: none;
   padding: 0;
+  z-index: 200;
 }
 
 #livestream {
-  height: 100%;
+  padding-top: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-around;
+
+  #player {
+    position: relative;
+    align-self: center;
+    width: $width-player;
+    height: calc(($width-player / 16) * 9); // 16:9
+    border: 1px solid;
+  }
 }
 
-#player:nth-child(1n+1) {
+.selection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+
+  padding: 2rem 20% 0;
+
+  .ant-select{
+    width: 100%;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.7em;
+
+  button {
+    padding: 0.2em 0.5em;
+    color: white;
+    background-color: $bambi-shade-darker-2;
+    border: $bambi-shade-darker-3 1px solid;
+  }
+
+  button:hover {
+      cursor: pointer;
+  }
+}
+
+#player:nth-child(1n+2) {
   display: none;
 }
 
-#player {
-  position: relative;
-  align-self: center;
-  margin: 0 auto;
-  //width: 720px;
-  width: $width-player;
-  //height: 420px;
-  height: calc(($width-player / 16) * 9); // 16:9
-  border: 1px solid;
-}
+#livestream.fullscreen {
+  padding-top: 0;
+  height: 100%;
+  justify-content: center;
 
-#player.fullscreen {
-  margin: 0;
-  //position: fixed;
-  //top: 0 - var(--bar-height);
+  #player {
+    width: 100vw;
+    height: calc((100vw / 16) * 9); // 16:9
+  }
 
-  width: 100vw;
-  height: calc((100vw / 16) * 9); // 16:9
+  .selection {
+    display: none;
+  }
 }
 
 @media screen and (orientation: landscape) {
-  #player {
-    width: calc(($height-player / 9) * 16);
-    height: $height-player;
+  #livestream {
+    height: 100%;
+    flex-direction: row;
+    align-items: stretch;
+
+    #player {
+      width: calc(($height-player / 9) * 16);
+      height: $height-player;
+    }
   }
-  #player.fullscreen {
-    height: 100vh;
-    width: calc((100vh / 9) * 16);
+
+  .selection{
+    flex-grow: 0.5;
+    padding: 0;
+  }
+
+  #livestream.fullscreen {
+    #player {
+      width: calc((100vh / 9) * 16);
+      height: 100vh;
+    }
+  }
+}
+
+@media screen and (orientation: landscape) and (min-width: 1000px) {
+  .ant-select, button{
+    font-size: 1.2rem;
+  }
+
+  img{
+    height: 30px;
+    width: 30px;
+  }
+
+  #playerButton {
+    bottom: 5px;
+    right: 5px;
   }
 }
 

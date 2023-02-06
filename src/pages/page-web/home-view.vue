@@ -2,12 +2,12 @@
 <template>
   <div class="outer-div">
     <div class="home-view">
-      <h1>Home</h1>
       <div class="content">
         <div class="north">
           <div class="content-container">
             <div class="icon-container north">
-              <img :src="compass" :style="{rotate: droneDir + 'deg'}" alt="icon of compass" class="home-icon compass">
+              <img :src="compass" :style="{transform: 'rotate('+ droneDir + 'deg)'}" alt="icon of compass"
+                   class="home-icon compass">
             </div>
             <p v-if="!showData" class="num">--°</p>
             <p v-else class="num">{{ data.heading }}°</p>
@@ -16,7 +16,11 @@
         </div>
 
         <div class="gps">
-          <div>
+          <div class="content-container">
+            <div class="icon-container">
+              <img :src="satellite" alt="icon of satellite"
+                   class="satellite">
+            </div>
             <p v-if="!showData" class="num">--<span class="unit">Satellites</span></p>
             <p v-else-if="data.is_fixed == 2" class="num">{{ data.rtk_number }}<span class="unit">RTK</span></p>
             <p v-else class="num">{{ data.gps_number }}<span class="unit">Satellites</span></p>
@@ -27,7 +31,10 @@
         <div class="battery">
           <div class="content-container">
             <div class="icon-container">
-              <img :src="battery" alt="icon of battery" class="home-icon">
+              <img v-if="data.battery_percent <= 25" :src="battery25" alt="icon of battery 25%" class="home-icon">
+              <img v-else-if="data.battery_percent <= 50" :src="battery50" alt="icon of battery 50%" class="home-icon">
+              <img v-else-if="data.battery_percent <= 75" :src="battery75" alt="icon of battery 75%" class="home-icon">
+              <img v-else :src="battery100" alt="icon of battery 100%" class="home-icon">
             </div>
             <p v-if="!showData" class="num">--<span class="unit">%</span></p>
             <p v-else class="num">{{ data.battery_percent }}<span class="unit">%</span></p>
@@ -86,7 +93,7 @@
           <div class="wind-dir">
             <div class="compass">
               <img :src="cardinalPoints" class="cardinal-points">
-              <img :class="direction" :src="needle" :style="{rotate: direction + 'deg'}" class="needle">
+              <img :class="direction" :src="needle" :style="{transform: 'rotate(' + direction + 'deg)'}" class="needle">
             </div>
           </div>
 
@@ -133,19 +140,27 @@
       </div>
       <br>
     </div>
+    <!-- TODO uncomment for testing
     <div style="text-align: center">
       <button class="test-button" @click="toggleTestingValue">Dummy Test</button>
     </div>
+    -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import battery from '/@/assets/icons/icons_homeview/battery.png'
+import battery25 from '/@/assets/icons/icons_homeview/battery25.png'
+import battery50 from '/@/assets/icons/icons_homeview/battery50.png'
+import battery75 from '/@/assets/icons/icons_homeview/battery75.png'
+import battery100 from '/@/assets/icons/icons_homeview/battery100.png'
 import compass from '/@/assets/icons/icons_homeview/compass 1.png'
 import storage from '/@/assets/icons/icons_homeview/micro-sd-karte.png'
 import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
 import needle from '/@/assets/icons/icons_homeview/needle.png'
+import satellite from '/@/assets/icons/icons_homeview/satelliteV2.png'
 import loading from '/@/assets/icons/loading.webp'
+
 // leaflet
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -337,7 +352,6 @@ function updateMap () {
 const fakeLocation: any = [[48.356453, 14.6456], [60.3436, 24.358786], [28.7664, 4.456456]]
 let index = 0
 
-// TODO 2 add something until map is loaded
 function getLocation () {
   let latLong: [number, number] = [0, 0]
   if (connected.value && onlineDevices.data[0]) {
@@ -545,7 +559,6 @@ async function updateWeather () {
       data.temperature = json.hourly.temperature_2m[10]
     })
 }
-
 // endregion
 
 // region ---------------------------- compass logic  ----------------------------
@@ -618,13 +631,6 @@ h5 {
   text-align: center;
 }
 
-h1 {
-  font-family: 'Fredoka', sans-serif;
-  color: $bambi-main;
-  display: none;
-  margin-bottom: 0;
-}
-
 img {
   max-width: 100%;
   max-height: auto;
@@ -650,7 +656,7 @@ img {
   background-color: $bambi-white;
   padding: 2vw;
 
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .loading {
@@ -768,7 +774,7 @@ img {
         display: grid;
         width: 100%;
         grid-template-columns: 30% 60%;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         gap: 0.1em;
 
@@ -787,15 +793,13 @@ img {
     .north {
       .compass {
         transform-origin: center;
-        transition: rotate 0.5s ease-in-out;
-        height: 100%;
-        width: auto;
+        transition: transform 0.5s ease-in-out;
       }
 
       p {
         display: block;
         flex-basis: 60%;
-        text-align: right;
+        text-align: center;
       }
     }
 
@@ -817,7 +821,7 @@ img {
 
           .needle {
             position: absolute;
-            transition: rotate 0.5s ease-in-out;
+            transition: transform 0.5s ease-in-out;
             width: 30%;
           }
         }
@@ -829,10 +833,6 @@ img {
         display: block;
         padding-left: 0;
       }
-    }
-
-    .gps {
-      align-items: flex-end;
     }
 
     .map {
@@ -921,11 +921,6 @@ img {
 }
 
 @media screen and (orientation: landscape) {
-  h1 {
-    //display: block;
-    font-size: 2rem;
-  }
-
   .home-view {
     .content {
       max-width: 700px;
@@ -1036,6 +1031,10 @@ img {
   .home-view {
     .content {
       max-width: 800px;
+
+      .content-alert:after {
+        top: 2.6em;
+      }
     }
   }
 }
@@ -1061,9 +1060,6 @@ img {
 }
 
 @media screen and (min-width: 1400px) {
-  p {
-
-  }
   h5 {
     font-size: 1.5rem;
   }
@@ -1071,7 +1067,7 @@ img {
     font-size: 1.2rem;
   }
   .num {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
   .unit {
     font-size: 1rem;
@@ -1079,6 +1075,35 @@ img {
   .home-view {
     .content {
       max-width: 1100px;
+
+      .content-alert:after {
+        right: 1em;
+        top: 3em;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1800px) {
+  h5 {
+    font-size: 1.8rem;
+  }
+  h6 {
+    font-size: 1.4rem;
+  }
+  .num {
+    font-size: 1.9rem;
+  }
+  .unit {
+    font-size: 1.2rem;
+  }
+  .home-view {
+    .content {
+      max-width: 1400px;
+
+      .content-alert:after {
+        top: 3.3em;
+      }
     }
   }
 }

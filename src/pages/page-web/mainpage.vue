@@ -32,14 +32,14 @@ let wrapperCheck: any = null // to determine if diff page was loaded
 
 function checkButton () {
   wrapperCheck = document.getElementsByClassName('livestream-wrapper')
-  console.log(wrapperCheck)
+  // console.log(wrapperCheck)
   if (wrapperCheck.length !== 0) {
     if (!buttonLivestream) { // not found yet
       buttonLivestream = document.getElementById('playerButton') // try get
       if (buttonLivestream) { // if not null
         buttonLivestream.addEventListener('click', () => {
           fullscreen.value = !fullscreen.value
-          console.log('fullscreen.value =' + fullscreen.value)
+          // console.log('fullscreen.value =' + fullscreen.value)
         })
       }
     }
@@ -47,7 +47,7 @@ function checkButton () {
     buttonLivestream = null
     fullscreen.value = false
   }
-  console.log('end of function ' + fullscreen.value + '  ' + buttonLivestream)
+  // console.log('end of function ' + fullscreen.value + '  ' + buttonLivestream)
 }
 
 const messageHandler = async (payload: any) => {
@@ -182,13 +182,12 @@ p {
   width: 100%;
   grid-row: 1/2;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
-  clip-path: inset(-5px 0px -5px -5px);
+  clip-path: inset(-10px 0px -10px -10px);
 }
 
 .content {
   height: 100%;
   grid-row: 2/3;
-  overflow-y: auto;
 }
 
 .bottom-bar {
@@ -207,8 +206,8 @@ p {
 
     .bottom-bar {
       grid-row: 1/2;
-      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
-      clip-path: inset(-5px -5px -5px 0px);
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
+      clip-path: inset(-10px -10px -10px 0px);
     }
   }
 

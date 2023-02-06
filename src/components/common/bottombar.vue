@@ -33,7 +33,7 @@ const icons = {
   homeIcon,
   videoIcon,
   settingsIcon,
-  // note add icon here
+  // TODO add icon here when adding new routes
 }
 
 interface IOptions {
@@ -59,6 +59,7 @@ export default defineComponent({
   name: 'Bottom-bar',
   setup () {
     const root = getRoot()
+    // TODO add routes and names for new pages
     const options = [
       {
         key: 0,
@@ -182,7 +183,9 @@ p {
     justify-content: flex-end;
 
     .items {
-      max-width: 500px;
+      max-width: 600px;
+      justify-content: flex-end;
+      gap: calc(var(--font-size-bar)/3);
 
       a {
         span {
