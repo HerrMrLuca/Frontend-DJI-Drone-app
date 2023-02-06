@@ -5,39 +5,35 @@
       <p class="fz35 pb60 title">Bambi</p>
     </div>
     <a-form
-        layout="inline"
-        :model="formState"
-        class="flex-display flex-align-stretch flex-row flex-justify-center flex-align-center"
+      :model="formState"
+      class="flex-display flex-align-stretch flex-row flex-justify-center flex-align-center"
+      layout="inline"
     >
       <a-form-item class="name">
         <a-input v-model:value="formState.username" placeholder="Username">
-          <template #prefix
-          >
-            <UserOutlined style="color: rgba(0, 0, 0, 0.25)"
-            />
+          <template #prefix>
+            <UserOutlined style="color: rgba(0, 0, 0, 0.25)"/>
           </template>
         </a-input>
       </a-form-item>
       <a-form-item class="password">
         <a-input
-            v-model:value="formState.password"
-            type="password"
-            placeholder="Password"
+          v-model:value="formState.password"
+          placeholder="Password"
+          type="password"
         >
-          <template #prefix
-          >
-            <LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-            />
+          <template #prefix>
+            <LockOutlined style="color: rgba(0, 0, 0, 0.25)"/>
           </template>
         </a-input>
       </a-form-item>
       <a-form-item class="login-button">
         <a-button
-            class="m0"
-            type="primary"
-            html-type="submit"
-            :disabled="loginBtnDisabled"
-            @click="onSubmit"
+          :disabled="loginBtnDisabled"
+          class="m0"
+          html-type="submit"
+          type="primary"
+          @click="onSubmit"
         >
           Login
         </a-button>
@@ -48,15 +44,13 @@
 </template>
 
 <script lang="ts" setup>
-import djiLogo from '/@/assets/icons/dji_logo.png'
 import bambiLogo from '/@/assets/icons/BAMBI_notext.png'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import { reactive, computed, UnwrapRef } from 'vue'
+import { computed, reactive, UnwrapRef } from 'vue'
 import { login, LoginBody } from '/@/api/manage'
 import { getRoot } from '/@/root'
 import { ELocalStorageKey, ERouterName, EUserType } from '/@/types'
-import router from '/@/router'
 
 // TODO 2 postpone displaying until the picture is done loading
 
@@ -103,7 +97,7 @@ const onSubmit = async (e: any) => {
   img {
     width: 50vw;
     height: auto;
-    max-width: 200px;
+    max-width: 180px;
   }
 
   .title {
@@ -128,9 +122,7 @@ const onSubmit = async (e: any) => {
     }
 
     .login-button {
-
       margin: 5px 0 0; //reset button margin except top
-
       button {
         background-color: $bambi-shade-darker-2;
         border-color: $bambi-shade-darker-3;
@@ -141,15 +133,25 @@ const onSubmit = async (e: any) => {
 
 @media screen and (orientation: landscape) {
   .login {
-    flex-direction: row;
+    // flex-direction: row;
     justify-content: space-evenly;
     align-content: center;
 
-    .title{
+    .title {
       margin-bottom: 0;
     }
-  }
 
+    form {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      max-width: 200px;
+
+      .login-button {
+
+        margin: 0; //reset button margin except top
+      }
+    }
+  }
 }
 
 </style>

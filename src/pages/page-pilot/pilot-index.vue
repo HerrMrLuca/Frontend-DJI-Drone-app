@@ -1,39 +1,40 @@
 <template>
   <div class="login flex-column flex-justify-center flex-align-center m0 b0">
-    <a-image
-      style="width: 17vw; height: 10vw; margin-bottom: 50px"
-      :src="djiLogo"
-    />
-    <p class="logo fz35 pb50">Pilot Cloud API Demo</p>
+    <div class="logo">
+      <img :src="bambiLogo" alt="Bambi logo"/>
+      <p class="fz35 pb60 title">Bambi</p>
+    </div>
     <a-form
-      layout="inline"
       :model="formState"
       class="flex-row flex-justify-center flex-align-center"
+      layout="inline"
     >
       <a-form-item>
         <a-input v-model:value="formState.username" placeholder="Username">
           <template #prefix
-            ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          >
+            <UserOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+          </template>
         </a-input>
       </a-form-item>
       <a-form-item>
         <a-input
           v-model:value="formState.password"
-          type="password"
           placeholder="Password"
+          type="password"
         >
           <template #prefix
-            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-          /></template>
+          >
+            <LockOutlined style="color: rgba(0, 0, 0, 0.25)"/>
+          </template>
         </a-input>
       </a-form-item>
-      <a-form-item>
+      <a-form-item class="login-button">
         <a-button
-          class="m0"
-          type="primary"
-          html-type="submit"
           :disabled="formState.user === '' || formState.password === ''"
+          class="m0"
+          html-type="submit"
+          type="primary"
           @click="onSubmit"
         >
           Login
@@ -44,16 +45,15 @@
 </template>
 
 <script lang="ts" setup>
+import bambiLogo from '/@/assets/icons/BAMBI_notext.png'
 import { message } from 'ant-design-vue'
 import { onMounted, reactive, ref, UnwrapRef } from 'vue'
 import { CURRENT_CONFIG } from '/@/api/http/config'
 import { login, LoginBody, refreshToken } from '/@/api/manage'
 import apiPilot from '/@/api/pilot-bridge'
 import { getRoot } from '/@/root'
-import router from '/@/router'
 import { EComponentName, ELocalStorageKey, ERouterName, EUserType } from '/@/types'
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import djiLogo from '/@/assets/icons/dji_logo.png'
+import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 
 const root = getRoot()
 
@@ -138,12 +138,50 @@ function verifyLicense () {
 </script>
 
 <style lang="scss" scoped>
-@import '/@/styles/index.scss';
+//@import '/@/styles/index.scss';
+@import "/@/styles/variables.scss";
+
 .login {
-  // background-color: $dark-highlight;
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  img {
+    width: 50vw;
+    height: auto;
+    max-width: 180px;
+  }
+
+  .title {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    margin-bottom: 20vh;
+  }
+
+  background-color: $bambi-nat-ultralight;
   height: 100vh;
+
+  form {
+    .name,
+    .password {
+      width: 100%;
+    }
+
+    .login-button {
+
+      margin: 5px 0 0; //reset button margin except top
+
+      button {
+        background-color: $bambi-shade-darker-2;
+        border-color: $bambi-shade-darker-3;
+      }
+    }
+  }
 }
-.logo {
-  color: $primary;
-}
+
 </style>
