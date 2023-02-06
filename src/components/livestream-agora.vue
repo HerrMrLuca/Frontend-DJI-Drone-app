@@ -95,7 +95,7 @@ const agoraPara = reactive({
   appid: config.agoraAPPID,
   token: config.agoraToken,
   channel: config.agoraChannel,
-  uid: 123456,
+  uid: 2892130292,
   stream: {}
 })
 const dronePara = reactive({

@@ -160,6 +160,8 @@ import cardinalPoints from '/@/assets/icons/icons_homeview/compass.png'
 import needle from '/@/assets/icons/icons_homeview/needle.png'
 import satellite from '/@/assets/icons/icons_homeview/satelliteV2.png'
 import loading from '/@/assets/icons/loading.webp'
+import drone from '/@/assets/icons/drone.png'
+import markerIcon from '/@/assets/icons/markerIcon.png'
 
 // leaflet
 import 'leaflet/dist/leaflet.css'
@@ -323,14 +325,14 @@ function getOnlineDeviceHms () {
 
 // Map Variables
 const droneIcon = L.icon({
-  iconUrl: '/src/assets/icons/drone.png',
+  iconUrl: drone,
   iconSize: [38, 38], // size of the icon
   iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
   popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
 })
 
 const waypointIcon = L.icon({
-  iconUrl: '/src/assets/icons/marker.svg',
+  iconUrl: markerIcon,
   iconSize: [20, 20], // size of the icon
   iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
   popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
