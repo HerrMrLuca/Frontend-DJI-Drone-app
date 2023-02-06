@@ -141,10 +141,10 @@
       <br>
     </div>
     <!-- TODO uncomment for testing
+    -->
     <div style="text-align: center">
       <button class="test-button" @click="toggleTestingValue">Dummy Test</button>
     </div>
-    -->
   </div>
 </template>
 
