@@ -91,16 +91,61 @@ $bambi-alert-color: #ED4337;
 $bambi-alert-color-translucent: rgba(235, 66, 56, 0.69);
 $bambi-alert-glow: 0px 0px 10px $bambi-alert-color;
 
+$bambi-shade-3-boxshadow: rgba(0, 81, 23, 0.15);
+
 $bambi-font-open-sans: 'Open Sans', sans-serif;
 $bambi-font-fredoka: 'Fredoka', sans-serif;
 
 $bambi-home-view-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 
-$bottom-bar-height: 60px;
+:root{
+  --bar-height: 60px;
+  --font-size-bar: 1rem;
+}
+
+//$bottom-bar-height: 60px;
+
+@media screen and (orientation: landscape) and (min-width: 1500px){
+  :root{
+    --bar-height: 80px;
+    --font-size-bar: 1.3rem;
+  }
+}
+
+@media screen and (orientation: landscape) and (min-width: 1800px){
+  :root{
+    --bar-height: 100px;
+    --font-size-bar: 1.5rem;
+  }
+}
+
+@media screen and (orientation: landscape) and (min-width: 2000px){
+  :root{
+    --bar-height: 120px;
+    --font-size-bar: 1.8rem;
+  }
+}
 
 .not-selectable{
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.ant-input-affix-wrapper{
+  border-radius: 8px;
+}
+
+button{
+  border-radius: 8px;
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector{
+  border-color: $bambi-shade-darker-3;
+  box-shadow: 0 0 0 2px $bambi-shade-3-boxshadow;
+}
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector{
+  border-color: $bambi-shade-darker-3;
 }

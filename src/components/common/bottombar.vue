@@ -1,6 +1,5 @@
 <template>
   <div class="width-100 flex-row all">
-    <!--    <img src="src/assets/icons/bottombar/home.svg">-->
     <div class="fz16 height-100 items">
       <router-link
         v-for="item in options"
@@ -10,7 +9,7 @@
             selected: selectedRoute(item)
           }"
         :to="item.path"
-      > <!--TODO 4 check click behavior-->
+      >
         <span @click="selectedRoute(item)">
           <img :alt="`Icon for page ${item.label}`"
                :src="item.icon"
@@ -34,7 +33,6 @@ const icons = {
   homeIcon,
   videoIcon,
   settingsIcon,
-  // note add icon here
 }
 
 interface IOptions {
@@ -60,7 +58,7 @@ export default defineComponent({
   name: 'Bottom-bar',
   setup () {
     const root = getRoot()
-    // TODO 4 change Routes and names
+    // TODO add routes and names for new pages
     const options = [
       {
         key: 0,
@@ -94,7 +92,6 @@ export default defineComponent({
   }
 })
 
-// TODO 1 change img colors to delete line "filter: invert(100%);"
 </script>
 
 <style lang="scss" scoped>
@@ -103,22 +100,19 @@ export default defineComponent({
 
 p {
   font-family: $bambi-font-open-sans;
+  font-size: var(--font-size-bar);
+  padding-left: calc(var(--font-size-bar) / 4);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.fontBold {
-  font-weight: 500;
-  font-size: 18px;
-}
-
 .all {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: $bottom-bar-height;
+  height: var(--bar-height);
   background-color: white;
 
   .items {
@@ -172,12 +166,25 @@ p {
   }
 }
 
+@media screen and (orientation: landscape) and (min-width: 801px) {
+  .all {
+    .items {
+      .label {
+        display: block;
+      }
+    }
+  }
+}
+
 @media screen and (orientation: landscape) {
   .all {
     background-color: $bambi-nat-ultralight;
+    justify-content: flex-end;
 
     .items {
-      max-width: 500px;
+      max-width: 600px;
+      justify-content: flex-end;
+      gap: calc(var(--font-size-bar) / 3);
 
       a {
         span {
@@ -188,20 +195,10 @@ p {
       }
 
       .label {
-        //font-family: ;
-
         margin-left: 0.5rem;
         margin-bottom: 0;
-        display: block;
       }
     }
   }
 }
-
-@media screen and (orientation: landscape) and (min-width: 1500px) {
-  .all {
-    height: 80px;
-  }
-}
-
 </style>
