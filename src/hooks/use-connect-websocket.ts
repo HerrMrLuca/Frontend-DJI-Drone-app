@@ -1,5 +1,4 @@
 import { onMounted, onUnmounted } from 'vue'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 import ConnectWebSocket, { MessageHandler } from '/@/websocket'
 import { getWebsocketUrl } from '/@/websocket/util/config'
 

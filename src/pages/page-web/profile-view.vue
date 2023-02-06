@@ -32,10 +32,10 @@
       </div>
 
       <div>
-        <h2>Nickname</h2>
+        <h2>User</h2>
         <p v-if="!connected">--</p>
         <!--Note: The code below might not work, please test it-->
-        <p v-else>{{ data.device[0].nickname }}</p>
+        <p v-else>{{ user }}</p>
       </div>
     </div>
   </div>
@@ -64,6 +64,7 @@ const expandRows = ref<string[]>([])
 const data = reactive<DeviceData>({
   device: []
 })
+const user = ref(localStorage.getItem(ELocalStorageKey.Username) || '')
 
 const paginationProp = reactive({
   pageSizeOptions: ['20', '50', '100'],

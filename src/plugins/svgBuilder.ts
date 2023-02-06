@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'fs'
+import { readdirSync, readFileSync } from 'fs'
 
 let idPerfix = ''
 const svgTitle = /<svg([^>+].*?)>/
@@ -7,7 +7,7 @@ const hasViewBox = /(viewBox="[^>+].*?")/g
 const clearReturn = /(\r)|(\n)/g
 
 // Find the svg file
-function svgFind(e) {
+function svgFind (e) {
   const arr = []
   const dirents = readdirSync(e, { withFileTypes: true })
   for (const dirent of dirents) {
@@ -43,7 +43,7 @@ export const svgBuilder = (path: any, perfix = 'icon') => {
     transformIndexHtml (dom: String) {
       return dom.replace(
         '<body>',
-          `<body><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute; width: 0; height: 0" version="1.1">${res.join('')}</svg>`
+        `<body><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute; width: 0; height: 0" version="1.1">${res.join('')}</svg>`
       )
     }
   }

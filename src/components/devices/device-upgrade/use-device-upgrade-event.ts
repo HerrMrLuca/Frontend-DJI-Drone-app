@@ -1,6 +1,6 @@
 import EventBus from '/@/event-bus/'
-import { onMounted, onBeforeUnmount } from 'vue'
-import { DeviceCmdExecuteInfo, DeviceCmdExecuteStatus } from '/@/types/device-cmd'
+import { onBeforeUnmount, onMounted } from 'vue'
+import { DeviceCmdExecuteInfo } from '/@/types/device-cmd'
 
 export function useDeviceUpgradeEvent (onDeviceUpgradeWs: (payload: DeviceCmdExecuteInfo) => void): void {
   function handleDeviceUpgrade (payload: any) {

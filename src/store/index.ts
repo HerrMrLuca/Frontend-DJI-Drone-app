@@ -198,10 +198,7 @@ const mutations: MutationTree<RootStateType> = {
 
 const actions: ActionTree<RootStateType, RootStateType> = {
   async getAllElement ({ commit }) {
-    const result = await getLayers({
-      groupId: '',
-      isDistributed: true
-    })
+    const result = await getLayers()
     commit('SET_LAYER_INFO', result.data?.list)
     console.log(result)
   },

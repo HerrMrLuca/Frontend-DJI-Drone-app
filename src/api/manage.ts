@@ -5,16 +5,18 @@ const HTTP_PREFIX = '/manage/api/v1'
 
 // login
 export interface LoginBody {
- username: string,
- password: string,
- flag: number,
+  username: string,
+  password: string,
+  flag: number,
 }
+
 export interface BindBody {
   device_sn: string,
   user_id: string,
   workspace_id: string,
   domain?: string
 }
+
 export interface HmsQueryBody {
   sns: string[],
   children_sn: string,
