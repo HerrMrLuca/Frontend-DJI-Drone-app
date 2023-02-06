@@ -592,6 +592,27 @@ function toggleTestingValue () {
   data.rtk_number = 23
   data.is_fixed = 0
   data.storage = percentage(50, 200)
+
+  const north = document.getElementsByClassName('north').item(0).classList
+  north.remove('content-alert')
+  north.remove('content-warning')
+
+  const gps = document.getElementsByClassName('gps').item(0).classList
+  gps.remove('content-alert')
+  gps.remove('content-warning')
+
+  const battery = document.getElementsByClassName('battery').item(0).classList
+  battery.remove('content-alert')
+  battery.remove('content-warning')
+
+  const storage = document.getElementsByClassName('storage').item(0).classList
+  storage.remove('content-alert')
+  storage.remove('content-warning')
+
+  const wind = document.getElementsByClassName('wind').item(0).classList
+  wind.remove('content-alert')
+  wind.remove('content-warning')
+
   testing.value = !testing.value
   console.log(testing.value)
 }
