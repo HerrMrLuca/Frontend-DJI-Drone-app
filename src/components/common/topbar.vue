@@ -1,40 +1,20 @@
 <template>
   <div class="width-100 flex-row flex-justify-between flex-align-center topbar">
     <div class="height-100 logo not-selectable">
-      <img :src="bambiLogo"/>
+      <img :src="bambiLogo" alt="logo of bambi company"/>
       <p><span>Bambi</span> Info Center</p>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { message } from 'ant-design-vue'
-import { defineComponent, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getRoot } from '/@/root'
 import { getPlatformInfo } from '/@/api/manage'
-import { ELocalStorageKey, ERouterName } from '/@/types'
-import { UserOutlined, ExportOutlined } from '@ant-design/icons-vue'
 import bambiLogo from '/@/assets/icons/BAMBI_notext.png'
-import userIcon from '/@/assets/icons/user.png'
 
 const root = getRoot()
-
-interface IOptions {
-  key: number
-  label: string
-  path:
-      | string
-      | {
-    path: string
-    query?: any
-  }
-  icon: string
-}
-
-const username = ref(localStorage.getItem(ELocalStorageKey.Username))
 const workspaceName = ref('')
-
-const selected = ref<string>(root.$route.path)
 
 onMounted(() => {
   getPlatformInfo().then(res => {
@@ -42,23 +22,15 @@ onMounted(() => {
   })
 })
 
-const logout = () => {
-  localStorage.clear()
-  root.$router.push(ERouterName.PROJECT)
-}
 </script>
 
 <style lang="scss" scoped>
 //@import '/@/styles/index.scss';
 @import '/@/styles/variables.scss';
 
-@media screen and (orientation: landscape) and (min-width: 1500px){
-  $bottom-bar-height: 120px;
-}
-
 p, span {
   font-family: $bambi-font-fredoka;
-  font-size: large;
+  font-size: var(--font-size-bar);
 }
 
 span {
@@ -71,7 +43,7 @@ span {
 }
 
 .topbar {
-  height: $bottom-bar-height;
+  height: var(--bar-height);
   width: 100%;
   background-color: $bambi-nat-ultralight;
 
@@ -124,5 +96,4 @@ span {
     }
   }
 }
-
 </style>
